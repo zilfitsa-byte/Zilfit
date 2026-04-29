@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
-cd /root/hermes/zilfit-ip-core || exit 1
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/." && pwd)"
+cd "$REPO_ROOT" || exit 1
 
 echo "[1/6] test routing"
 python3 tests/test_scan_image_routing.py
