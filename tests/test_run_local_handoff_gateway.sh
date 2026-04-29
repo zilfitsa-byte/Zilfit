@@ -5,7 +5,8 @@ TEST_NAME="$(basename "$0")"
 trap 'rc=$?; echo "[FAIL] ${TEST_NAME}: line ${LINENO}"; exit $rc' ERR
 
 
-cd /root/hermes/zilfit-ip-core || exit 1
+REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$REPO_ROOT" || exit 1
 
 OUT="tests/local_handoff_gateway_output_v1.json"
 
