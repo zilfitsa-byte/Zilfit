@@ -26,11 +26,16 @@
   ],
   "pass_fail_thresholds": {
     "max_adjacent_density_jump_pct": 15,
+    "max_adjacent_density_jump_pct_note": "Configured engineering threshold used by simulator pass/fail checks; not runtime-derived.",
     "allowed_wall_variants_mm": [0.5, 0.6, 0.7],
     "min_manufacturing_readiness_score": 70,
     "max_failure_risk_score": 35,
     "require_no_medical_claims": true,
     "require_baseline_comparison": true
+  },
+  "density_validation_notes": {
+    "raw_density_pct_behavior": "Raw/generated density may exceed profile ceiling prior to clamp or smoothing in upstream computations.",
+    "density_in_allowed_range_definition": "density_in_allowed_range applies to final density_pct after clamp/smoothing."
   },
   "review_target": "claude_final_review_after_first_test"
 }

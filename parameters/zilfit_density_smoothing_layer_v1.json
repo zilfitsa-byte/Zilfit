@@ -10,6 +10,7 @@
   "purpose": "reduce adjacent density jumps before pressure simulation or prototype preparation",
   "rules": {
     "max_adjacent_density_jump_pct": 15,
+    "max_adjacent_density_jump_pct_note": "Configured engineering threshold (static); smoothing enforces this on final density_pct values.",
     "preserve_wall_variants_mm": [0.5, 0.6, 0.7],
     "physical_min_wall_mm": 0.5,
     "preserve_baseline_comparison": true,
@@ -20,6 +21,7 @@
   "smoothing_method": {
     "name": "bounded_neighbor_average",
     "description": "If adjacent density jump exceeds limit, adjust current density toward previous smoothed zone within allowed jump limit.",
+    "density_range_note": "raw_density_pct (input/original density) may exceed a profile ceiling before clamp/smoothing in upstream generation; density_in_allowed_range checks apply to final density_pct after clamp/smoothing.",
     "validation_status": "simulation"
   },
   "output_requirements": [

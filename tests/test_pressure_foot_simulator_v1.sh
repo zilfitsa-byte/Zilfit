@@ -24,8 +24,19 @@ data = json.loads(p.read_text(encoding="utf-8"))
 assert data["schema_version"] == "v1"
 assert data["review_target"] == "claude_final_review"
 assert data["smoothed_summary"]["pass_fail"]["density_jump_pass"] is True
+assert data["smoothed_summary"]["pass_fail"]["manufacturing_ready_pass"] is True
+assert data["smoothed_summary"]["pass_fail"]["failure_risk_pass"] is True
 assert data["smoothed_summary"]["pass_fail"]["non_medical_language_pass"] is True
 assert data["engineering_verdict"]["ready_for_claude_review"] is True
+assert data["engineering_verdict"]["ready_for_pressure_simulator_iteration_2"] is True
+assert data["smoothed_summary"]["peak_pressure_zone"]["zone_id"] == "Z01"
+assert data["smoothed_summary"]["peak_pressure_zone"]["density_pct"] == 56.0
+assert data["smoothed_summary"]["density_min_pct"] == 21.0
+assert data["smoothed_summary"]["density_max_pct"] == 56.0
+assert data["smoothed_summary"]["density_jump_max_pct"] == 15.0
+
+zones = data["smoothed_summary"]
+assert zones["pass_fail"]["density_jump_pass"] and zones["pass_fail"]["manufacturing_ready_pass"] and zones["pass_fail"]["failure_risk_pass"] and zones["pass_fail"]["non_medical_language_pass"]
 
 print("PRESSURE_FOOT_SIMULATOR_STRUCTURE_PASS")
 PY
