@@ -1,0 +1,54 @@
+{
+  "schema_version": "v1",
+  "agent_name": "Z-UX",
+  "task_id": "z_ux_z_cad_packet_schema_v1",
+  "output_class": "DESIGN_PROPOSAL",
+  "confidence": 0.95,
+  "sources": [
+    "governance/Z_UX_SKILLS.md",
+    "governance/Z_CAD_SKILLS.md",
+    "docs/z_ux_z_cad_packet_schema_v1.md",
+    "docs/z_ux_mobile_flow_v1.md",
+    "docs/z_ux_wireframe_spec_v1.md",
+    "docs/CURRENT_SYSTEM_STATE.md"
+  ],
+  "assumptions": [
+    "scan-derived fit context can be routed into CAD-ready intake",
+    "UX should send structured sizing and recommendation context",
+    "geometry interpretation belongs to Z-CAD"
+  ],
+  "risks": [
+    "fit context may be too vague for CAD intake",
+    "recommendation context may be confused with geometry rules",
+    "sizing inputs may be incomplete"
+  ],
+  "decision": "NEEDS_REVIEW",
+  "next_required_validation": "Hermes review before runtime routing activation",
+  "approved_for_use": false,
+  "skills_used": [
+    "Workflow Structuring",
+    "CAD Routing",
+    "Knowledge Structuring"
+  ],
+  "flow_type": "ux_to_cad_intake",
+  "conversion_risk": "MEDIUM",
+  "screen_sequence": [
+    "scan_capture_top",
+    "scan_capture_side",
+    "smart_result_summary",
+    "product_recommendation",
+    "fast_checkout"
+  ],
+  "friction_points": [
+    "unclear sizing handoff",
+    "fit-summary ambiguity",
+    "design intake mismatch"
+  ],
+  "primary_user_goal": "Route fit and sizing context from UX into CAD-ready design intake.",
+  "ux_recommendation": "Send structured fit, sizing, and recommendation context into Z-CAD intake only.",
+  "next_design_step": "Convert fit, sizing, and product-selection context into CAD-ready intake packets for design preparation.",
+  "fit_context": "Estimated fit profile from scan and selected user goal.",
+  "sizing_context": "Sizing-related intake from scan and recommendation stage.",
+  "recommendation_context": "Recommended product path and fit-summary context.",
+  "design_intent": "Prepare structured intake for CAD-side geometry interpretation."
+}

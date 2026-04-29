@@ -1,0 +1,17 @@
+{
+  "schema_version": "v1",
+  "trigger_stage": "scan_capture",
+  "trigger_screen_id": "scan_capture_top",
+  "prompt_text": "Place your foot clearly in frame and capture the top view.",
+  "next_expected_action": "capture_top_view",
+  "guidance_type": "instruction",
+  "user_goal_context": "daily_comfort",
+  "safe_for_display": true,
+  "blocked_phrase_flag": false,
+  "confidence": 0.97,
+  "scan_quality_context": "pending",
+  "configured_image_input_mode": "auto",
+  "model_capabilities": {
+    "supports_vision": true
+  }
+}

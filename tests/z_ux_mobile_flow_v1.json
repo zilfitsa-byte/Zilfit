@@ -1,0 +1,54 @@
+{
+  "schema_version": "v1",
+  "agent_name": "Z-UX",
+  "task_id": "z_ux_mobile_flow_v1",
+  "output_class": "DESIGN_PROPOSAL",
+  "confidence": 0.94,
+  "sources": [
+    "governance/Z_UX_SKILLS.md",
+    "docs/z_ux_live_brief_v1.md",
+    "docs/z_ux_mobile_flow_v1.md",
+    "docs/CURRENT_SYSTEM_STATE.md"
+  ],
+  "assumptions": [
+    "the first release should focus on one hero product",
+    "the fastest path should avoid forced account creation",
+    "guided scan prompts should stay short and visual"
+  ],
+  "risks": [
+    "too much text may reduce conversion",
+    "scan failure may increase drop-off",
+    "multi-product branching too early may confuse the user"
+  ],
+  "decision": "NEEDS_REVIEW",
+  "next_required_validation": "Hermes review before implementation in app UI",
+  "approved_for_use": false,
+  "skills_used": [
+    "UI/UX Layout Advisor",
+    "Workflow Automation Agent",
+    "Knowledge Structuring"
+  ],
+  "primary_user_goal": "Help a first-time user understand the product quickly, complete a guided foot scan, receive a simple recommendation, and finish checkout with minimal friction.",
+  "flow_type": "conversion_focused_mobile_scan_checkout",
+  "screen_sequence": [
+    "welcome_first_impression",
+    "goal_selection",
+    "guided_scan_intro",
+    "scan_capture",
+    "scan_quality_check",
+    "smart_result_summary",
+    "product_recommendation",
+    "fast_checkout",
+    "order_confirmation",
+    "post_purchase_followup"
+  ],
+  "friction_points": [
+    "too much explanation before scan",
+    "unclear scan prompts",
+    "forcing account creation before payment",
+    "showing too many choices too early"
+  ],
+  "ux_recommendation": "Keep the first ZILFIT app experience focused on one hero product, one guided scan path, one recommendation path, and one fast checkout flow with minimal text and strong trust cues.",
+  "conversion_risk": "MEDIUM",
+  "next_design_step": "Turn the approved mobile flow into screen wireframes and UI copy for implementation."
+}

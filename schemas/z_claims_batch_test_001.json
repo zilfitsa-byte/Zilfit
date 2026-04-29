@@ -1,0 +1,48 @@
+{
+  "agent_name": "Z-Claims",
+  "task_id": "claims_batch_test_001",
+  "output_class": "FACT",
+  "confidence": 0.94,
+  "sources": ["internal claims review", "docs/ZILFIT_CLAIMS_MATRIX_V1.md"],
+  "assumptions": [],
+  "risks": ["regulatory risk", "medical overstatement risk", "customer misunderstanding"],
+  "decision": "NEEDS_REVIEW",
+  "next_required_validation": "Hermes review before public messaging approval",
+  "approved_for_use": false,
+  "skills_used": [
+    "Source Validation",
+    "Knowledge Structuring",
+    "SCQA Writing Framework"
+  ],
+  "claim_status": "NEEDS_EVIDENCE",
+  "original_claim": "Batch review for 5 public-facing claims",
+  "safer_rewrite": "Use only approved comfort and recovery-experience wording unless further evidence is validated.",
+  "reason": "Batch review used to classify candidate marketing statements before public use.",
+  "claims_review": [
+    {
+      "claim": "supports comfort",
+      "status": "ALLOWED",
+      "safe_version": "supports comfort"
+    },
+    {
+      "claim": "supports recovery experience",
+      "status": "ALLOWED",
+      "safe_version": "supports recovery experience"
+    },
+    {
+      "claim": "reduces cortisol",
+      "status": "FORBIDDEN",
+      "safe_version": "designed to support a calming post-exercise experience"
+    },
+    {
+      "claim": "prevents injury",
+      "status": "FORBIDDEN",
+      "safe_version": "designed for comfort-oriented post-exercise use"
+    },
+    {
+      "claim": "pressure-informed design",
+      "status": "ALLOWED",
+      "safe_version": "pressure-informed design"
+    }
+  ]
+}

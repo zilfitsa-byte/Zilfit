@@ -1,0 +1,66 @@
+{
+  "agent_name": "Z-Guide",
+  "task_id": "z_guide_z_ux_runtime_packet_v1",
+  "output_class": "GUIDANCE",
+  "confidence": 0.97,
+  "sources": [
+    "governance/Z_GUIDE_SKILLS.md",
+    "docs/z_guide_live_brief_v1.md",
+    "docs/z_guide_prompt_pack_v1.md",
+    "docs/z_guide_z_ux_runtime_packet_v1.md",
+    "docs/CURRENT_SYSTEM_STATE.md"
+  ],
+  "assumptions": [
+    "Z-Guide sends display-safe prompts only",
+    "Z-UX controls live screen routing",
+    "runtime packets must remain traceable and safe"
+  ],
+  "risks": [
+    "unsafe prompt wording may reach runtime state",
+    "screen routing may drift from prompt stage",
+    "scan context may be missing during early flow"
+  ],
+  "decision": "NEEDS_REVIEW",
+  "next_required_validation": "Hermes review before runtime activation",
+  "approved_for_use": false,
+  "skills_used": [
+    "Live Guidance",
+    "Workflow Structuring",
+    "Runtime Structuring"
+  ],
+  "guidance_scope": [
+    "welcome",
+    "goal_selection",
+    "scan_intro",
+    "scan_capture",
+    "scan_quality_check",
+    "result_summary",
+    "recommendation"
+  ],
+  "primary_user_goal": "Guide the user safely through the live ZILFIT flow with low friction.",
+  "live_behavior_mode": "supportive_guided_low_friction",
+  "fallback_rule": "If safety or clarity is weak, send a shorter fallback-safe prompt.",
+  "packet_name": "z_guide_z_ux_runtime_packet_v1",
+  "schema_version": "v1",
+  "session_id": "session_demo_001",
+  "event_id": "evt_runtime_001",
+  "timestamp": "2026-04-27T20:00:00Z",
+  "source_agent": "Z-Guide",
+  "target_agent": "Z-UX",
+  "trigger_stage": "scan_capture",
+  "trigger_screen_id": "scan_capture_top",
+  "guidance_type": "instruction",
+  "prompt_id": "guide_scan_top_001",
+  "prompt_text": "Place your foot clearly in frame and capture the top view.",
+  "prompt_mode": "normal",
+  "user_goal_context": "daily_comfort",
+  "next_expected_action": "capture_top_view",
+  "safe_for_display": true,
+  "scan_quality_context": "pending",
+  "blocked_phrase_flag": false,
+  "scan_processing_mode": "text_fallback",
+  "configured_image_input_mode": "auto",
+  "model_capabilities": {
+    "supports_vision": true
+  }
+}

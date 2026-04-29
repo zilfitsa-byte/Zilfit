@@ -1,0 +1,36 @@
+{
+  "schema_version": "v1",
+  "module_id": "zilfit_pressure_foot_simulator",
+  "project": "ZILFIT",
+  "status": "engineering_draft",
+  "depends_on": [
+    "parameters/zilfit_formula_safety_layer_v1.json",
+    "parameters/zilfit_personalized_pressure_density_model_v1.json",
+    "parameters/zilfit_density_smoothing_layer_v1.json"
+  ],
+  "purpose": "compare personalized pressure-density maps before physical prototyping",
+  "input_files": {
+    "original_map": "parameters/sample_personalized_pressure_density_output_v1.json",
+    "smoothed_map": "parameters/sample_personalized_pressure_density_smoothed_v1.json"
+  },
+  "simulation_metrics": [
+    "total_zone_load_N",
+    "peak_pressure_zone",
+    "density_jump_max_pct",
+    "heel_to_toe_transition_score",
+    "medial_lateral_balance_score",
+    "damping_distribution_score",
+    "comfort_distribution_score",
+    "manufacturing_readiness_score",
+    "failure_risk_score"
+  ],
+  "pass_fail_thresholds": {
+    "max_adjacent_density_jump_pct": 15,
+    "allowed_wall_variants_mm": [0.5, 0.6, 0.7],
+    "min_manufacturing_readiness_score": 70,
+    "max_failure_risk_score": 35,
+    "require_no_medical_claims": true,
+    "require_baseline_comparison": true
+  },
+  "review_target": "claude_final_review_after_first_test"
+}

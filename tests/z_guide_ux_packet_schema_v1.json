@@ -1,0 +1,46 @@
+{
+  "schema_version": "v1",
+  "agent_name": "Z-Guide",
+  "task_id": "z_guide_ux_packet_schema_v1",
+  "output_class": "GUIDANCE",
+  "confidence": 0.96,
+  "sources": [
+    "governance/Z_GUIDE_SKILLS.md",
+    "docs/z_guide_live_brief_v1.md",
+    "docs/z_guide_prompt_pack_v1.md",
+    "docs/z_guide_ux_packet_schema_v1.md",
+    "docs/z_ux_mobile_flow_v1.md",
+    "docs/CURRENT_SYSTEM_STATE.md"
+  ],
+  "assumptions": [
+    "Z-Guide should remain a display-safe prompt layer",
+    "Z-UX should own screen progression and UX state",
+    "live prompts need packet-level traceability"
+  ],
+  "risks": [
+    "prompt events may be rendered without proper safety checks",
+    "guidance packets may be confused with UX orchestration logic",
+    "unsafe prompt wording may slip into display state"
+  ],
+  "decision": "NEEDS_REVIEW",
+  "next_required_validation": "Hermes review before packet-level runtime integration",
+  "approved_for_use": false,
+  "skills_used": [
+    "Live Guidance",
+    "Workflow Structuring",
+    "Knowledge Structuring"
+  ],
+  "guidance_scope": [
+    "welcome",
+    "goal_selection",
+    "scan_intro",
+    "scan_capture",
+    "scan_retry",
+    "recommendation",
+    "checkout",
+    "post_purchase_followup"
+  ],
+  "primary_user_goal": "Help the user move through the ZILFIT flow with clear, safe, low-friction live guidance.",
+  "live_behavior_mode": "supportive_guided_low_friction",
+  "fallback_rule": "If display safety or confidence is weak, send fallback prompt mode only."
+}

@@ -1,0 +1,70 @@
+{
+  "schema_version": "v1",
+  "agent_name": "Z-UX",
+  "task_id": "z_ux_handoff_map_v1",
+  "output_class": "DESIGN_PROPOSAL",
+  "confidence": 0.96,
+  "sources": [
+    "governance/Z_UX_SKILLS.md",
+    "docs/z_ux_mobile_flow_v1.md",
+    "docs/z_ux_wireframe_spec_v1.md",
+    "docs/z_ux_microcopy_v1.md",
+    "docs/z_ux_handoff_map_v1.md",
+    "docs/CURRENT_SYSTEM_STATE.md"
+  ],
+  "assumptions": [
+    "the first ZILFIT release should use one hero product",
+    "customer-facing UX should remain separate from technical agent logic",
+    "claim wording must be approved before public rendering",
+    "fit summary packets should be reusable across recommendation and feedback loops"
+  ],
+  "risks": [
+    "unsafe wording may leak into user-facing copy",
+    "weak scan data may be routed too early",
+    "technical packets may be confused with customer-facing outputs",
+    "feedback may be overinterpreted without structured routing"
+  ],
+  "decision": "NEEDS_REVIEW",
+  "next_required_validation": "Hermes review before app integration and multi-agent routing activation",
+  "approved_for_use": false,
+  "skills_used": [
+    "Workflow Automation Agent",
+    "Knowledge Structuring",
+    "UI/UX Layout Advisor"
+  ],
+  "flow_type": "mobile_conversion_scan_checkout",
+  "conversion_risk": "MEDIUM",
+  "primary_user_goal": "Help a first-time user understand the product quickly, complete a guided foot scan, receive a simple recommendation, and finish checkout with minimal friction.",
+  "screen_sequence": [
+    "welcome_first_impression",
+    "goal_selection",
+    "guided_scan_intro",
+    "scan_capture_top",
+    "scan_capture_side",
+    "scan_capture_gait_optional",
+    "scan_quality_check",
+    "smart_result_summary",
+    "product_recommendation",
+    "fast_checkout",
+    "order_confirmation",
+    "post_purchase_followup"
+  ],
+  "friction_points": [
+    "too much explanation before scan",
+    "unclear scan framing",
+    "low-quality scan retry friction",
+    "too many choices too early",
+    "slow checkout steps"
+  ],
+  "handoff_targets": [
+    "Z-Claims",
+    "Z-Sim",
+    "Z-CAD",
+    "Z-Patent",
+    "Z-Research",
+    "order_system",
+    "feedback_loop"
+  ],
+  "ux_recommendation": "Keep Z-UX as the user-facing orchestration layer, while routing wording, simulation, CAD, patent, and research logic through the correct governed downstream agents.",
+  "next_design_step": "Turn this handoff map into implementation-ready event contracts and packet schemas for the first app build."
+}

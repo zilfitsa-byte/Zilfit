@@ -1,0 +1,81 @@
+{
+  "schema_version": "v1",
+  "module_id": "zilfit_pressure_foot_simulator_report",
+  "project": "ZILFIT",
+  "test_id": "first_pressure_foot_simulation_case_001",
+  "status": "PASS",
+  "review_target": "claude_final_review",
+  "original_summary": {
+    "label": "original_personalized_map",
+    "subject_id": "sample_001",
+    "profile_target": "BALANCE",
+    "model_status": "simulation_ready",
+    "total_zone_load_N": 725.291,
+    "peak_pressure_zone": {
+      "zone_id": "Z01",
+      "zone_name": "heel",
+      "zone_load_N": 206.01,
+      "density_pct": 56,
+      "t_wall_mm": 0.7
+    },
+    "density_min_pct": 21.0,
+    "density_max_pct": 56.0,
+    "density_jump_max_pct": 28.18,
+    "heel_to_toe_transition_score": 17.28,
+    "medial_lateral_balance_score": 99.1,
+    "damping_distribution_score": 36.14,
+    "comfort_distribution_score": 63.86,
+    "manufacturing_readiness_score": 40,
+    "failure_risk_score": 59,
+    "prohibited_language_found": [],
+    "pass_fail": {
+      "density_jump_pass": false,
+      "manufacturing_ready_pass": false,
+      "failure_risk_pass": false,
+      "non_medical_language_pass": true
+    }
+  },
+  "smoothed_summary": {
+    "label": "smoothed_personalized_map",
+    "subject_id": "sample_001",
+    "profile_target": "BALANCE",
+    "model_status": "smoothed_simulation_ready",
+    "total_zone_load_N": 725.291,
+    "peak_pressure_zone": {
+      "zone_id": "Z01",
+      "zone_name": "heel",
+      "zone_load_N": 206.01,
+      "density_pct": 56.0,
+      "t_wall_mm": 0.7
+    },
+    "density_min_pct": 21.0,
+    "density_max_pct": 56.0,
+    "density_jump_max_pct": 15.0,
+    "heel_to_toe_transition_score": 70,
+    "medial_lateral_balance_score": 99.1,
+    "damping_distribution_score": 36.14,
+    "comfort_distribution_score": 63.86,
+    "manufacturing_readiness_score": 100,
+    "failure_risk_score": 0,
+    "prohibited_language_found": [],
+    "pass_fail": {
+      "density_jump_pass": true,
+      "manufacturing_ready_pass": true,
+      "failure_risk_pass": true,
+      "non_medical_language_pass": true
+    }
+  },
+  "comparison": {
+    "density_jump_delta_pct": 13.18,
+    "manufacturing_readiness_delta": 60,
+    "failure_risk_delta": 59,
+    "smoothing_effective": true
+  },
+  "engineering_verdict": {
+    "ready_for_claude_review": true,
+    "ready_for_pressure_simulator_iteration_2": true,
+    "ready_for_coupon_test": false,
+    "ready_for_physical_prototype": false,
+    "reason": "simulation-only first pass; requires external review and later coupon validation"
+  }
+}

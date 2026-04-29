@@ -1,0 +1,16 @@
+{
+  "agent_name": "Z-Research",
+  "task_id": "test-001",
+  "output_class": "HYPOTHESIS",
+  "confidence": 0.72,
+  "sources": [],
+  "assumptions": [
+    "Plantar stimulation may influence comfort perception."
+  ],
+  "risks": [
+    "Not yet validated on ZILFIT prototype."
+  ],
+  "decision": "NEEDS_REVIEW",
+  "next_required_validation": "Require source review and Z-Sim validation.",
+  "approved_for_use": false
+}

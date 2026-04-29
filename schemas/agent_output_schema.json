@@ -1,0 +1,80 @@
+{
+  "type": "object",
+  "required": [
+    "agent_name",
+    "task_id",
+    "output_class",
+    "confidence",
+    "sources",
+    "assumptions",
+    "risks",
+    "decision",
+    "next_required_validation",
+    "approved_for_use",
+    "skills_used"
+  ],
+  "properties": {
+    "agent_name": {
+      "type": "string"
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "output_class": {
+      "type": "string",
+      "enum": [
+        "FACT",
+        "ENGINEERING_ASSUMPTION",
+        "HYPOTHESIS",
+        "DESIGN_PROPOSAL",
+        "BLOCKER"
+      ]
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "decision": {
+      "type": "string",
+      "enum": [
+        "PASS",
+        "FAIL",
+        "CONDITIONAL_PASS",
+        "BLOCK",
+        "NEEDS_REVIEW"
+      ]
+    },
+    "next_required_validation": {
+      "type": "string"
+    },
+    "approved_for_use": {
+      "type": "boolean"
+    },
+    "skills_used": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    }
+  }
+}

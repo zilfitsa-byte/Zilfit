@@ -1,0 +1,151 @@
+{
+  "schema_version": "v1",
+  "module_id": "zilfit_personalized_pressure_density_model",
+  "project": "ZILFIT",
+  "status": "engineering_draft",
+  "depends_on": [
+    "parameters/zilfit_formula_safety_layer_v1.json"
+  ],
+  "non_medical_boundary": {
+    "allowed_framing": [
+      "wear_experience",
+      "pressure_response",
+      "fit_observation",
+      "support_feel",
+      "comfort_feel",
+      "stability_feel",
+      "walking_feel",
+      "sensory_feedback"
+    ],
+    "prohibited_claims": [
+      "diagnosis",
+      "treatment",
+      "pain_reduction",
+      "healing",
+      "organ_effect",
+      "hormone_effect",
+      "disease_prevention",
+      "therapeutic_claim"
+    ]
+  },
+  "personalization_inputs": {
+    "body_weight_kg": {
+      "required": true,
+      "min": 35,
+      "max": 140
+    },
+    "foot_length_mm": {
+      "required": true,
+      "min": 200,
+      "max": 330
+    },
+    "foot_width_mm": {
+      "required": true,
+      "min": 70,
+      "max": 140
+    },
+    "arch_height_category": {
+      "required": true,
+      "allowed": ["low", "medium", "high"]
+    },
+    "profile_target": {
+      "required": true,
+      "allowed": ["CALM", "FEMME", "FOCUS", "VITAL", "BALANCE"]
+    },
+    "left_right_balance": {
+      "required": true,
+      "min": -1.0,
+      "max": 1.0
+    }
+  },
+  "foot_zones": [
+    {
+      "zone_id": "Z01",
+      "name": "heel",
+      "contact_fraction": 0.24,
+      "gait_phase_factor": 1.25
+    },
+    {
+      "zone_id": "Z02",
+      "name": "arch_midfoot",
+      "contact_fraction": 0.14,
+      "gait_phase_factor": 0.80
+    },
+    {
+      "zone_id": "Z03",
+      "name": "metatarsal",
+      "contact_fraction": 0.22,
+      "gait_phase_factor": 1.15
+    },
+    {
+      "zone_id": "Z04",
+      "name": "forefoot",
+      "contact_fraction": 0.18,
+      "gait_phase_factor": 1.05
+    },
+    {
+      "zone_id": "Z05",
+      "name": "toe",
+      "contact_fraction": 0.08,
+      "gait_phase_factor": 0.85
+    },
+    {
+      "zone_id": "Z06",
+      "name": "medial_edge",
+      "contact_fraction": 0.07,
+      "gait_phase_factor": 0.95
+    },
+    {
+      "zone_id": "Z07",
+      "name": "lateral_edge",
+      "contact_fraction": 0.07,
+      "gait_phase_factor": 0.95
+    }
+  ],
+  "profile_density_bounds": {
+    "CALM": {
+      "density_floor_pct": 20,
+      "density_ceiling_pct": 52,
+      "priority": "heel_damping_and_smooth_transition"
+    },
+    "FEMME": {
+      "density_floor_pct": 18,
+      "density_ceiling_pct": 50,
+      "priority": "adaptive_surface_feel"
+    },
+    "FOCUS": {
+      "density_floor_pct": 22,
+      "density_ceiling_pct": 58,
+      "priority": "forefoot_and_metatarsal_feedback"
+    },
+    "VITAL": {
+      "density_floor_pct": 24,
+      "density_ceiling_pct": 62,
+      "priority": "structured_support_feel"
+    },
+    "BALANCE": {
+      "density_floor_pct": 21,
+      "density_ceiling_pct": 56,
+      "priority": "medial_lateral_stability_feel"
+    }
+  },
+  "output_requirements": [
+    "zone_load_N",
+    "P_norm",
+    "density_pct",
+    "t_wall_mm",
+    "source",
+    "confidence",
+    "validation_status",
+    "failure_flags",
+    "baseline_comparison"
+  ],
+  "failure_rules": {
+    "max_adjacent_density_jump_pct": 15,
+    "physical_min_wall_mm": 0.5,
+    "required_baseline_wall_mm": 0.6,
+    "require_non_medical_language": true,
+    "require_profile_density_bounds": true,
+    "require_zone_outputs": true
+  }
+}

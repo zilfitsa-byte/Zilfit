@@ -1,0 +1,78 @@
+{
+  "schema_version": "v1",
+  "agent_name": "Z-UX",
+  "task_id": "z_ux_microcopy_v1",
+  "output_class": "DESIGN_PROPOSAL",
+  "confidence": 0.95,
+  "sources": [
+    "governance/Z_UX_SKILLS.md",
+    "docs/z_ux_mobile_flow_v1.md",
+    "docs/z_ux_wireframe_spec_v1.md",
+    "docs/z_ux_microcopy_v1.md",
+    "docs/CURRENT_SYSTEM_STATE.md"
+  ],
+  "assumptions": [
+    "the first ZILFIT release should use one hero product",
+    "the first customer journey should stay simple and guided",
+    "the writing should remain premium and supportive without sounding medical"
+  ],
+  "risks": [
+    "unclear copy may reduce scan completion",
+    "overexplaining may reduce conversion",
+    "medical-sounding copy may create compliance risk"
+  ],
+  "decision": "NEEDS_REVIEW",
+  "next_required_validation": "Hermes and Z-Claims review before production UI implementation",
+  "approved_for_use": false,
+  "skills_used": [
+    "UI/UX Layout Advisor",
+    "Structured Copywriting",
+    "Knowledge Structuring"
+  ],
+  "flow_type": "mobile_conversion_scan_checkout",
+  "conversion_risk": "MEDIUM",
+  "primary_user_goal": "Help a first-time user understand the product quickly, complete a guided foot scan, receive a simple recommendation, and finish checkout with minimal friction.",
+  "screen_sequence": [
+    "welcome_first_impression",
+    "goal_selection",
+    "guided_scan_intro",
+    "scan_capture_top",
+    "scan_capture_side",
+    "scan_capture_gait_optional",
+    "scan_quality_check",
+    "smart_result_summary",
+    "product_recommendation",
+    "fast_checkout",
+    "order_confirmation",
+    "post_purchase_followup"
+  ],
+  "friction_points": [
+    "too much explanation before scan",
+    "unclear scan framing",
+    "low-quality scan retry friction",
+    "too many choices too early",
+    "slow checkout steps"
+  ],
+  "microcopy_scope": [
+    "welcome",
+    "goal_selection",
+    "scan_intro",
+    "scan_capture",
+    "scan_quality_check",
+    "fit_summary",
+    "recommendation",
+    "checkout",
+    "order_confirmation",
+    "post_purchase_feedback"
+  ],
+  "tone_profile": [
+    "calm",
+    "clear",
+    "premium",
+    "supportive",
+    "minimal",
+    "non_medical"
+  ],
+  "ux_recommendation": "Use short, premium, confidence-building copy with one main action per screen and no medical-treatment wording.",
+  "next_design_step": "Pair this microcopy pack with final screen wireframes and handoff logic for app implementation."
+}

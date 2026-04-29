@@ -1,0 +1,55 @@
+{
+  "schema_version": "v1",
+  "agent_name": "Z-UX",
+  "task_id": "z_ux_live_flow_001",
+  "output_class": "DESIGN_PROPOSAL",
+  "confidence": 0.93,
+  "sources": [
+    "governance/Z_UX_SKILLS.md",
+    "docs/z_ux_live_brief_v1.md",
+    "docs/CURRENT_SYSTEM_STATE.md"
+  ],
+  "assumptions": [
+    "the first release should focus on one hero product only",
+    "customers prefer a fast guided buying flow over a complex onboarding flow",
+    "scan instructions must be visual and short"
+  ],
+  "risks": [
+    "too many steps before checkout may reduce conversion",
+    "unclear scan guidance may cause failed scans",
+    "too much technical language may reduce trust"
+  ],
+  "decision": "NEEDS_REVIEW",
+  "next_required_validation": "Hermes review before app UX implementation",
+  "approved_for_use": false,
+  "skills_used": [
+    "UI/UX Layout Advisor",
+    "Workflow Automation Agent",
+    "Knowledge Structuring"
+  ],
+  "primary_user_goal": "Understand the ZILFIT product quickly, complete the scan flow with confidence, and purchase with minimal friction.",
+  "flow_type": "conversion_focused_mobile_scan_checkout",
+  "screen_sequence": [
+    "welcome_value_proposition",
+    "goal_selection",
+    "guided_scan_intro",
+    "scan_capture_top_view",
+    "scan_capture_side_view",
+    "optional_short_gait_video",
+    "scan_quality_check",
+    "result_summary",
+    "recommended_product_vital_recover",
+    "fast_checkout",
+    "order_confirmation",
+    "post_purchase_followup"
+  ],
+  "friction_points": [
+    "too much explanation before the user starts",
+    "weak visual scan instructions",
+    "asking for account creation before payment",
+    "showing multiple product options too early"
+  ],
+  "ux_recommendation": "Keep the first experience focused on one hero product, one guided scan path, and one fast checkout path. Use short visual instructions, strong trust cues, and mobile-first CTA placement.",
+  "conversion_risk": "MEDIUM",
+  "next_design_step": "Create a screen-by-screen structure with CTA text, scan prompts, and trust-building microcopy for the first ZILFIT mobile flow."
+}

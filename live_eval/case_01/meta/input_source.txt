@@ -1,0 +1,3 @@
+source=tests/z_ux_runtime_input_v1.json
+case_id=case_01
+role=baseline_input

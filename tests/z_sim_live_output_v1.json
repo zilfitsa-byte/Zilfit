@@ -1,0 +1,37 @@
+{
+  "schema_version": "v1",
+  "agent_name": "Z-Sim",
+  "task_id": "z_sim_live_001",
+  "output_class": "FACT",
+  "confidence": 0.9,
+  "sources": [
+    "tests/Z_SIM_LIVE_BRIEF_V1.md",
+    "governance/Z_SIM_SKILLS.md",
+    "patent/Z_PATENT_LIVE_BRIEF_V1.md"
+  ],
+  "assumptions": [
+    "simulation stage is pre-prototype and review-oriented",
+    "final structural values are not fully frozen yet"
+  ],
+  "risks": [
+    "wall thickness not fully validated across all zones",
+    "stimulation geometry may exceed comfort threshold",
+    "printability may vary by lattice density"
+  ],
+  "decision": "NEEDS_REVIEW",
+  "next_required_validation": "Hermes review before prototype signoff",
+  "approved_for_use": false,
+  "skills_used": [
+    "Knowledge Structuring",
+    "Workflow Automation Agent",
+    "Source Validation"
+  ],
+  "test_scope": "printability, thickness logic, comfort risk, and overstimulation screening before first prototype",
+  "blockers": [
+    "no full-zone thickness validation yet",
+    "no controlled print test sequence finalized yet"
+  ],
+  "risk_level": "MEDIUM",
+  "go_no_go": "CONDITIONAL_GO",
+  "next_validation_step": "run prototype print test and zone-by-zone comfort screening"
+}

@@ -1,0 +1,51 @@
+{
+  "schema_version": "v1",
+  "agent_name": "Z-UX",
+  "task_id": "z_ux_z_claims_packet_schema_v1",
+  "output_class": "DESIGN_PROPOSAL",
+  "confidence": 0.96,
+  "sources": [
+    "governance/Z_UX_SKILLS.md",
+    "governance/Z_CLAIMS_SKILLS.md",
+    "docs/z_ux_z_claims_packet_schema_v1.md",
+    "docs/z_ux_mobile_flow_v1.md",
+    "docs/z_ux_microcopy_v1.md",
+    "docs/CURRENT_SYSTEM_STATE.md"
+  ],
+  "assumptions": [
+    "all UX-facing wording should be reviewable before public display",
+    "claims review must sit between UX wording and customer-visible output",
+    "packet routing should stay simple and traceable"
+  ],
+  "risks": [
+    "unsafe wording may pass into UI without review",
+    "UX copy may imply treatment or prevention",
+    "rewrites may be missed if routing is inconsistent"
+  ],
+  "decision": "NEEDS_REVIEW",
+  "next_required_validation": "Hermes review before runtime routing activation",
+  "approved_for_use": false,
+  "skills_used": [
+    "Workflow Structuring",
+    "Claims Routing",
+    "Knowledge Structuring"
+  ],
+  "flow_type": "ux_to_claims_review",
+  "conversion_risk": "MEDIUM",
+  "screen_sequence": [
+    "smart_result_summary",
+    "product_recommendation",
+    "fast_checkout",
+    "order_confirmation"
+  ],
+  "friction_points": [
+    "unsafe wording",
+    "unclear recommendation text",
+    "overclaiming risk"
+  ],
+  "primary_user_goal": "Ensure customer-facing UX wording is routed through claims-safe review before display.",
+  "screen_id": "product_recommendation",
+  "content_type": "recommendation_copy",
+  "ux_recommendation": "Route all recommendation-facing UX copy through Z-Claims before customer display.",
+  "next_design_step": "Route recommendation, summary, and checkout-facing UX copy through Z-Claims review before any customer-visible release."
+}

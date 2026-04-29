@@ -1,0 +1,12 @@
+ZILFIT LIVE EVAL SUMMARY - CASE 01
+baseline_file=live_eval/case_01/output/baseline_pipeline_output_v1.json
+rerun_file=live_eval/case_01/output/rerun_pipeline_output_v1.json
+exact_match=YES
+schema_version: MATCH | baseline='v1' | rerun='v1'
+scan_processing_mode: MATCH | baseline='native' | rerun='native'
+routing_input: MATCH | baseline='trigger_screen_id' | rerun='trigger_screen_id'
+vision_supported: MATCH | baseline=True | rerun=True
+ui_screen: MATCH | baseline='scan_capture_top' | rerun='scan_capture_top'
+ui_message: MATCH | baseline='Place your foot clearly in frame and capture the top view.' | rerun='Place your foot clearly in frame and capture the top view.'
+primary_cta: MATCH | baseline='capture_top_view' | rerun='capture_top_view'
+stability_score=100

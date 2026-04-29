@@ -1,0 +1,1523 @@
+{
+  "created_at": "2026-04-26T21:34:25.987239+00:00",
+  "since": "2026-03-27",
+  "today": "2026-04-26",
+  "result_count": 79,
+  "errors": [],
+  "results": [
+    {
+      "source": "OpenAlex",
+      "topic": "plantar_pressure_gait",
+      "title": "Finite element analysis-based optimization of longitudinal bending stiffness and rearfoot stability in carbon-plated running shoes",
+      "url": "https://openalex.org/W7143377008",
+      "year": "2026",
+      "journal_or_source": "Frontiers in Bioengineering and Biotechnology",
+      "doi": "https://doi.org/10.3389/fbioe.2026.1797727",
+      "abstract": "This research provides a novel standard of LBS testing and a novel FEA modeling framework for designing carbon-plated running shoes that enhance performance while reducing injury risks.",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Bio",
+        "Z-Physics",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "May affect plantar pressure mapping, gait interpretation, or balance logic."
+      ]
+    },
+    {
+      "source": "OpenAlex",
+      "topic": "plantar_pressure_gait",
+      "title": "Non-Implantable Prosthetic Devices to Stabilize the Posture and Body Balance",
+      "url": "https://openalex.org/W7143284001",
+      "year": "2026",
+      "journal_or_source": "Preprints.org",
+      "doi": "https://doi.org/10.20944/preprints202603.2162.v1",
+      "abstract": "The review explores the development of non-implantable vestibular devices designed to address postural instability, particularly in aging populations and patients with vestibular hypofunction. It establishes that balance relies on complex sensory integration and that the functional decline of this system creates a significant medical need. Three principal technological strategies are examined: sensory substitution devices, galvanic vestibular stimulation (GVS), and immersive visual feedback systems. Sensory substitution devices, which convert balance data into auditory, tactile, or electrotactile cues, demonstrate significant promise. Examples like vibrotactile belts provide feedback that reduces postural sway, enhancing stability and patient confidence. Parallel to this, GVS—using electrical currents applied to the mastoids—emerges as a potent non-invasive method to modulate vestibular pathways, improving balance control and even inducing neuroplastic changes, especially with stochastic “noisy” signals. Most recently develop devices include augmented and virtual reality technologies offer innovative visual feedback, creating enriched rehabilitation environments that accelerate rec",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Bio",
+        "Z-Physics",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "May affect plantar pressure mapping, gait interpretation, or balance logic.",
+        "May affect neuro-sensory stimulation hypothesis and claims safety."
+      ]
+    },
+    {
+      "source": "OpenAlex",
+      "topic": "plantar_pressure_gait",
+      "title": "Özel Öğrenme Güçlüğü Olan ve Olmayan Çocuklarda Plantar Basınç Dağılımı ve Denge Parametrelerinin Karşılaştırılması",
+      "url": "https://openalex.org/W7154905592",
+      "year": "2026",
+      "journal_or_source": "SDÜ SAĞLIK BİLİMLERİ DERGİSİ",
+      "doi": "https://doi.org/10.22312/sdusbed.1661172",
+      "abstract": "Amaç: Bu çalışma Özel Öğrenme Güçlüğü (ÖÖG) olan ve olmayan çocukların plantar basınç dağılımını ve denge parametrelerini karşılaştırmak amacıyla yapıldı. Gereç ve Yöntem: Çalışmaya Ayak Postür İndeksi (APİ) normal aralıkta bulunan 40 çocuk katıldı. Katılımcı çocuklardan ÖÖG olan 20 çocuk (ÖÖG grubu) ve ÖÖG olmayan 20 çocuk (Kontrol grubu) olarak ayrıldı. Çalışmaya katılan çocukların sosyodemografik bilgileri alındı. Dengeyi değerlendirmek için Pediatrik Denge Ölçeği (PDÖ) ve plantar basınç dağılımı analizi için DİASU Dijital Analiz Sistemi kullanıldı. Bulgular: ÖÖG grubundaki çocukların PDÖ skorlarının, kontrol grubundaki çocuklara göre anlamlı şekilde düşük olduğu görüldü (p",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Bio",
+        "Z-Physics",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "May affect plantar pressure mapping, gait interpretation, or balance logic."
+      ]
+    },
+    {
+      "source": "OpenAlex",
+      "topic": "plantar_pressure_gait",
+      "title": "Acute Effects of Muscle Flexibility and Myofascial Release of the Posterior Lower-Leg Muscles on Ankle Function in Individuals with Active Ankle Dorsiflexion Range of Motion Deficits",
+      "url": "https://openalex.org/W7154464034",
+      "year": "2026",
+      "journal_or_source": "Sports",
+      "doi": "https://doi.org/10.3390/sports14040154",
+      "abstract": "Ankle dorsiflexion range of motion (ADF-ROM) deficits has been linked to impaired function, altered gait, and injury risk. This study’s objective was to examine the acute effects of static self-stretching (SSS), foam rolling (FR), and instrument-assisted soft tissue mobilization (IASTM) of the posterior lower-leg on ADF-ROM and functional ankle outcomes in individuals with ADF-ROM deficits. Thirteen healthy, physically active college students with active ADF-ROM ≤ 13°, assessed in a non-weight-bearing position, completed all three interventions in a randomized, within-subject repeated-measures design. Pre- and post-intervention assessments included ADF-ROM, ankle plantar flexor isometric strength (APF-IS), single-leg countermovement vertical jump (SLCVJ), anterior reach distance in the Y-Balance Test (A-YBT), and gait parameters (contact time and plantar pressure). A two-way repeated-measures ANOVA with Bonferroni post hoc tests was used. Effect sizes reported as partial eta squared (ηp2) and Cohen dz. All interventions significantly improved ADF-ROM (p &lt; 0.001; ηp2 = 0.885), with IASTM showing the largest increase (50.7%, dz = 2.15), followed by FR (35.4%, dz = 2.20) and SSS (2",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Bio",
+        "Z-Physics",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "May affect plantar pressure mapping, gait interpretation, or balance logic."
+      ]
+    },
+    {
+      "source": "OpenAlex",
+      "topic": "plantar_pressure_gait",
+      "title": "COMPARATIVE EFFECTS OF KINESIO TAPING AND SOFT TISSUE MOBILIZATION ON CALF MUSCLE AND ACHILLES TENDON AMONG THE PATIENTS WITH PLANTAR FASCIITIS",
+      "url": "https://openalex.org/W7154187338",
+      "year": "2026",
+      "journal_or_source": "Journal of Nursing and Allied Health",
+      "doi": "https://doi.org/10.37939/jnah.v4i01.233",
+      "abstract": "Objective: This study aimed to compare the effects of Kinesio Taping (KT) and Instrument-Assisted Soft Tissue Mobilization (IASTM) on heel ‎pain and ankle dorsiflexion range of motion (ADROM) in patients with plantar fasciitis.‎ Study Design: A Quasi-experimental comparative study was conducted. Place and duration of study: The study was conducted at Allied Hospital and Civil Hospital, Faisalabad, from 1st March to 31st May 2025.‎. ‎ Material and Methods: A total of 30 participants aged between 21 and 50 years, diagnosed with plantar fasciitis, were selected using ‎purposive sampling and equally divided into two groups (n=15 each). Group 1 received Kinesio Taping (KT) ‎applied three times per week for four weeks, with each application maintained for 48 hours. Myofascial release ‎techniques were applied prior to taping as a preparatory intervention. Group 2 received Instrument-Assisted Soft ‎Tissue Mobilization (IASTM) targeting the calf musculature and Achilles tendon, also administered three times ‎weekly over a period of four weeks. Outcome measures included pain intensity, assessed using the Visual Analogue ‎Scale (VAS), and ankle dorsiflexion range of motion, measured with a un",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Bio",
+        "Z-Physics",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "May affect plantar pressure mapping, gait interpretation, or balance logic."
+      ]
+    },
+    {
+      "source": "OpenAlex",
+      "topic": "plantar_pressure_gait",
+      "title": "Estimation of ground reaction force direction in inline speed skating motion",
+      "url": "https://openalex.org/W7154000557",
+      "year": "2026",
+      "journal_or_source": "Frontiers in Sports and Active Living",
+      "doi": "https://doi.org/10.3389/fspor.2026.1782354",
+      "abstract": "This study proposes and verifies a method to estimate the ground reaction force (GRF) direction from supporting-leg posture during speed skating. We hypothesized that GRF direction can be accurately estimated from supporting-leg posture. Two estimation methods were developed under the assumption that the reaction force acts perpendicular to the shoe sole. One method used the coordinates of the front and rear blade ends and the ankle joint center (Est1). In contrast, the other used the coordinates of the front and rear blade ends and the knee joint center (Est2). The magnitude of each GRF component was estimated by multiplying the resultant force measured by the force plates (FP) by the corresponding unit vector components calculated in Est1 and Est2. GRFs measured using FP were adopted as true values to verify the proposed methods. Sixteen experienced university speed skaters performed straight and curved inline speed skating trials, during which three-dimensional kinematic and FP data were recorded. The root mean square error (RMSE) between FP measurements and estimates from Est1 and Est2 was calculated for each force component. The largest observed error was approximately 10% of ",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Bio",
+        "Z-Physics",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "May affect plantar pressure mapping, gait interpretation, or balance logic."
+      ]
+    },
+    {
+      "source": "OpenAlex",
+      "topic": "plantar_pressure_gait",
+      "title": "Medial plantar artery perforator and anterolateral thigh perforator flaps for complex forefoot reconstruction: A retrospective case series",
+      "url": "https://openalex.org/W7148900818",
+      "year": "2026",
+      "journal_or_source": "JPRAS Open",
+      "doi": "https://doi.org/10.1016/j.jpra.2026.03.038",
+      "abstract": "The combined use of an MPAPF and ALTPF provides a feasible and promising strategy for complex forefoot reconstruction, resulting in reliable functional and sensory recovery with satisfactory aesthetic outcomes.",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Bio",
+        "Z-Physics",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "May affect plantar pressure mapping, gait interpretation, or balance logic."
+      ]
+    },
+    {
+      "source": "OpenAlex",
+      "topic": "plantar_pressure_gait",
+      "title": "Three-dimensional kinematic analysis of running in rocker-soled shoes",
+      "url": "https://openalex.org/W7155416551",
+      "year": "2026",
+      "journal_or_source": "Journal of the Foot & Ankle",
+      "doi": "https://doi.org/10.30795/jfootankle.2026.v20.2088",
+      "abstract": "Introduction: Rocker-soled shoes have mechanical advantages by redistributing load to the forefoot and reducing local overload, and are widely used for foot and ankle pathologies and in sports models. By creating a plantar volume proximal to the metatarsal heads, the rocker establishes a fulcrum during support and can modify biomechanics. Compared with conventional shoes, the rocker shifts the point of rotation, redistributes pressure, and can alter the kinematic demands on the hip, knee, and ankle. Although some studies show changes in gait parameters with rocker shoes, the findings are heterogeneous, and there remains a lack of evidence from standardized three-dimensional (3D) analysis protocols in healthy individuals. The objective of this study was to compare 3D kinematic gait parameters in healthy individuals walking in conventional versus rocker shoes, with the hypothesis that rocker shoes would reduce peak knee flexion and ankle eversion/inversion amplitudes. Methods: Cross-sectional study with 20 healthy volunteers (12 men), with clinical alignment of the hindfoot between 0° and 10°. Patients with rigid deformities, prior foot surgery/fractures, rheumatic diseases, and othe",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Bio",
+        "Z-Physics",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "May affect plantar pressure mapping, gait interpretation, or balance logic.",
+        "May affect Z-CAD and Z-Printability rules."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "plantar_pressure_gait",
+      "title": "Quantitative flow ratio virtual pullback index predicts focal coronary artery disease identified on wire-based pullback pressure gradient",
+      "url": "https://doi.org/10.4330/wjc.v18.i4.116033",
+      "year": "2026",
+      "journal_or_source": "World Journal of Cardiology",
+      "doi": "10.4330/wjc.v18.i4.116033",
+      "abstract": "<jats:p>BACKGROUND</jats:p>\n                  <jats:p>Wire-based pressure pullback gradient (PPG) is the reference method for differentiating focal from diffuse coronary artery disease (CAD). However, it requires invasive instrumentation and hyperaemia. The quantitative flow ratio (QFR)-derived PPG [QFR virtual pullback (QVP) index] is a non-invasive alternative.</jats:p>\n                  <jats:p>AIM</jats:p>\n                  <jats:p>To evaluate the correlation between QVP index and PPG, and to explore the diagnostic performance of QVP index for identifying focal CAD.</jats:p>\n                  <jats:p>METHODS</jats:p>\n                  <jats:p>We retrospectively studied 74 patients (86 vessels) who underwent coronary angiography, fractional flow reserve (FFR), wire-based PPG, angio-based QFR and QVP index between December 2021 and October 2023. The primary analysis focused on FFR-significant lesions (FFR ≤ 0.75, n  = 31), as these are clinically relevant for guiding percutaneous coronary intervention. QVP index was calculated from the maximal QFR drop over 20 mm and the length of the epicardial segment with the greatest reduction. Focal disease was defined by PPG &gt; 0.73.</jat",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Bio",
+        "Z-Physics",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "May affect plantar pressure mapping, gait interpretation, or balance logic."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "plantar_pressure_gait",
+      "title": "Effects of high- and low-pressure EGR on performance and emissions of natural gas engines",
+      "url": "https://doi.org/10.1177/14680874261443890",
+      "year": "2026",
+      "journal_or_source": "International Journal of Engine Research",
+      "doi": "10.1177/14680874261443890",
+      "abstract": "<jats:p>Heavy-duty gas engines show significant advantages in reducing carbon emissions. However, heavy-duty gas engines still suffer knocking issues when operating under high-load conditions. This paper investigated the role of combined high- and low-pressure EGR in improving stoichiometric combustion in a six-cylinder 14.5 L heavy-duty gas engine. The cylinder pressure-derived combustion characteristics and intake-exhaust boundary parameters were performed to analyze the gas consumption tendency at various EGR rates and proportions. The results show that under low-speed high-load conditions, the EGR rate is enhanced significantly through low-pressure EGR circuit. The thermal efficiency is significantly improved by 3.1% from the original 41.97% with an increment of EGR rate. The advantages of a tumble combustion system at high EGR rates are mainly reflected in the reduction of cycle variation and ignition delay. At the same EGR rate, the proportion of high- and low-pressure EGR has little effect on performance because of the increased pumping loss with the higher low-pressure EGR ratio. Under the rated power condition, the results show that only very low low-pressure EGR can be ad",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Bio",
+        "Z-Physics",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "May affect plantar pressure mapping, gait interpretation, or balance logic."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "plantar_pressure_gait",
+      "title": "L-2-Hydroxyglutaric Aciduria Due to the Homozygous Variant c.905C&gt;T in L2HGDH Without Cognitive Deficits or Gait Disturbance: A Case Report",
+      "url": "https://doi.org/10.7759/cureus.107757",
+      "year": "2026",
+      "journal_or_source": "Cureus",
+      "doi": "10.7759/cureus.107757",
+      "abstract": "",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Bio",
+        "Z-Physics",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "May affect plantar pressure mapping, gait interpretation, or balance logic."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "plantar_pressure_gait",
+      "title": "Anatomy, function, biomechanics, and regenerative properties of Wharton’s jelly in the umbilical cord",
+      "url": "https://doi.org/10.4252/wjsc.v18.i4.118404",
+      "year": "2026",
+      "journal_or_source": "World Journal of Stem Cells",
+      "doi": "10.4252/wjsc.v18.i4.118404",
+      "abstract": "<jats:p>Over the past decade, the human umbilical cord has been recognized as a significant and ethical source of mesenchymal stem cells (MSCs), particularly Wharton’s jelly (WJ). WJ, as a connective tissue of the cord, possesses gelatinous uniformity and is being studied in regenerative medicine for certain modalities. This mucoid tissue provides a remarkable therapeutic potential through its extracellular matrix components, MSCs, and proteoglycans, while serving biochemical and protective functions during fetal development. This review highlights the advancements in WJ’s biological structure and function, biomechanical characteristics, and regenerative capacities, with a special focus on WJ-acquired MSCs alongside their clinical translation. Current research reveals that WJ-MSCs may be used in clinical settings as a potential source due to their high proliferation capacity, differentiation capabilities, and an immunomodulatory profile, compared to adult-tissue-derived stem cells. These significant properties make this tissue a good candidate for cell-based interventions.</jats:p>",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Bio",
+        "Z-Physics",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "May affect plantar pressure mapping, gait interpretation, or balance logic."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "plantar_pressure_gait",
+      "title": "In Vivo Validation of Computational Fluid Dynamics for Determining the Pressure Gradient for Multi-segmental Femoropopliteal Disease",
+      "url": "https://doi.org/10.1007/s00270-026-04427-1",
+      "year": "2026",
+      "journal_or_source": "CardioVascular and Interventional Radiology",
+      "doi": "10.1007/s00270-026-04427-1",
+      "abstract": "<jats:title>Abstract</jats:title>\n                  <jats:sec>\n                    <jats:title>Purpose</jats:title>\n                    <jats:p>In peripheral arterial disease, the presence of multi-segmental (adjacent) stenotic lesions is common. The application of anatomic grading and duplex ultrasound for defining the significance of multi-segmental lesions is limited. This study aimed to validate computational fluid dynamics (CFD) simulations for estimating the pressure gradient in patients with multi-segmental femoropopliteal disease.</jats:p>\n                  </jats:sec>\n                  <jats:sec>\n                    <jats:title>Materials and Methods</jats:title>\n                    <jats:p>Fifteen patients scheduled for angiography with multiple lesions in the femoropopliteal artery were prospectively enrolled. Pressures were recorded in rest and after papaverine administration using sheath and pressure-wire measurements. The resting pressure gradient of the full segment and the fractional flow reserve (FFR) of the full segment and individual lesions were calculated. These metrics were noninvasively replicated by CTA-based CFD using a reference flow rate (CFDm) and a duple",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Bio",
+        "Z-Physics",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "May affect plantar pressure mapping, gait interpretation, or balance logic."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "plantar_pressure_gait",
+      "title": "Pressure Regulation of the Lone‐Pair 5\n                    <i>\n                      s\n                      <sup>2</sup>\n                    </i>\n                    Electrons in Metal Phosphorous Chalcogenides SnPS\n                    <sub>3</sub>\n                    for Enhanced Photoelectric Effect",
+      "url": "https://doi.org/10.1002/smll.73559",
+      "year": "2026",
+      "journal_or_source": "Small",
+      "doi": "10.1002/smll.73559",
+      "abstract": "<jats:title>ABSTRACT</jats:title>\n                  <jats:p>\n                    Lone‐pair n\n                    <jats:italic>s</jats:italic>\n                    <jats:sup>2</jats:sup>\n                    electrons play a key role in designing high performance optoelectronic semiconductors, such as metal phosphorous chalcogenides (MPChs), for photoelectric detection technologies. However, how to regulate lone‐pair n\n                    <jats:italic>s</jats:italic>\n                    <jats:sup>2</jats:sup>\n                    electrons for superior properties attracts wide attention and are still major concerns for MPChs. Herein, we presented a lone‐pair‐electron regulation strategy to significantly enhance the photoelectric properties of SnPS\n                    <jats:sub>3</jats:sub>\n                    by pressure‐induced overlapping of lone‐pair electrons of Sn\n                    <jats:sup>2+</jats:sup>\n                    and non‐bonding electrons of S\n                    <jats:sup>2−</jats:sup>\n                    . As a result, the photocurrent density, responsivity, and external quantum efficiency of the SnPS\n                    <jats:sub>3</jats:sub>\n                    m",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Bio",
+        "Z-Physics",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "May affect plantar pressure mapping, gait interpretation, or balance logic."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "plantar_pressure_gait",
+      "title": "Tailored Hierarchical Porous Copper Architectures via Three Dimensional Printing and Pressure‐less Sintering for Next‐Generation Lithium‐Metal Batteries",
+      "url": "https://doi.org/10.1002/adem.202502623",
+      "year": "2026",
+      "journal_or_source": "Advanced Engineering Materials",
+      "doi": "10.1002/adem.202502623",
+      "abstract": "<jats:p>\n                    As the demand for safer, higher‐energy batteries continues to rise, researchers are looking beyond graphite, whose capacity is capped at 372  mAh g\n                    <jats:sup>−1</jats:sup>\n                    . Lithium metal stands out with its exceptional capacity of 3860  mAh g\n                    <jats:sup>−1</jats:sup>\n                    and very low reduction potential, but its practical use is hampered by dendrite growth, unstable interfaces, and large volume changes. Structural modification of copper current collectors is a promising strategy to stabilize lithium metal anodes. Three‐dimensional (3D) porous architectures can homogenize current distribution and suppress dendrite growth, yet their fabrication via combined 3D printing and pressureless sintering remains unexplored. In this study, a new fabrication approach is presented that combines 3D printing with pressureless sintering to create a hierarchical porous copper current collector. The interconnected pores guide lithium to deposit inside the structure, lowering the chance of dendrite‐induced short circuits. The large surface area helps reduce nucleation barriers and promotes a unifor",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Bio",
+        "Z-Physics",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "May affect plantar pressure mapping, gait interpretation, or balance logic.",
+        "May affect Z-CAD and Z-Printability rules."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "plantar_pressure_gait",
+      "title": "Wound Healing, Tissue Viability and Pressure Ulcers",
+      "url": "https://doi.org/10.1002/9781394206148.mdp0112",
+      "year": "2026",
+      "journal_or_source": "Manual of Dietetic Practice, 7th Edition",
+      "doi": "10.1002/9781394206148.mdp0112",
+      "abstract": "<jats:p>Wound healing is a complex process, and there are many factors that influence how quickly and how effectively wounds heal. Acute wounds tend to follow a predictable pattern of healing, whereas chronic wounds are slower to progress and remain in each healing phase for a longer duration. Pressure ulcers are generally localised skin and soft tissue injuries typically over bony prominences. Nutritional assessment is a consideration for each principle, to establish if undernutrition is a factor influencing the tissue type, infection or inflammatory response, the level of moisture in the wound bed and the surrounding skin integrity. Most assessment and screening tools include common information, for example, patient age, weight, gender, nutritional and mobility status, co‐morbidities and medications. The chapter also outlines the intrinsic and extrinsic factors that impact wound healing. It then presents a list of key nutrients and their specific roles in wound healing and potential complications resulting from their deficiencies.</jats:p>",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Bio",
+        "Z-Physics",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "May affect plantar pressure mapping, gait interpretation, or balance logic."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "foot_neuro_sensory_stimulation",
+      "title": "StepOverflow: PMC Overflows on AMD SEV",
+      "url": "https://doi.org/10.1145/3805690.3805727",
+      "year": "2026",
+      "journal_or_source": "Proceedings of the 9th Workshop on System Software for Trusted Execution",
+      "doi": "10.1145/3805690.3805727",
+      "abstract": "",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-NeuroFoot",
+        "Z-PsyFoot",
+        "Z-Claims"
+      ],
+      "relevance_to_zilfit": [
+        "May affect neuro-sensory stimulation hypothesis and claims safety."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "foot_neuro_sensory_stimulation",
+      "title": "MegaScale-Omni: A Hyper-Scale, Workload-Resilient System for MultiModal LLM Training in Production",
+      "url": "https://doi.org/10.1145/3767295.3803587",
+      "year": "2026",
+      "journal_or_source": "Proceedings of the 21st European Conference on Computer Systems",
+      "doi": "10.1145/3767295.3803587",
+      "abstract": "",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-NeuroFoot",
+        "Z-PsyFoot",
+        "Z-Claims"
+      ],
+      "relevance_to_zilfit": [
+        "May affect neuro-sensory stimulation hypothesis and claims safety."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "foot_neuro_sensory_stimulation",
+      "title": "Reduced pre-treatment isolated effective coherence between the dorsolateral prefrontal cortex and the subgenual anterior cingulate cortex as a potential predictive marker for remission following repetitive transcranial magnetic stimulation in major depressive disorder",
+      "url": "https://doi.org/10.1080/15622975.2026.2651741",
+      "year": "2026",
+      "journal_or_source": "The World Journal of Biological Psychiatry",
+      "doi": "10.1080/15622975.2026.2651741",
+      "abstract": "",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-NeuroFoot",
+        "Z-PsyFoot",
+        "Z-Claims"
+      ],
+      "relevance_to_zilfit": [
+        "May affect neuro-sensory stimulation hypothesis and claims safety."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "foot_neuro_sensory_stimulation",
+      "title": "Keystone with Linux PREEMPT_RT: Real-Time Enclaves on RISC-V?",
+      "url": "https://doi.org/10.1145/3805690.3805735",
+      "year": "2026",
+      "journal_or_source": "Proceedings of the 9th Workshop on System Software for Trusted Execution",
+      "doi": "10.1145/3805690.3805735",
+      "abstract": "",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-NeuroFoot",
+        "Z-PsyFoot",
+        "Z-Claims"
+      ],
+      "relevance_to_zilfit": [
+        "May affect neuro-sensory stimulation hypothesis and claims safety."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "foot_neuro_sensory_stimulation",
+      "title": "Design of an intelligent evaluation system for japanese literature translation ability based on deep learning",
+      "url": "https://doi.org/10.1007/s44163-026-01245-9",
+      "year": "2026",
+      "journal_or_source": "Discover Artificial Intelligence",
+      "doi": "10.1007/s44163-026-01245-9",
+      "abstract": "",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-NeuroFoot",
+        "Z-PsyFoot",
+        "Z-Claims"
+      ],
+      "relevance_to_zilfit": [
+        "May affect neuro-sensory stimulation hypothesis and claims safety."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "foot_neuro_sensory_stimulation",
+      "title": "Trusted and Transparent Time-Stamping Through TEEs and Network Time Security",
+      "url": "https://doi.org/10.1145/3805690.3805731",
+      "year": "2026",
+      "journal_or_source": "Proceedings of the 9th Workshop on System Software for Trusted Execution",
+      "doi": "10.1145/3805690.3805731",
+      "abstract": "",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-NeuroFoot",
+        "Z-PsyFoot",
+        "Z-Claims"
+      ],
+      "relevance_to_zilfit": [
+        "May affect neuro-sensory stimulation hypothesis and claims safety."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "foot_neuro_sensory_stimulation",
+      "title": "[PDF/Kindle] Rigged: The Incredible True Story of the Whistleblowers Jailed after Exposing the Rotten Heart of the Financial System by Andy Verity",
+      "url": "https://doi.org/10.55277/researchhub.kw3gacqu.1",
+      "year": "2026",
+      "journal_or_source": "",
+      "doi": "10.55277/researchhub.kw3gacqu.1",
+      "abstract": "",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-NeuroFoot",
+        "Z-PsyFoot",
+        "Z-Claims"
+      ],
+      "relevance_to_zilfit": [
+        "May affect neuro-sensory stimulation hypothesis and claims safety."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "foot_neuro_sensory_stimulation",
+      "title": "INTELLIGENT CYBERSECURITY SYSTEM USING MACHINE LEARNING FOR THREAT URL DETECTION",
+      "url": "https://doi.org/10.56726/irjmets95423",
+      "year": "2026",
+      "journal_or_source": "International Research Journal of Modernization in Engineering Technology &amp; Science",
+      "doi": "10.56726/irjmets95423",
+      "abstract": "",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-NeuroFoot",
+        "Z-PsyFoot",
+        "Z-Claims"
+      ],
+      "relevance_to_zilfit": [
+        "May affect neuro-sensory stimulation hypothesis and claims safety."
+      ]
+    },
+    {
+      "source": "OpenAlex",
+      "topic": "foot_massage_recovery",
+      "title": "Diabetic Neuropathy: From Etiopathogenesis to Integrative Therapeutic Strategies with Traditional Chinese Medicine",
+      "url": "https://openalex.org/W7151433012",
+      "year": "2026",
+      "journal_or_source": "International Journal of General Medicine",
+      "doi": "https://doi.org/10.2147/ijgm.s607918",
+      "abstract": "Diabetic neuropathy is a common and disabling complication of diabetes leading to numbness, pain, sensory loss and reduced quality of life. This review summarizes its diagnosis, epidemiology, genetic basis, pathophysiological mechanisms and current treatment strategies, with a focus on the role of traditional Chinese medicine (TCM). Its current common diagnostic methods include nerve conduction studies and corneal confocal microscopy. The development of diabetic neuropathy has been closely linked to chronic hyperglycemia, metabolic disorders, oxidative stress, inflammation, and mitochondrial dysfunction, and the current treatment mainly relies on glycemic control, neuroprotective agents, pain relief, exercise, and physical therapy, despite clinical benefits remain limited in many patients. TCM has shown potential value through herbal formulas, active natural compounds, acupuncture, moxibustion, and external therapies such as herbal foot baths, which have shown efficacies in relieving symptoms and protecting nerve function through antioxidant, anti-inflammatory, and autophagy-related effects, as well as regulation of gut microbiota. This review also highlights current research gaps,",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-NeuroFoot",
+        "Z-Bio",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "May affect neuro-sensory stimulation hypothesis and claims safety."
+      ]
+    },
+    {
+      "source": "OpenAlex",
+      "topic": "foot_massage_recovery",
+      "title": "Recovery Strategies for Athletes with Disabilities",
+      "url": "https://openalex.org/W7154846831",
+      "year": "2026",
+      "journal_or_source": "Revista de Ciencias del Ejercicio FOD",
+      "doi": "https://doi.org/10.29105/rce-fod.v21i1.158",
+      "abstract": "SUMMARY Recovery is a determining factor for performance and health in adapted sports, owing to the interaction among the functional, physiological, and psychological demands inherent to various disabilities. This narrative review synthesized scientific evidence on recovery methods used in athletes with disabilities, considering fatigue, muscle damage, sleep, nutrition, hydration, supplementation, training load, and psychological regulation. The results reveal heterogeneous data and evident limitations in characterizing athletic populations, as well as challenges associated with biomechanical constraints, chronic pain, and the emotional demands athletes face. The need for individualized, multidisciplinary interventions supported by scientific evidence is highlighted to optimize athletes' recovery in adapted sports. Finally, the review proposes the development and evaluation of new research lines and strategies to enhance the performance, safety, and overall well-being of athletes with disabilities. Keywords: Disability, adapted sport, recovery, fatigue, athlete.",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-NeuroFoot",
+        "Z-Bio",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "May affect neuro-sensory stimulation hypothesis and claims safety."
+      ]
+    },
+    {
+      "source": "OpenAlex",
+      "topic": "foot_massage_recovery",
+      "title": "Acute effects of “Munz Floor”® fascial stretching on autonomic nervous responses assessed by heart rate variability",
+      "url": "https://openalex.org/W7151375207",
+      "year": "2026",
+      "journal_or_source": "Frontiers in Physiology",
+      "doi": "https://doi.org/10.3389/fphys.2026.1793941",
+      "abstract": "The \"Munz Floor\"® fascial stretching method was effective for acutely increasing the parasympathetic activity. These results suggest \"Munz Floor\"® fascial stretching as a potential strategy for improving recovery and reducing the impact of stress and fatigue.",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-NeuroFoot",
+        "Z-Bio",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "May affect neuro-sensory stimulation hypothesis and claims safety."
+      ]
+    },
+    {
+      "source": "OpenAlex",
+      "topic": "foot_massage_recovery",
+      "title": "Expression of Concern Notice: Evaluation and Monitoring System for Exercise Rehabilitation Based on Combined Chinese and Western Medicine Technology",
+      "url": "https://openalex.org/W7155534610",
+      "year": "2026",
+      "journal_or_source": "EAI Endorsed Transactions on Pervasive Health and Technology",
+      "doi": "https://doi.org/10.4108/eetpht.11.12770",
+      "abstract": "We, the publisher, are issuing an expression of concern about Yunxiang Shang (2024) Evaluation and Monitoring System for Exercise Rehabilitation Based on Combined Chinese and Western Medicine Technology. https://doi.org/10.4108/eetpht.10.5138 There is a concern over the integrity of the peer review review process and suspected manipulation of the editorial process. The investigation is ongoing and we advise scholars to exercise caution when referencing this manuscript.",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-NeuroFoot",
+        "Z-Bio",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "May affect neuro-sensory stimulation hypothesis and claims safety."
+      ]
+    },
+    {
+      "source": "OpenAlex",
+      "topic": "foot_massage_recovery",
+      "title": "Effects of Lower-Leg Fascial Flossing on Flexibility and Performance in Collegiate Distance Runners: Ultrasound Evaluation of Fascial Gliding",
+      "url": "https://openalex.org/W7147996731",
+      "year": "2026",
+      "journal_or_source": "International Journal of Sports Physical Therapy",
+      "doi": "https://doi.org/10.26603/001c.158518",
+      "abstract": "Level 2.",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-NeuroFoot",
+        "Z-Bio",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "May affect neuro-sensory stimulation hypothesis and claims safety."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "foot_massage_recovery",
+      "title": "Cultivating change: Addressing shifts in knowledge and skills required for landscape-scale nature recovery",
+      "url": "https://doi.org/10.1007/s13280-026-02404-z",
+      "year": "2026",
+      "journal_or_source": "Ambio",
+      "doi": "10.1007/s13280-026-02404-z",
+      "abstract": "<jats:title>Abstract</jats:title>\n                  <jats:p>Delivering landscape-scale nature recovery depends on the effective acquisition and development of skills across agricultural, environmental, and governance contexts. This study draws on 25 semi-structured interviews with farmers, land managers, and intermediary organisations (delivery partners, bridging organisations, extension/advisory services) across England to examine how skills are acquired and developed in practice. Informed by taskscapes literature and structured around a novel five-domain analytical framework—systems thinking, lifelong and life-wide learning, collaborative partnerships, agri-environmental entrepreneurship, and technical expertise—findings highlight the centrality of collaborative, entrepreneurial, and technical capacities. They also reveal core tensions and misalignments: between (1) policy ambition and institutional capacity; (2) fragmentation of learning pathways caught between standardisation and flexibility; and (3) entrepreneurial initiative within compliance-oriented governance structures. The research underscores the need for tailored skill frameworks spanning formal, informal, and non-form",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-NeuroFoot",
+        "Z-Bio",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "May affect neuro-sensory stimulation hypothesis and claims safety."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "foot_massage_recovery",
+      "title": "[PDF/Kindle] A Heart Full of Hatred by Derek Landy",
+      "url": "https://doi.org/10.55277/researchhub.hp0zolm8.1",
+      "year": "2026",
+      "journal_or_source": "",
+      "doi": "10.55277/researchhub.hp0zolm8.1",
+      "abstract": "",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-NeuroFoot",
+        "Z-Bio",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "May affect neuro-sensory stimulation hypothesis and claims safety."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "foot_massage_recovery",
+      "title": "Revision rate and postoperative volume development of chronic subdural hematomas after burr hole craniotomy in combination with tranexamic acid vs. surgery alone – a single-center propensity score- matched analysis",
+      "url": "https://doi.org/10.21203/rs.3.rs-9361375/v1",
+      "year": "2026",
+      "journal_or_source": "",
+      "doi": "10.21203/rs.3.rs-9361375/v1",
+      "abstract": "<title>Abstract</title>\n                <p>\n                  <bold>Background</bold>\n                  Chronic subdural hematoma (cSDH) is a common intracranial hemorrhage in elderly patients and is associated with substantial postoperative recurrence rates. Tranexamic acid (TXA) has been proposed as an adjuvant therapy to reduce recurrence by targeting hyperfibrinolysis; however, its efficacy and impact on hematoma volume evolution remain controversial.\n                  <bold>Methods</bold>\n                  We performed a retrospective cohort study of adult patients who underwent burr-hole evacuation with subdural drainage for cSDH at a single neurosurgical center between 2012 and 2024. Patients receiving postoperative TXA within 48 hours for at least 30 days were compared with patients treated surgically without TXA. Propensity score matching (1:1) was applied to balance baseline characteristics. The primary outcome was revision surgery for recurrent cSDH within 3 months. Secondary outcomes included postoperative hematoma volume evolution and all-cause mortality.\n                  <bold>Results</bold>\n                  After matching, 73 patients were included in each group wi",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-NeuroFoot",
+        "Z-Bio",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "May affect plantar pressure mapping, gait interpretation, or balance logic.",
+        "May affect neuro-sensory stimulation hypothesis and claims safety."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "foot_massage_recovery",
+      "title": "Impact of GST Rate Rationalisation on Essential Commodity Prices and Household Consumption Patterns in Karnataka: An Empirical Study",
+      "url": "https://doi.org/10.55041/ijcope.v2i4.752",
+      "year": "2026",
+      "journal_or_source": "International Journal of Creative and Open Research in Engineering and Management",
+      "doi": "10.55041/ijcope.v2i4.752",
+      "abstract": "<jats:p>The rationalization of tax rates under the Goods and Services Tax represents a significant development in India’s indirect tax reform framework. This study examines the impact of GST rate rationalization (commonly referred to as GST 2.0 reforms) on essential commodity prices and household consumption patterns in Karnataka during the period 2024–2026. The primary objective is to analyse whether GST rate revisions have resulted in measurable changes in retail prices and whether these changes have influenced household consumption behaviour across income groups.\nThe study is based on secondary data collected from the Karnataka Economic Survey, Consumer Price Index (CPI) reports, household consumption expenditure data from the National Sample Survey Office, and publications of the Reserve Bank of India. Statistical tools such as trend analysis, correlation analysis, regression analysis, and price elasticity estimation are used to evaluate the relationship between GST rate revisions, commodity price trends, and consumption behaviour.\n\n\nThe findings indicate that GST rate rationalisation has contributed to moderate price stabilisation in selected essential commodities. However, th",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-NeuroFoot",
+        "Z-Bio",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "May affect neuro-sensory stimulation hypothesis and claims safety."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "foot_massage_recovery",
+      "title": "Mapping dark matter in the Bullet Cluster using JWST imaging and spectroscopy",
+      "url": "https://doi.org/10.1051/0004-6361/202659214",
+      "year": "2026",
+      "journal_or_source": "Astronomy &amp; Astrophysics",
+      "doi": "10.1051/0004-6361/202659214",
+      "abstract": "<jats:p>The Bullet Cluster (1E 0657–56), located at a redshift of 0.296, is among the best-known merging galaxy clusters and a key laboratory for dark matter studies. Although the mass distribution in the Bullet Cluster has been modelled using an increasing number of multiply imaged galaxies, only six systems had spectroscopic redshifts published prior to this work, which are essential for system confirmation and as lens model constraints.\nWe present an updated gravitational lens model of the Bullet cluster, obtained by combining JWST NIRCam imaging and NIRSpec spectroscopy. Our lens model has been constrained on the basis of a catalogue of 135 secure multiple images from 27 background galaxies with spectroscopic redshifts, uniformly covering both subclusters and a wide redshift range of 0.9 -- 6.7. We also provide a catalogue of 199 multiple image candidates.\nWe modelled the cluster with the parametric lens modelling code . We incorporated several large-scale halos, cluster member galaxies, intracluster gas, and group-scale halos surrounding the cluster core, motivated by spectroscopic studies of cluster member kinematics. Lenstool\nWe describe the main cluster component with a com",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-NeuroFoot",
+        "Z-Bio",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "May affect neuro-sensory stimulation hypothesis and claims safety."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "foot_massage_recovery",
+      "title": "Effect of foliar treatments with silver-containing and microbiological preparations on the survival rate, growth and quality of grafted grapevine seedlings in the nursery",
+      "url": "https://doi.org/10.30679/2219-5335-2026-2-98-117-124",
+      "year": "2026",
+      "journal_or_source": "Fruit growing and viticulture of South Russia",
+      "doi": "10.30679/2219-5335-2026-2-98-117-124",
+      "abstract": "<jats:p>Abstract. The effect of foliar treatments with silver-containing and microbiological preparations on the\nsurvival rate, growth processes, and quality formation of grafted grapevine seedlings grown in a nursery\nwas studied. The research was conducted in the nursery complex of OOO AF Yubileynaya (Temryuk\nDistrict) on the Cabernet Sauvignon variety plants grafted onto the Kober 5BB rootstock. The experiment\nevaluated the preparations Plantarel, Polyplata Saikuron, and Metabacterin, as well as their combined application. Treatments were carried out five times during the period of active plant growth. It was established\nthat the application of the studied preparations had a pronounced effect on the adaptive and growth processes of grafted plants. Foliar treatments with silver-containing preparations provided a significant increase in the survival rate of grafted cuttings by 13.0-17.4 % compared with the control. The microbiological preparation Metabacterin demonstrated the most pronounced growth-stimulating effect, increasing\nshoot length by up to 49.9 %. In all experimental treatments, an increase in the yield of standard seedlings\nby 5.5-34.8 % was observed. The highest yield ",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-NeuroFoot",
+        "Z-Bio",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "May affect neuro-sensory stimulation hypothesis and claims safety."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "foot_massage_recovery",
+      "title": "[download pdf] Heart-Struck by Sebb Argo, Dion Yorkie",
+      "url": "https://doi.org/10.55277/researchhub.g57wvay1.1",
+      "year": "2026",
+      "journal_or_source": "",
+      "doi": "10.55277/researchhub.g57wvay1.1",
+      "abstract": "",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-NeuroFoot",
+        "Z-Bio",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "May affect neuro-sensory stimulation hypothesis and claims safety."
+      ]
+    },
+    {
+      "source": "OpenAlex",
+      "topic": "female_gait_pelvis_q_angle",
+      "title": "School-based screening for scoliosis and foot biomechanical abnormalities: a study of prevalence, plantar pressure, and gait among adolescents in Haidian District, Beijing",
+      "url": "https://openalex.org/W7147106949",
+      "year": "2026",
+      "journal_or_source": "Frontiers in Pediatrics",
+      "doi": "https://doi.org/10.3389/fped.2026.1749070",
+      "abstract": "Key findings highlight the need for early and targeted interventions within school health programs. A gender-stratified approach is recommended: implementing gender-sensitive screening for scoliosis, while adopting universal promotion measures for foot health. Specific priorities include increasing flatfoot screening frequency among 1st-2nd grade boys and enhancing posture-related health education for adolescent girls during key transitional growth phases. These strategies aim to mitigate long-term musculoskeletal complications.",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-FemmeBiomech",
+        "Z-Bio",
+        "Z-Physics"
+      ],
+      "relevance_to_zilfit": [
+        "May affect plantar pressure mapping, gait interpretation, or balance logic.",
+        "May affect FEMME-RECOVER female biomechanics logic."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "female_gait_pelvis_q_angle",
+      "title": "Romanticism Bewitched",
+      "url": "https://doi.org/10.1017/9781009650045",
+      "year": "2026",
+      "journal_or_source": "",
+      "doi": "10.1017/9781009650045",
+      "abstract": "<jats:p>The Romantic-era witch was a remarkably flexible symbol of political and social disorder. The then-recent seventeenth-century witch hunts had already revealed deep anxieties about the subversive potential of women, and the witches who stalk the pages of Gothic poetry and prose or glare menacingly from works of art by Henry Fuseli and William Blake embody revolutionary anger and the possibility of radical social transformation. Despite the fears surrounding such figures, however, the Romantic period also saw witchcraft open up in conceptually new ways, enabling writers and artists to envision alternative means of interacting in the world that were not predicated on the subordination of women and other marginalized groups. Here, Orianne Smith embarks on an interdisciplinary reimagining of witchcraft, women's writing, religion, and social reform, providing original insights on the history of witchcraft and its influence on public discourse, literature and art.</jats:p>",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-FemmeBiomech",
+        "Z-Bio",
+        "Z-Physics"
+      ],
+      "relevance_to_zilfit": [
+        "May affect plantar pressure mapping, gait interpretation, or balance logic.",
+        "May affect FEMME-RECOVER female biomechanics logic."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "female_gait_pelvis_q_angle",
+      "title": "Clinical outcomes of restricting-type anorexia nervosa onset in female adolescents and young adults aged 12–24 years during Japan’s first COVID-19 state of emergency",
+      "url": "https://doi.org/10.1186/s40337-026-01619-5",
+      "year": "2026",
+      "journal_or_source": "Journal of Eating Disorders",
+      "doi": "10.1186/s40337-026-01619-5",
+      "abstract": "",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-FemmeBiomech",
+        "Z-Bio",
+        "Z-Physics"
+      ],
+      "relevance_to_zilfit": [
+        "May affect plantar pressure mapping, gait interpretation, or balance logic.",
+        "May affect FEMME-RECOVER female biomechanics logic."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "female_gait_pelvis_q_angle",
+      "title": "An Analytical Study on Sliding Mode Strength at the Bonded Interface Depending on the Inclined Angle of Unidirectional CFRP Inclined Double Cantilever with Laminated Structure",
+      "url": "https://doi.org/10.14419/ijet.v7i3.24.22810",
+      "year": "2026",
+      "journal_or_source": "International Journal of Engineering and Technology",
+      "doi": "10.14419/ijet.v7i3.24.22810",
+      "abstract": "<jats:p>Background/Objectives: CFRP is getting a great deal of attention with its next-generation lightweight materials.  Weight lightening can be greatly improved by designing the structure using the method of bonding lightweight materials.\nMethods/Statistical analysis: This study was based on BS (British standard) 7991 for mode II (Sliding mode).  BS 7991 is a basic research method for identifying the basic elements of CZM(Cohesive zone method). In the mode II as sliding mode of the inclined double cantilever beam, the effects on the materials and the mechanical properties shall be identified when the sliding load working at the bonded interface appears.\nFindings: Unidirectional CFRP shall be designed in accordance with quasi-isotropic laminate in order for its elastic stiffness to be designed similarly at all the coordination directions. Therefore, the laminate structure used in this study was designed to be [0 / ± 603]s. This is because the adhesion force acting on the bonded interface varies according to the progress of the failure when the interfacial failure occurs in the mode II as sliding mode of the inclined double cantilever. Quasi-isotropic laminate structure has an adv",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-FemmeBiomech",
+        "Z-Bio",
+        "Z-Physics"
+      ],
+      "relevance_to_zilfit": [
+        "May affect plantar pressure mapping, gait interpretation, or balance logic.",
+        "May affect FEMME-RECOVER female biomechanics logic."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "female_gait_pelvis_q_angle",
+      "title": "Sporadic Mixed Heterotopic Tissue Choristoma of the Middle Ear in an Adolescent Female: A Rare Case Report",
+      "url": "https://doi.org/10.1177/01455613261432967",
+      "year": "2026",
+      "journal_or_source": "Ear, Nose &amp; Throat Journal",
+      "doi": "10.1177/01455613261432967",
+      "abstract": "<jats:p>Choristomas are rare benign developmental lesions composed of histologically normal tissue located in an abnormal (ectopic) anatomical site. Their occurrence in the middle ear is uncommon and may mimic more common pathologies such as chronic otitis media or cholesteatoma, often leading to diagnostic challenges. We report a 16-year-old female who presented with chronic left ear discharge and hearing loss for 8 years. Examination revealed bilateral grade I microtia with a narrow external auditory canal. Pure tone audiometry showed bilateral conductive hearing loss, and high-resolution computed tomography demonstrated a soft-tissue mass in the left middle ear and mastoid with ossicular erosion. A transmeatal exploratory tympanotomy was performed, revealing an encapsulated small brown soft-tissue mass limited to the tympanic cavity complete excision done. Histopathological examination confirmed a mixed heterotopic tissue choristoma composed of skin, adnexal structures, fibroadipose tissue, muscle, cartilage, and salivary gland elements. The postoperative course was uneventful, with hearing improvement and no recurrence at 6-month follow-up. This case highlights the importance o",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-FemmeBiomech",
+        "Z-Bio",
+        "Z-Physics"
+      ],
+      "relevance_to_zilfit": [
+        "May affect plantar pressure mapping, gait interpretation, or balance logic.",
+        "May affect FEMME-RECOVER female biomechanics logic."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "3d_printed_tpu_footwear",
+      "title": "Logarithmic corrections to O($$a^2$$) effects in lattice QCD with unrooted staggered quarks",
+      "url": "https://doi.org/10.1140/epjc/s10052-026-15460-2",
+      "year": "2026",
+      "journal_or_source": "The European Physical Journal C",
+      "doi": "10.1140/epjc/s10052-026-15460-2",
+      "abstract": "<jats:title>Abstract</jats:title>\n                  <jats:p>\n                    We derive the asymptotic lattice-spacing dependence\n                    <jats:inline-formula>\n                      <jats:alternatives>\n                        <jats:tex-math>$$a^2[2b_0\\bar{g}^2(1/a)]^{\\hat{\\gamma }_i}$$</jats:tex-math>\n                        <mml:math xmlns:mml=\"http://www.w3.org/1998/Math/MathML\">\n                          <mml:mrow>\n                            <mml:msup>\n                              <mml:mi>a</mml:mi>\n                              <mml:mn>2</mml:mn>\n                            </mml:msup>\n                            <mml:msup>\n                              <mml:mrow>\n                                <mml:mo>[</mml:mo>\n                                <mml:mn>2</mml:mn>\n                                <mml:msub>\n                                  <mml:mi>b</mml:mi>\n                                  <mml:mn>0</mml:mn>\n                                </mml:msub>\n                                <mml:msup>\n                                  <mml:mrow>\n                                    <mml:mover>\n                                      <mml:mrow>\n                          ",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-CAD",
+        "Z-Printability",
+        "Z-Physics"
+      ],
+      "relevance_to_zilfit": [
+        "May affect Z-CAD and Z-Printability rules."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "3d_printed_tpu_footwear",
+      "title": "Discontinuous 3D Printing of Amorphous Photonic Crystal Hydrogels for Multifunctional Applications",
+      "url": "https://doi.org/10.1002/smll.73576",
+      "year": "2026",
+      "journal_or_source": "Small",
+      "doi": "10.1002/smll.73576",
+      "abstract": "<jats:title>ABSTRACT</jats:title>\n                  <jats:p>Amorphous photonic crystals (APCs) offer angle‐independent structural color for reliable sensing, yet their precise 3D fabrication remains challenging due to the tendency of particles to self‐assemble into ordered structures. We develop a discontinuous digital light processing 3D printing strategy combining discrete ink reflow and rapid curing to construct disordered APCs hydrogels. The printed hydrogels integrate single‐sized polymer nanospheres and MXene nanosheets to achieve structural color, mechanical robustness, and interactive optical/electrical responsiveness. The structural color responds to moisture‐induced swelling yet remains unchanged under mechanical deformation because of strain‐accommodating microcracks. These features ensure reliable visual feedback without strain interference. Meanwhile, mechanical deformation modulates the conductive network and thus provides a complementary electrical response. In diabetic wound models, the hydrogel enables precise electrical stimulation and provides visual alerts of micro‐swelling to prevent secondary damage from unnoticed volumetric changes. This strategy provides a g",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-CAD",
+        "Z-Printability",
+        "Z-Physics"
+      ],
+      "relevance_to_zilfit": [
+        "May affect neuro-sensory stimulation hypothesis and claims safety.",
+        "May affect Z-CAD and Z-Printability rules."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "3d_printed_tpu_footwear",
+      "title": "Enhancing Elementary Students' Mathematical Reasoning through Realistic Mathematics Education:  A Quasi-Experimental Study on 3D Geometry",
+      "url": "https://doi.org/10.58421/misro.v5i2.1220",
+      "year": "2026",
+      "journal_or_source": "Journal of Mathematics Instruction, Social Research and Opinion",
+      "doi": "10.58421/misro.v5i2.1220",
+      "abstract": "<jats:p>This study addresses the limited empirical evidence on the effectiveness of the Realistic Mathematics Education approach in improving elementary students' mathematical reasoning skills, particularly in three-dimensional geometry. The objective of this research is to examine whether the Realistic Mathematics Education approach significantly enhances fifth-grade students' mathematical reasoning abilities in learning three-dimensional geometry. The study employed an applied quasi-experimental design with a Non-Equivalent Control Group. Two fifth-grade classes at SD Muhammadiyah Ngijon 1 were selected as the experimental and control groups. Data were collected through pretest and posttest using a validated and reliable five-item essay test that measured students' mathematical reasoning skills. Data analysis was conducted using the Shapiro-Wilk normality test, Levene homogeneity test, Independent Samples t test, and normalized gain analysis. The findings revealed a statistically significant difference between the posttest scores of the two groups (p = 0.031), which is lower than the 0.05 threshold. The experimental group achieved an N-Gain score of 79.75 percent, categorized as ",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-CAD",
+        "Z-Printability",
+        "Z-Physics"
+      ],
+      "relevance_to_zilfit": [
+        "May affect Z-CAD and Z-Printability rules."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "3d_printed_tpu_footwear",
+      "title": "Guidewire-Assisted 3D Mapping of Intramural Ventricular Arrhythmia: A Case Report",
+      "url": "https://doi.org/10.21203/rs.3.rs-9197870/v1",
+      "year": "2026",
+      "journal_or_source": "",
+      "doi": "10.21203/rs.3.rs-9197870/v1",
+      "abstract": "<title>Abstract</title>\n                <p>Background\n Intramural PVCs (premature ventricular complexes) can be challenging to treat due to the deep origin within the myocardium.\nCase Summary\n A 45-year-old female with frequent palpitations was found to have a 24% PVC burden over 24 hours and preserved LVEF (left ventricular ejection fraction). An electrophysiology study and 3D electroanatomical mapping showed features of intramural PVCs. The coronary venous system was further mapped using VisionWire (0.014-inch). Catheter ablation at the basal interventricular septum from the right led to PVC suppression with non-inducibility of the clinical PVC at the end of the case.\nConclusion\n The use of multimodality mapping and ablation tool has enabled us to manage cases effectively with good clinical outcomes.</p>",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-CAD",
+        "Z-Printability",
+        "Z-Physics"
+      ],
+      "relevance_to_zilfit": [
+        "May affect FEMME-RECOVER female biomechanics logic.",
+        "May affect Z-CAD and Z-Printability rules."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "3d_printed_tpu_footwear",
+      "title": "A structural bioinformatics framework for prioritizing pH-sensitive proteins from 3D structural features",
+      "url": "https://doi.org/10.1186/s12859-026-06415-1",
+      "year": "2026",
+      "journal_or_source": "BMC Bioinformatics",
+      "doi": "10.1186/s12859-026-06415-1",
+      "abstract": "",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-CAD",
+        "Z-Printability",
+        "Z-Physics"
+      ],
+      "relevance_to_zilfit": [
+        "May affect Z-CAD and Z-Printability rules."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "3d_printed_tpu_footwear",
+      "title": "Ver 𝗢𝗻𝗹𝚒ɴᴇ ❝Billie Eilish Hit Me Hard and Soft: The Tour (en 3D)❞ (2026) 𝗣𝗲𝗹í𝗰𝘂𝗹𝗮 Co𝚖𝚙𝚕𝚎𝘁𝗮 𝗟𝗮𝘁ɪɴᴏ 𝙷D 𝗚ʀ𝚊𝘁𝗶s",
+      "url": "https://doi.org/10.55277/researchhub.74j6a1cq.1",
+      "year": "2026",
+      "journal_or_source": "",
+      "doi": "10.55277/researchhub.74j6a1cq.1",
+      "abstract": "",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-CAD",
+        "Z-Printability",
+        "Z-Physics"
+      ],
+      "relevance_to_zilfit": [
+        "May affect Z-CAD and Z-Printability rules."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "3d_printed_tpu_footwear",
+      "title": "3D Printed Omniphobic Slippery Liquid Infused Porous Surfaces for Low Surface Tension Repellency",
+      "url": "https://doi.org/10.1002/admt.71004",
+      "year": "2026",
+      "journal_or_source": "Advanced Materials Technologies",
+      "doi": "10.1002/admt.71004",
+      "abstract": "<jats:title>ABSTRACT</jats:title>\n                  <jats:p>\n                    Omniphobicity is gaining increasing interest due to its ability to promote dynamic liquid mobility and impart multifunctional properties, such as self‐cleaning, antifouling, and anti‐icing. Among the strategies for achieving omniphobicity, Slippery Liquid‐Infused Porous Surfaces (SLIPS) stand out for their ability to repel liquids across a wide range of surface tensions with high stability. However, so far, integrating SLIPS into complex 3D structures while maintaining omniphobicity and low surface‐tension repellency has remained challenging. Here, we report the fabrication of omniphobic 3D‐printed SLIPS via digital light processing (DLP). The printed architectures feature an internal reservoir connected to the surface through microchannel networks, enabling stable retention and continuous replenishment of a fluorinated lubricant. A photocurable ink composed of acrylate monomers and silica nanoparticles was formulated to enable 3D printing of high‐resolution porous structures, which were subsequently silanized with a fluorinated precursor to ensure lubricant compatibility and enhance mechanical robustn",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-CAD",
+        "Z-Printability",
+        "Z-Physics"
+      ],
+      "relevance_to_zilfit": [
+        "May affect Z-CAD and Z-Printability rules."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "3d_printed_tpu_footwear",
+      "title": "Thermomechanical Behaviour of Axially Restrained Prestressed Hollow-Core Slabs in Fire: A 3D Nonlinear Finite Element Investigation of Thermal Lag during Fire Decay",
+      "url": "https://doi.org/10.70382/ajbegr.v11i4.063",
+      "year": "2026",
+      "journal_or_source": "Journal of Built Environment and Geological Research",
+      "doi": "10.70382/ajbegr.v11i4.063",
+      "abstract": "<jats:p>Precast prestressed hollow-core (PHC) concrete slabs are widely utilized in modern construction for their material efficiency, yet their thermomechanical response during the critical fire decay phase remains insufficiently quantified. This study aims to evaluate the structural resilience of PHC slabs under realistic fire scenarios by developing a high-fidelity 3D nonlinear finite element (FE) framework in ABAQUS. The methodology explicitly accounts for the \"cavity effect\" - incorporating internal radiation and convection within longitudinal voids - and utilizes a sequentially coupled thermal-structural approach. Data was collected through the validation of the numerical model against established experimental benchmarks, achieving high predictive accuracy with thermal error margins below 2%. A parametric investigation was conducted to quantify the influence of axial restraint stiffness and varying fire exposure types, including ISO 834 and Eurocode parametric curves. Findings demonstrate that Compressive Arching Action (CAA) in restrained slabs significantly mitigates deformation, reducing peak mid-span deflections by up to 78.7% compared to simply supported configurations. ",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-CAD",
+        "Z-Printability",
+        "Z-Physics"
+      ],
+      "relevance_to_zilfit": [
+        "May affect Z-CAD and Z-Printability rules."
+      ]
+    },
+    {
+      "source": "OpenAlex",
+      "topic": "smart_insole_pressure_sensors",
+      "title": "The Role of Artificial Intelligence and Machine Learning in Balance Classification Using Center of Pressure – A Comprehensive Review",
+      "url": "https://openalex.org/W7153327281",
+      "year": "2026",
+      "journal_or_source": "International Journal of Online and Biomedical Engineering (iJOE)",
+      "doi": "https://doi.org/10.3991/ijoe.v22i04.59523",
+      "abstract": "Balance control is essential for safe daily activities, and impaired postural stability is strongly associated with fall risk, particularly in older adults. This systematic review examined the performance of artificial intelligence (AI) and machine learning (ML) methods for balance classification using Center of Pressure (CoP) data. Following PRISMA guidelines, 47 studies published between 2015 and 2025 were included. Force-platform-based post-urography remained the predominant sensing modality, while wearable technologies increasingly enabled assessment beyond laboratory environments. Support vector machine (SVM) was the most frequently used algorithm, followed by neural network (NN)-based models. Deep learning (DL) architectures, including convolutional neural networks (CNN) and long shortterm memory networks (LSTM), achieved high classification accuracy by capturing complex balance patterns. Traditional ML models also demonstrated strong performance with lower computational demands and greater interpretability, supporting clinical feasibility. However, class imbalance remains a key limitation, often reducing sensitivity in high-risk groups. Future studies should prioritize robus",
+      "evidence_level": "MEDIUM",
+      "affected_agents": [
+        "Z-Bio",
+        "Z-Ops",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "May affect plantar pressure mapping, gait interpretation, or balance logic."
+      ]
+    },
+    {
+      "source": "OpenAlex",
+      "topic": "smart_insole_pressure_sensors",
+      "title": "A review and evaluation of balance training methods for young adults: mechanisms, applications, and effects",
+      "url": "https://openalex.org/W7148545671",
+      "year": "2026",
+      "journal_or_source": "Sport Sciences for Health",
+      "doi": "https://doi.org/10.1007/s11332-025-01633-1",
+      "abstract": "Abstract Purpose This mapping review aims to systematically organize and compare the applications of various balance training methods and their associated quantitative assessment tools in healthy young adults. The study establishes a \"device-method-population adaptation\" framework to identify areas of concentrated evidence and research gaps in the field. Methods A systematic search of PubMed and Web of Science was conducted for experimental research published between 2014 and 2025. Inclusion criteria focused on original research involving healthy participants. Ultimately, a total of 64 studies focusing on healthy young adults (aged 18–35) were included in this review. Interventions were categorized into six pathways: balance board/unstable surface, wearable/sensor-based, audiovisual feedback, hands-on/manual, platform-based, and other integrated methods. Results Analysis of the 64 core studies revealed that unstable surface training is the most frequently researched approach (26.4%), followed by wearable/sensor-based training (20.3%). Key mechanisms identified include sensory-input reweighting, perturbation adaptation, and optimized muscle coordination. Technology-based interventio",
+      "evidence_level": "MEDIUM",
+      "affected_agents": [
+        "Z-Bio",
+        "Z-Ops",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "May affect plantar pressure mapping, gait interpretation, or balance logic."
+      ]
+    },
+    {
+      "source": "OpenAlex",
+      "topic": "smart_insole_pressure_sensors",
+      "title": "Emergency Clinical Decision for Sports Injury Management: A Wearable Sensor-Driven Framework from Training to Rehabilitation",
+      "url": "https://openalex.org/W7150168246",
+      "year": "2026",
+      "journal_or_source": "Biosensors",
+      "doi": "https://doi.org/10.3390/bios16040205",
+      "abstract": "Sports-related injuries present challenges across training, acute care, and rehabilitation, and largely rely on episodic, subjective, and delayed assessment methods. Wearable sensor technologies have emerged as powerful tools for objective monitoring of biomechanical and physiological parameters, offering new opportunities to enhance the entire sports injury management continuum. While prior research has explored the function for sports monitoring and injury prevention, the potential role of wearable sensors in the entire clinical pathway covering acute injury assessment, emergency clinical decision-making and rehabilitation guidance remains insufficiently integrated. This review synthesizes current advances in wearable sensor technologies, including inertial measurement units, pressure sensors, surface electromyography, cardiovascular monitoring, biochemical sweat sensing, and emerging self-powered and textile-integrated systems. Another main part of this review is the proposal of a wearable sensor–driven emergency clinical decision framework that integrates multimodal sensor data with clinically interpretable indicators to support risk assessment, early triage, treatment suggesti",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Bio",
+        "Z-Ops",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "Needs human review before applying to ZILFIT."
+      ]
+    },
+    {
+      "source": "OpenAlex",
+      "topic": "smart_insole_pressure_sensors",
+      "title": "Wearable monitoring of muscle health across fatigue, injury and recovery in sports",
+      "url": "https://openalex.org/W7154605727",
+      "year": "2026",
+      "journal_or_source": "Soft Science",
+      "doi": "https://doi.org/10.20517/ss.2025.132",
+      "abstract": "Muscle fatigue and injury are the core issues that restrict the improvement of athletes’ competitive performance and the maintenance of sports health for the general population. The traditional muscle health management paradigm is limited by lagging assessment and single indicators, failing to meet the demands of precise training and individualized rehabilitation. With the advances in wearable sensing technology, muscle health management has the potential to transform from the empirical modality to a new data-driven paradigm. However, existing publications either focus on materials innovation and structure design in sensor development, or solely highlight the overlapping physiological mechanisms inducing muscle fatigue and injury. Thus, a comprehensive review presenting insights on the physiological relevance between biological signals fluctuations and muscle health status, the detection mechanisms and functional layouts of wearable sensors to capture these signals, as well as their real-world applications in competitive sports and public fitness is timely needed. Herein, this article systematically reviews the physiological mechanisms of muscle fatigue, injury and repair, with a f",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Bio",
+        "Z-Ops",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "Needs human review before applying to ZILFIT."
+      ]
+    },
+    {
+      "source": "OpenAlex",
+      "topic": "smart_insole_pressure_sensors",
+      "title": "Practical Use of Wearable Activity Measurement Devices in Orthopaedic Surgery: A Qualitative Analysis of Multidisciplinary Expert Experience",
+      "url": "https://openalex.org/W7154586935",
+      "year": "2026",
+      "journal_or_source": "Journal of Clinical Medicine",
+      "doi": "https://doi.org/10.3390/jcm15083009",
+      "abstract": "Background/Objectives: Wearable activity monitors and sensor-based devices are increasingly used to quantify mobility, load, and recovery in orthopaedic patients, yet clinicians lack practical guidance on selection, implementation, and interpretation. This qualitative expert consensus study synthesized real-world experiences from leaders in orthopaedics, rehabilitation, biomechanics, and digital health who implemented wearables at scale. Methods: Semi-structured interviews were conducted with 16 experts (64% response rate) recruited via hybrid purposive and snowball sampling. Participants included orthopaedic surgeons and research scientists with 124 cumulative years of wearable experience across over 9000 monitored patients. Interviews addressed device selection, clinical workflow, data management, and adoption barriers. Data were charted into a structured extraction matrix and analyzed using Inductive Thematic Analysis and a Framework Approach, reported per COREQ guidelines. Results: Experts utilized diverse sensor platforms across arthroplasty, trauma, spine, and sports medicine. Four key themes emerged: (1) device selection prioritized usability and patient compliance over tech",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Bio",
+        "Z-Ops",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "Needs human review before applying to ZILFIT."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "smart_insole_pressure_sensors",
+      "title": "AI -Based Novel Cognitive Computational Strategy for Optimizing Brain Tumor Classification Using Magnetic Resonance Imaging Data",
+      "url": "https://doi.org/10.55041/ijcope.v2i4.589",
+      "year": "2026",
+      "journal_or_source": "International Journal of Creative and Open Research in Engineering and Management",
+      "doi": "10.55041/ijcope.v2i4.589",
+      "abstract": "<jats:p>The    rapid     expansion    of   digital    infrastructure,    network    security has become a critical challenge. Traditional intrusion detection systems (IDS) often struggle with high false-positive rates and poor adaptability to new attack patterns. To address these issues, this paper proposes an enhanced AI-based Network Intrusion Detection System (NIDS) using Generative Adversarial Networks (GANs). GANs, consisting of a generator and a discriminator, enable the system to detect anomalies more effectively by learning complex attack patterns from network traffic data. The generator produces synthetic attack scenarios, improving the model’s ability to recognize both known and novel threats, while the discriminator distinguishes between legitimate and malicious traffic. Unlike conventional machine learning-based IDS, which rely on static datasets, the proposed system continuously evolves, improving its detection accuracy over time.</jats:p>",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Bio",
+        "Z-Ops",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "Needs human review before applying to ZILFIT."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "smart_insole_pressure_sensors",
+      "title": "CLASSIFICATION OF PROVINCES USING CLUSTERING METHODS IN TERMS OF BANK DEPOSITS AND LOANS",
+      "url": "https://doi.org/10.37880/cumuiibf.1885630",
+      "year": "2026",
+      "journal_or_source": "Cumhuriyet Üniversitesi İktisadi ve İdari Bilimler Dergisi",
+      "doi": "10.37880/cumuiibf.1885630",
+      "abstract": "<jats:p xml:lang=\"en\">Numerous studies in the literature classify provinces in Turkey using various indicators such as socio-economic development, education, and health, and examine clustering structures based on similarities or differences. This study differs by classifying provinces according to bank deposits and bank loans and evaluating their clustering patterns. Six variables related to deposits and loans were used, and the data were obtained from the 2022 statistics of the Turkish Banks Association. Per capita bank deposits and loans were calculated using 2022 provincial population figures, and clustering analyses were conducted based on these per capita values. As the number of clusters, six tiers defined in the SEGE2017 socio-economic development rankings of the Ministry of Industry and Technology were adopted. Additionally, changes in clustering structures were examined for different cluster counts. Although various classification studies exist, this study represents a new attempt in terms of socio-economic development levels, as it evaluates provinces according to SEGE2017 while using financial indicators. For clustering, k-means, complete linkage, Ward’s method, and medi",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Bio",
+        "Z-Ops",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "Needs human review before applying to ZILFIT."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "smart_insole_pressure_sensors",
+      "title": "Spectral-Spatial Crop Classification Using Wavelet-Based Parallel Bidirectional LSTM Networks",
+      "url": "https://doi.org/10.1007/s13253-026-00736-7",
+      "year": "2026",
+      "journal_or_source": "Journal of Agricultural, Biological and Environmental Statistics",
+      "doi": "10.1007/s13253-026-00736-7",
+      "abstract": "",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Bio",
+        "Z-Ops",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "Needs human review before applying to ZILFIT."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "smart_insole_pressure_sensors",
+      "title": "Implementation Framework of Advanced Planning and Scheduling System for Smart Manufacturing in SMEs",
+      "url": "https://doi.org/10.14419/ijet.v7i3.24.22839",
+      "year": "2026",
+      "journal_or_source": "International Journal of Engineering and Technology",
+      "doi": "10.14419/ijet.v7i3.24.22839",
+      "abstract": "<jats:p>Background/Objectives: Small and medium-sized manufacturing enterprises (SMEs) are usually unable to properly respond to the rapid changes in the production environment.\nMethods/Statistical analysis: We propose an implementation framework of advanced planning and scheduling (APS) system specialized for SMEs. The following are considered as the main factors in implementation of APS system: 1) establishment of on-site production data collection and management system for SMEs with poor IT infrastructure, 2) establishment of production scheduling system linking experiential knowledge of field production manager, and 3) construction of various scenario analysis system using simulation technique.\nFindings: The proposed APS system can collect and manage the production data generated at the manufacturing site. Various production data can be stored, and realistic scheduling can be established according to actual situation of the site. Second, scheduling can be established in connection with the experiential knowledge of field managers. Using a technique for order or preference by similarity to ideal solution (TOPSIS) based approach, it is possible to select the optimal work priority",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Bio",
+        "Z-Ops",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "Needs human review before applying to ZILFIT."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "smart_insole_pressure_sensors",
+      "title": "Development and simulation of an innovative autonomous knowledge-based smart waste collection system",
+      "url": "https://doi.org/10.1038/s41598-026-48792-w",
+      "year": "2026",
+      "journal_or_source": "Scientific Reports",
+      "doi": "10.1038/s41598-026-48792-w",
+      "abstract": "",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Bio",
+        "Z-Ops",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "Needs human review before applying to ZILFIT."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "smart_insole_pressure_sensors",
+      "title": "Emotion Classification in Music: Leveraging Machine Learning for Music Therapy and Emotional Response Analysis",
+      "url": "https://doi.org/10.1007/s44196-026-01304-0",
+      "year": "2026",
+      "journal_or_source": "International Journal of Computational Intelligence Systems",
+      "doi": "10.1007/s44196-026-01304-0",
+      "abstract": "",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Bio",
+        "Z-Ops",
+        "Z-Sim"
+      ],
+      "relevance_to_zilfit": [
+        "Needs human review before applying to ZILFIT."
+      ]
+    },
+    {
+      "source": "OpenAlex",
+      "topic": "reflexology_clinical_evidence",
+      "title": "Thermoregulation in Sleep Disorders—Comprehensive Review",
+      "url": "https://openalex.org/W7154149508",
+      "year": "2026",
+      "journal_or_source": "Journal of Clinical Medicine",
+      "doi": "https://doi.org/10.3390/jcm15082929",
+      "abstract": "Sleep is tightly regulated by thermoregulatory processes that include core body temperature (CBT) modulation, the distal–proximal temperature gradient (DPG), and melatonin rhythms. In this review, we examine how these factors intersect with sleep physiology and contribute to the pathophysiology of common sleep disorders such as ADHD, insomnia, narcolepsy, Obstructive Sleep Apnea (OSA), depression, and Restless Legs Syndrome (RLS). We discuss evidence showing that delayed or disrupted CBT minima, impaired DPG, and altered melatonin secretion can prolong sleep latency, fragment rest, and lead to daytime symptoms. In addition, we explore temperature-based interventions, including foot baths, passive body heating, whole-body hyperthermia, and adjustments in room temperature, which have demonstrated potential to mitigate symptoms and enhance sleep quality. Collectively, these findings emphasize the need for personalized interventions to address thermoregulatory disruptions, presenting a noninvasive avenue for more effective sleep disorder management.",
+      "evidence_level": "MEDIUM",
+      "affected_agents": [
+        "Z-Reflex",
+        "Z-Claims",
+        "Z-NeuroFoot"
+      ],
+      "relevance_to_zilfit": [
+        "Needs human review before applying to ZILFIT."
+      ]
+    },
+    {
+      "source": "OpenAlex",
+      "topic": "reflexology_clinical_evidence",
+      "title": "Sleep quality assessment in hospitalized postoperative surgical patients: a COSMIN-based systematic review",
+      "url": "https://openalex.org/W7154114815",
+      "year": "2026",
+      "journal_or_source": "Frontiers in Sleep",
+      "doi": "https://doi.org/10.3389/frsle.2025.1714777",
+      "abstract": "Background Sleep is a crucial physiological process that significantly influences recovery among hospitalized postoperative surgical patients, including those treated in intensive care units and general surgical wards. Reliable and valid instruments for assessing sleep quality are essential for guiding clinical decision-making and improving patient outcomes. However, the psychometric properties of commonly used sleep assessment tools remain inconsistent, highlighting the need for systematic evaluation. Objective This study aimed to conduct a COSMIN-based systematic review to examine the measurement properties of sleep quality assessment instruments used in hospitalized postoperative surgical patients. Methods A systematic literature search was conducted across PubMed, Scopus, Web of Science, CINAHL, and PsycINFO for studies published between 2010 and 2024. The methodological quality of each study was evaluated using the COSMIN Risk of Bias checklist, and a narrative synthesis was performed to summarize the psychometric evidence for each instrument. Results Of the 210 studies initially identified, 37 met the eligibility criteria. The Pittsburgh Sleep Quality Index (PSQI) demonstrate",
+      "evidence_level": "HIGH",
+      "affected_agents": [
+        "Z-Reflex",
+        "Z-Claims",
+        "Z-NeuroFoot"
+      ],
+      "relevance_to_zilfit": [
+        "Needs human review before applying to ZILFIT."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "reflexology_clinical_evidence",
+      "title": "Laparoscopic cholecystectomy in patients with situs inversus totalis: Two case reports and review of literature",
+      "url": "https://doi.org/10.12998/wjcc.v14.i12.118091",
+      "year": "2026",
+      "journal_or_source": "World Journal of Clinical Cases",
+      "doi": "10.12998/wjcc.v14.i12.118091",
+      "abstract": "<jats:p>BACKGROUND</jats:p>\n                  <jats:p>Situs inversus totalis (SIT) is a rare congenital anomaly characterized by complete mirror-image transposition of thoracic and abdominal organs. The presence of gallstone disease in these patients represents a diagnostic and technical challenge, particularly when laparoscopic cholecystectomy is indicated.</jats:p>\n                  <jats:p>CASE SUMMARY</jats:p>\n                  <jats:p>We report two cases of symptomatic gallstone disease in patients with SIT. The first case involved a 27-year-old female diagnosed with cholelithiasis following radiological evaluation, while the second case involved a 45-year-old male presenting with cholelithiasis and choledocholithiasis requiring preoperative endoscopic retrograde cholangiopancreatography. Cases were identified retrospectively from institutional surgical records. Data were collected from clinical charts, imaging studies, operative reports, and follow-up visits. In both patients, laparoscopic cholecystectomy was successfully performed using a mirror-image port placement strategy. No intraoperative or postoperative complications occurred, and both patients were discharged on the ",
+      "evidence_level": "MEDIUM",
+      "affected_agents": [
+        "Z-Reflex",
+        "Z-Claims",
+        "Z-NeuroFoot"
+      ],
+      "relevance_to_zilfit": [
+        "May affect FEMME-RECOVER female biomechanics logic."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "reflexology_clinical_evidence",
+      "title": "Dignity as a social-psychological signal: operationalizing “people like us” in clinical institutions",
+      "url": "https://doi.org/10.1007/s11017-026-09754-5",
+      "year": "2026",
+      "journal_or_source": "Theoretical Medicine and Bioethics",
+      "doi": "10.1007/s11017-026-09754-5",
+      "abstract": "",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Reflex",
+        "Z-Claims",
+        "Z-NeuroFoot"
+      ],
+      "relevance_to_zilfit": [
+        "Needs human review before applying to ZILFIT."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "reflexology_clinical_evidence",
+      "title": "Intralesional 5‑Fluorouracil in the Management of Resistant Warts: Outcomes from a Single-Arm Clinical Trial",
+      "url": "https://doi.org/10.54133/ajms.v10i2.2903",
+      "year": "2026",
+      "journal_or_source": "Al-Rafidain Journal of Medical Sciences ( ISSN 2789-3219 )",
+      "doi": "10.54133/ajms.v10i2.2903",
+      "abstract": "<jats:p>Background: Treating resistant warts is inconvenient and frustrating both for patients and for treating physicians. One possible therapy option is 5-fluorouracil, an antimetabolite that has shown better results when administered intralesionally rather than topically. Objective: To evaluate the efficacy and safety of intralesional 5-fluorouracil in treating warty lesions not responding to other options of treatment in a sample of Iraqi patients. Methods: A single-arm clinical trial study conducted in Al-Imamain Al-Kadhmain Medical City, Baghdad, Iraq, during a period of 18 months from March 2024 to September 2025. It included 110 patients diagnosed with warts not responding to different treatment options for at least one year. Each patient received an intralesional 5-fluorouracil injection in each session, repeated every two weeks for four sessions or less if the lesions are completely resolved. Results: The differences in mean size and number of warts during visits were significantly decreased (p&lt;0.05) compared to baseline size. The level of pain significantly decreased after six weeks compared to that after two weeks (p=0.001), and no pain was reported after three month",
+      "evidence_level": "MEDIUM",
+      "affected_agents": [
+        "Z-Reflex",
+        "Z-Claims",
+        "Z-NeuroFoot"
+      ],
+      "relevance_to_zilfit": [
+        "Needs human review before applying to ZILFIT."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "reflexology_clinical_evidence",
+      "title": "Cladribine in multiple sclerosis with autoimmune comorbidities: Further clinical insights from patients with rheumatologic disease treated in combination with secukinumab",
+      "url": "https://doi.org/10.1177/13524585261441504",
+      "year": "2026",
+      "journal_or_source": "Multiple Sclerosis Journal",
+      "doi": "10.1177/13524585261441504",
+      "abstract": "",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Reflex",
+        "Z-Claims",
+        "Z-NeuroFoot"
+      ],
+      "relevance_to_zilfit": [
+        "Needs human review before applying to ZILFIT."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "reflexology_clinical_evidence",
+      "title": "Decreased kinesiophobia with virtual embodiment for post-surgical knee rehabilitation: a randomized controlled trial",
+      "url": "https://doi.org/10.1186/s13018-026-06865-6",
+      "year": "2026",
+      "journal_or_source": "Journal of Orthopaedic Surgery and Research",
+      "doi": "10.1186/s13018-026-06865-6",
+      "abstract": "",
+      "evidence_level": "MEDIUM",
+      "affected_agents": [
+        "Z-Reflex",
+        "Z-Claims",
+        "Z-NeuroFoot"
+      ],
+      "relevance_to_zilfit": [
+        "Needs human review before applying to ZILFIT."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "reflexology_clinical_evidence",
+      "title": "Effectiveness of 577-nm Pro-Yellow Laser in Managing Inflammatory Acne: Results from a Quasi-Randomized Clinical Trial",
+      "url": "https://doi.org/10.54133/ajms.v10i2.2880",
+      "year": "2026",
+      "journal_or_source": "Al-Rafidain Journal of Medical Sciences ( ISSN 2789-3219 )",
+      "doi": "10.54133/ajms.v10i2.2880",
+      "abstract": "<jats:p>Background: Acne has been treated with many types of lasers in recent years. It has been found that vascular laser effectively and safely reduce inflammation in acne lesions. Objective: To evaluate the efficacy and safety of a 577-nm pro-yellow laser with traditional treatment for patients with mild to moderate inflammatory acne. Methods: A quasi-randomized clinical trial study was conducted in a private dermatology clinic in Baghdad from January 2025 to January 2026 on 140 patients diagnosed with mild to moderate inflammatory acne and randomly divided into two groups: Group A (70 patients) underwent three laser treatment sessions/week, and group B (70 patients) received traditional treatment (topical, systemic, adjunctive, or a combination thereof). Both groups were assessed at the first session (baseline) and after one and six months from treatment. Results: Acne severity and inflammatory lesion count show greater reduction in group A (p&lt;0.05). 70% of patients in group A and 48.6% in group B didn’t report any side effects. After six months, group A was more satisfied with the laser procedure than group B. The recurrence rate after six months was significantly higher in",
+      "evidence_level": "MEDIUM",
+      "affected_agents": [
+        "Z-Reflex",
+        "Z-Claims",
+        "Z-NeuroFoot"
+      ],
+      "relevance_to_zilfit": [
+        "Needs human review before applying to ZILFIT."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "reflexology_clinical_evidence",
+      "title": "The narrow(ing) scope of duty:  clinical negligence and secondary victims after Paul and others v Royal Wolverhampton NHS Trust",
+      "url": "https://doi.org/10.53386/nilq.v77i1.1318",
+      "year": "2026",
+      "journal_or_source": "Northern Ireland Legal Quarterly",
+      "doi": "10.53386/nilq.v77i1.1318",
+      "abstract": "<jats:p>In Paul and others v Royal Wolverhampton NHS Trust the United Kingdom Supreme Court (UKSC) held that a doctor who negligently misdiagnoses a patient does not owe a duty to family members who witness their death or injury. Such claimant witnesses – or ‘secondary victims’ – have hitherto been able to claim for psychiatric injury under an exception to the rule that there is no compensable interest arising from the death or injury of another. The majority of the UKSC curtailed this exception which, to quote the dissenting Lord Burrows, ‘will mean that recovery for negligently caused psychiatric illness by secondary victims will be closed off in medical negligence cases’.1 This commentary explores the pragmatism adopted by the court and its application of the ‘scope of duty’ principle. Placing this principle in a critical context, I argue that the scope of duty in clinical settings risks becoming unduly narrow and will limit access to justice for families. The decision will further amplify debate about wide-scale reform of National Health Service litigation, including a move towards a no-fault system focused on learning and accident-prevention.</jats:p>",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Reflex",
+        "Z-Claims",
+        "Z-NeuroFoot"
+      ],
+      "relevance_to_zilfit": [
+        "Needs human review before applying to ZILFIT."
+      ]
+    },
+    {
+      "source": "OpenAlex",
+      "topic": "recovery_footwear_athletes",
+      "title": "Neuromuscular Adaptation to Varying Drop Jump Heights: A Muscle Synergy Approach in Elite Handball Players",
+      "url": "https://openalex.org/W7154132833",
+      "year": "2026",
+      "journal_or_source": "Journal of Human Kinetics",
+      "doi": "https://doi.org/10.5114/jhk/217230",
+      "abstract": "Rapid single-leg landings and rebounds are central to high-performance handball, yet little is known about neuromuscular coordination adaptations to changing mechanical demands under such conditions. This study examined how different landing heights would modulate lower limb muscle synergy patterns in elite male handball players performing single-leg drop jumps. Twenty professional athletes executed rebound jumps from five standardized heights (0.15–0.75 m). Kinematic data, ground reaction forces, and surface electromyography (sEMG) from seven lower limb muscles were collected and synchronized. Muscle synergies were extracted using non-negative matrix factorization (NMF), while the temporal characteristics of activation patterns were analyzed with SPM1d. Across landing heights, synergy dimensionality remained stable while both muscle weightings and phase-specific activation (pre-activation, buffering, propulsion) were systematically modulated. These height-dependent adjustments were consistent with redistribution within existing motor modules rather than isolated muscle-specific changes. Practically, programming unilateral plyometrics at ~0.60 m may elicit the most pronounced, yet ",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Research",
+        "Z-Bio",
+        "Z-Claims"
+      ],
+      "relevance_to_zilfit": [
+        "Needs human review before applying to ZILFIT."
+      ]
+    },
+    {
+      "source": "OpenAlex",
+      "topic": "recovery_footwear_athletes",
+      "title": "Comparison of Mechanical Hurdle-Resisted, Sled-Resisted and Standard Sprint Training in U18 Female Hurdlers: A Preliminary Randomized Trial",
+      "url": "https://openalex.org/W7154962692",
+      "year": "2026",
+      "journal_or_source": "Applied Sciences",
+      "doi": "https://doi.org/10.3390/app16083989",
+      "abstract": "To compare hurdle-resisted sprint training (EGH), sled-resisted training (EGS), and hurdles-only training (CG) on performance and kinematics using a smallest-effect-size-of-interest (SESOI) framework, fifteen U18 female hurdlers (16.3 ± 1.3 years) were randomized to EGH, EGS, or CG (n = 5 each) for a 7-week intervention (7 microcycles). EGH used individualized resistance (10% velocity decrement), while EGS used fixed ~13% body-mass resistance. Outcomes included 30 m hurdle time (30 mH), Technique Index, and exploratory kinematics. Primary analysis used baseline-adjusted robust ANCOVA with permutation and linear mixed models (LMM) as sensitivity checks. A smallest-effect-size-of-interest (SESOI) of −0.066 s (~1.2%) was pre-specified. Adjusted ANCOVA favored EGH over CG (−0.19 s; 95% CI [−0.45, 0.06]; p = 0.11). The point estimate exceeded the SESOI, though the CI captured both meaningful and trivial effects. Sensitivity analyses maintained this directional pattern, but LMM estimates varied in magnitude, suggesting model dependence. The EGH–EGS contrast was smaller and uncertain (−0.15 s; p = 0.10). Exploratory baseline-adjusted kinematic contrasts showed no clear differences at the ",
+      "evidence_level": "MEDIUM",
+      "affected_agents": [
+        "Z-Research",
+        "Z-Bio",
+        "Z-Claims"
+      ],
+      "relevance_to_zilfit": [
+        "May affect FEMME-RECOVER female biomechanics logic."
+      ]
+    },
+    {
+      "source": "OpenAlex",
+      "topic": "recovery_footwear_athletes",
+      "title": "From Passive Filling to Active Energy Dissipation: Evolution, Mechanisms, and Application Prospects of Impact Absorption and Damping Coatings in Modern Sports Protective Gear",
+      "url": "https://openalex.org/W7147234212",
+      "year": "2026",
+      "journal_or_source": "Coatings",
+      "doi": "https://doi.org/10.3390/coatings16040420",
+      "abstract": "The rapid development of modern sports has placed higher demands on athlete protection. Traditional protective gear relying on passive energy dissipation through bulk materials such as foam and gel suffers from limitations like large volume and poor adaptability, driving the evolution of protection technology toward active and intelligent solutions. Impact absorption and damping coating technology, which integrates advanced functional materials in thin-film form onto the surface of protective gear, has achieved a paradigm shift in protective performance and is advancing toward lightweight, intelligent, and customizable designs. This review first systematically elaborates on the working principles and performance regulation mechanisms of novel coating systems centered on shear-thickening fluids, polymer gels, microstructural biomimetics, and phase-change materials. Secondly, it deeply analyzes the application modes and protective efficacy improvements of these technologies in specific scenarios such as helmets, joint protectors, and smart clothing. Furthermore, it explores the complex interaction mechanisms between coatings and human tissues under dynamic impact. Finally, we discuss",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Research",
+        "Z-Bio",
+        "Z-Claims"
+      ],
+      "relevance_to_zilfit": [
+        "Needs human review before applying to ZILFIT."
+      ]
+    },
+    {
+      "source": "OpenAlex",
+      "topic": "recovery_footwear_athletes",
+      "title": "Neuromuscular Activation Patterns in Response to Windlass Stimulation and Biofeedback: A Surface EMG Study",
+      "url": "https://openalex.org/W7154592074",
+      "year": "2026",
+      "journal_or_source": "Sports",
+      "doi": "https://doi.org/10.3390/sports14040158",
+      "abstract": "Background: Handball involves unilateral, high-demand actions that increase injury risk. The Windlass mechanism (WM) is a position-dependent plantar fascia tensioning system, activated by dorsiflexion of the first metatarsophalangeal joint, which increases medial longitudinal arch stiffness and contributes to foot stability. WM activation can be mechanically simulated using hallux wedges to induce controlled dorsiflexion, allowing graded engagement of the mechanism under standardized conditions. The primary aim of this study was to investigate how different wedge inclinations, with and without visual biofeedback, affect foot muscle activity during squats in elite female handball players. Methods: Seventeen elite female handball players performed squats at 65% of one-repetition maximum under six conditions combining three wedge inclinations (0°, 10°, 30°) with the presence or absence of visual biofeedback. Electromyographic activity (RMS and %MVC) of intrinsic and extrinsic foot muscles was recorded. Results: A significant increase in left abductor hallucis activation with the 10° wedge without biofeedback. Visual biofeedback significantly increased RMS and %MVC in intrinsic foot mu",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Research",
+        "Z-Bio",
+        "Z-Claims"
+      ],
+      "relevance_to_zilfit": [
+        "May affect neuro-sensory stimulation hypothesis and claims safety.",
+        "May affect FEMME-RECOVER female biomechanics logic."
+      ]
+    },
+    {
+      "source": "OpenAlex",
+      "topic": "recovery_footwear_athletes",
+      "title": "Stress Fracture in Athletes: A Practical Approach",
+      "url": "https://openalex.org/W7154713112",
+      "year": "2026",
+      "journal_or_source": "Journal of Clinical Medicine",
+      "doi": "https://doi.org/10.3390/jcm15083077",
+      "abstract": "Stress fractures (SFs) are a common overuse injury in athletes and represent the severe end of the bone stress injury (BSI) continuum. They result from repetitive mechanical loading exceeding the bone’s capacity for adaptation and are associated with impaired performance, prolonged time away from sport, and risk of recurrence if not appropriately managed. This narrative review provides a clinically oriented synthesis of current evidence on the epidemiology, pathophysiology, risk factors, diagnosis, management, and prevention of SFs in athletes. Particular emphasis is placed on modifiable contributors, including training load errors, neuromuscular fatigue, and low energy availability within the framework of Relative Energy Deficiency in Sport (RED-S). Diagnostic evaluation is discussed using a stepwise clinical approach integrating history, physical examination, targeted laboratory assessment, and imaging, with magnetic resonance imaging (MRI) as the reference standard for early detection and severity grading. Management is presented through a risk-based framework combining MRI severity and anatomical site classification to guide treatment decisions and return-to-sport pathways. Whi",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Research",
+        "Z-Bio",
+        "Z-Claims"
+      ],
+      "relevance_to_zilfit": [
+        "Needs human review before applying to ZILFIT."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "recovery_footwear_athletes",
+      "title": "Post-peak dependence analysis in statistical damage constitutive modeling of brittle rocks",
+      "url": "https://doi.org/10.1038/s41598-026-49872-7",
+      "year": "2026",
+      "journal_or_source": "Scientific Reports",
+      "doi": "10.1038/s41598-026-49872-7",
+      "abstract": "<jats:title>Abstract</jats:title>\n                  <jats:p>Accurately simulating the post-peak behavior of brittle rocks remains a challenge for statistical damage constitutive models. This study investigates the sensitivity of post-peak simulation to model components by evaluating combinations of three strength criteria and three micro-element strength distributions against triaxial test data from five rock types. Results indicate that the probability distribution of micro-element strength governs simulation accuracy, while the strength criterion exerts minimal influence. Based on these findings, a relative brittleness index-based method for selecting the optimal distribution is proposed, along with a dual-parameter collaborative correction method. Validation shows that this approach significantly enhances the fit to experimental post-peak curves, eliminates criterion-induced interference in parameter adjustment, and remains effective across multiple distribution modes. The proposed method offers a solution for improving the reliability of damage models in predicting brittle rocks failure.</jats:p>",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Research",
+        "Z-Bio",
+        "Z-Claims"
+      ],
+      "relevance_to_zilfit": [
+        "Needs human review before applying to ZILFIT."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "recovery_footwear_athletes",
+      "title": "When and in what patient segments are low-intensity and remote interventions valuable for treating symptoms of post-concussion syndrome?",
+      "url": "https://doi.org/10.1080/14737175.2026.2665651",
+      "year": "2026",
+      "journal_or_source": "Expert Review of Neurotherapeutics",
+      "doi": "10.1080/14737175.2026.2665651",
+      "abstract": "",
+      "evidence_level": "MEDIUM",
+      "affected_agents": [
+        "Z-Research",
+        "Z-Bio",
+        "Z-Claims"
+      ],
+      "relevance_to_zilfit": [
+        "Needs human review before applying to ZILFIT."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "recovery_footwear_athletes",
+      "title": "Application of a set of exercises to develop coordination in equestrian sports for athletes aged 12-14 Застосування комплексу вправ для розвитку координації в кінному спорті спортсменів 12-14 років",
+      "url": "https://doi.org/10.58962/ht.311",
+      "year": "2026",
+      "journal_or_source": "Health Technologies",
+      "doi": "10.58962/ht.311",
+      "abstract": "<jats:p>Background and purpose \r\nEquestrian sports are among the most difficult coordination sports. Due to early specialization and reduced training time, high demands are placed on equestrians in terms of coordination abilities. Therefore, coaches face a big task: how best and fastest to teach young athletes to control their movements. Goal: to identify the most effective means of developing the coordination abilities of equestrian athletes aged 12-14.\r\nMaterial and methods \r\nParticipants of the experiment: 20 female equestrians who have been involved in equestrian sports for 1 year (age 12-14) in Kharkiv. A control and experimental group of 10 athletes each was created. The experiment lasted for 6 months from September 2021 to February 2022. Methods: analysis of literary sources, pedagogical experiment, physical fitness tests, methods of mathematical statistics.\r\nResults \r\nTo develop coordination in the experimental group, a set of exercises to strengthen the muscles of the core was introduced. The set included exercises performed in static and dynamic mode, exercises on an unstable basis using a fitness ball. Testing of physical fitness of young female athletes demonstrated an ",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Research",
+        "Z-Bio",
+        "Z-Claims"
+      ],
+      "relevance_to_zilfit": [
+        "May affect plantar pressure mapping, gait interpretation, or balance logic.",
+        "May affect FEMME-RECOVER female biomechanics logic."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "recovery_footwear_athletes",
+      "title": "Electrocardiogram screening in adolescent athletes - evaluating clinical protocols, outcomes, and cost-effectiveness a systemic literature review",
+      "url": "https://doi.org/10.4330/wjc.v18.i4.115942",
+      "year": "2026",
+      "journal_or_source": "World Journal of Cardiology",
+      "doi": "10.4330/wjc.v18.i4.115942",
+      "abstract": "<jats:p>BACKGROUND</jats:p>\n                  <jats:p>Sudden cardiac death in adolescent athletes, although rare, carries substantial public health impact. Screening methods remain debated internationally. Cost effectiveness, diagnostic yield and logistical ability remain as points of contention.</jats:p>\n                  <jats:p>AIM</jats:p>\n                  <jats:p>To evaluate the diagnostic yield, accuracy, and cost-effectiveness of electrocardiogram (ECG)-based screening programs for adolescent athletes. The secondary aim is to discuss ethical and psychological issues that may arise from universal screening methods.</jats:p>\n                  <jats:p>METHODS</jats:p>\n                  <jats:p>A systematic review of literature from 1998-2025 was conducted, assessing ECG-inclusive screening, transthoracic echocardiography follow-up, and comparative international models. An additional segment was created to analyze more qualitative aspects of the screening method including psychological concerns, and physician comfortability.</jats:p>\n                  <jats:p>RESULTS</jats:p>\n                  <jats:p>ECG screening demonstrated superior sensitivity compared to history and physi",
+      "evidence_level": "MEDIUM",
+      "affected_agents": [
+        "Z-Research",
+        "Z-Bio",
+        "Z-Claims"
+      ],
+      "relevance_to_zilfit": [
+        "Needs human review before applying to ZILFIT."
+      ]
+    },
+    {
+      "source": "Crossref",
+      "topic": "recovery_footwear_athletes",
+      "title": "PDF/EPUB Download Post-work: What It Is, Why It Matters and How We Get There by Helen Hester, Will Stronge Full Book",
+      "url": "https://doi.org/10.55277/researchhub.zvi26bmy.1",
+      "year": "2026",
+      "journal_or_source": "",
+      "doi": "10.55277/researchhub.zvi26bmy.1",
+      "abstract": "",
+      "evidence_level": "LOW",
+      "affected_agents": [
+        "Z-Research",
+        "Z-Bio",
+        "Z-Claims"
+      ],
+      "relevance_to_zilfit": [
+        "Needs human review before applying to ZILFIT."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "schema_version": "v1",
+  "agent_name": "Z-Guide",
+  "task_id": "z_guide_live_output_v1",
+  "output_class": "GUIDANCE",
+  "confidence": 0.94,
+  "sources": [
+    "governance/Z_GUIDE_SKILLS.md",
+    "docs/z_guide_live_brief_v1.md",
+    "docs/z_ux_mobile_flow_v1.md",
+    "docs/z_ux_microcopy_v1.md",
+    "docs/CURRENT_SYSTEM_STATE.md"
+  ],
+  "assumptions": [
+    "the first customer journey should feel guided and lightweight",
+    "users benefit from short reassurance during scan and checkout",
+    "live guidance should remain separate from medical or technical claims"
+  ],
+  "risks": [
+    "too much guidance may create clutter",
+    "too little guidance may increase confusion",
+    "unsafe wording may sound medical",
+    "overactive prompts may reduce trust"
+  ],
+  "decision": "NEEDS_REVIEW",
+  "next_required_validation": "Hermes review before in-app live assistant activation",
+  "approved_for_use": false,
+  "skills_used": [
+    "Live Guidance",
+    "Friction Reduction",
+    "Support Copy"
+  ],
+  "guidance_scope": [
+    "welcome",
+    "goal_selection",
+    "scan_intro",
+    "scan_capture",
+    "scan_retry",
+    "recommendation_reassurance",
+    "checkout_reassurance",
+    "post_purchase_followup"
+  ],
+  "primary_user_goal": "Help the user move through the ZILFIT flow with confidence, clarity, and minimal hesitation.",
+  "live_behavior_mode": "supportive_guided_low_friction",
+  "fallback_rule": "If guidance confidence is low, use short neutral support copy only."
+}

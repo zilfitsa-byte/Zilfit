@@ -1,0 +1,21 @@
+{
+  "agent_name": "Z-Research",
+  "task_id": "research-protocol-test-001",
+  "output_class": "ENGINEERING_ASSUMPTION",
+  "confidence": 0.88,
+  "sources": [
+    "research/RESEARCH_PROTOCOL.md",
+    "patent/PRIOR_ART_TRACKER.md"
+  ],
+  "assumptions": [
+    "Research must be classified before it changes design or claims.",
+    "Prior art tracking is needed before patent drafting."
+  ],
+  "risks": [
+    "Public sources may be incomplete.",
+    "Patent attorney review will still be required before filing."
+  ],
+  "decision": "CONDITIONAL_PASS",
+  "next_required_validation": "Use this protocol for daily research entries and prior art review.",
+  "approved_for_use": true
+}

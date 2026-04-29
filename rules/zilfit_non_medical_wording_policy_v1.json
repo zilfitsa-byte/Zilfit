@@ -1,0 +1,219 @@
+{
+  "schema_version": "v1",
+  "policy_id": "zilfit_non_medical_wording_policy",
+  "project": "ZILFIT",
+  "status": "internal_approved_draft",
+  "scope": {
+    "product_context": "footwear_insole_runtime_outputs",
+    "claim_boundary": "non_medical",
+    "applies_to": [
+      "runtime_packet",
+      "live_output",
+      "handoff_gateway_output",
+      "agent_text_output",
+      "investor_demo_output",
+      "test_fixtures"
+    ]
+  },
+  "core_rule": {
+    "name": "red_flag_wording_rule",
+    "statement": "Do not generate, accept, or pass through any claim that describes treatment, diagnosis, correction, prevention, healing, or a biological outcome inside the body.",
+    "enforcement": "block_or_rewrite_before_output"
+  },
+  "allowed_claim_domains": [
+    "wear_experience",
+    "fit",
+    "comfort_feel",
+    "pressure_distribution",
+    "support_feel",
+    "stability_feel",
+    "material_response",
+    "insole_geometry",
+    "footwear_design_feedback",
+    "scan_based_fit_observation"
+  ],
+  "allowed_language": {
+    "english": [
+      "may feel more stable during wear",
+      "designed for a more secure fit",
+      "helps distribute pressure across the insole surface",
+      "designed for comfort during wear",
+      "supports a more balanced feel while wearing",
+      "adjusts insole geometry based on scan and pressure inputs",
+      "provides fit-related feedback",
+      "suggests design adjustments for comfort and support feel",
+      "pressure pattern observed",
+      "fit variation observed",
+      "support zone recommendation"
+    ],
+    "arabic": [
+      "قد يمنح إحساساً أكثر ثباتاً أثناء الارتداء",
+      "مصمم لملاءمة أكثر إحكاماً",
+      "يساعد على توزيع الضغط على سطح النعل",
+      "مصمم لراحة أثناء الارتداء",
+      "يدعم إحساساً أكثر توازناً عند الارتداء",
+      "يعدل هندسة النعل بناءً على بيانات المسح والضغط",
+      "يقدم ملاحظات متعلقة بالملاءمة",
+      "يقترح تعديلات تصميمية للراحة وإحساس الدعم",
+      "تم رصد نمط ضغط",
+      "تم رصد اختلاف في الملاءمة",
+      "توصية لمنطقة دعم"
+    ]
+  },
+  "prohibited_claim_categories": [
+    "diagnosis",
+    "treatment",
+    "pain_reduction",
+    "healing",
+    "injury_prevention",
+    "disease_prevention",
+    "correction_of_body_condition",
+    "therapeutic_effect",
+    "medical_grade_claim",
+    "clinical_outcome",
+    "biological_or_internal_body_effect",
+    "mental_or_hormonal_outcome",
+    "reflexology_health_effect"
+  ],
+  "prohibited_terms": {
+    "english": [
+      "diagnose",
+      "diagnosis",
+      "treat",
+      "treatment",
+      "therapy",
+      "therapeutic",
+      "heal",
+      "healing",
+      "cure",
+      "corrective",
+      "corrects",
+      "medical-grade",
+      "clinical-grade",
+      "clinically proven",
+      "orthopedic",
+      "reduces pain",
+      "pain relief",
+      "prevents injury",
+      "prevents disease",
+      "improves circulation",
+      "regulates hormones",
+      "reduces cortisol",
+      "reduces anxiety",
+      "relieves anxiety",
+      "treats fatigue",
+      "treats flat feet",
+      "fixes gait",
+      "corrects pronation",
+      "diagnostic memory",
+      "emotional prescription",
+      "biomedical prescription"
+    ],
+    "arabic": [
+      "يشخص",
+      "تشخيص",
+      "يعالج",
+      "علاج",
+      "علاجي",
+      "شفاء",
+      "يشفي",
+      "يصوّب",
+      "تصحيحي",
+      "طبي",
+      "درجة طبية",
+      "سريري",
+      "مثبت سريرياً",
+      "تقويمي",
+      "يقلل الألم",
+      "تخفيف الألم",
+      "يمنع الإصابة",
+      "يمنع المرض",
+      "يحسن الدورة الدموية",
+      "ينظم الهرمونات",
+      "يخفض الكورتيزول",
+      "يقلل القلق",
+      "يعالج التعب",
+      "يعالج تسطح القدم",
+      "يصلح المشية",
+      "يصحح الكب",
+      "وصفة عاطفية",
+      "وصفة حيوية",
+      "ذاكرة تشخيصية"
+    ]
+  },
+  "required_rewrites": [
+    {
+      "from": "reduces pain",
+      "to": "may improve comfort feel during wear"
+    },
+    {
+      "from": "pain relief",
+      "to": "comfort-focused support feel"
+    },
+    {
+      "from": "corrects pronation",
+      "to": "suggests a stability-focused insole adjustment"
+    },
+    {
+      "from": "treats flat feet",
+      "to": "provides arch-area support feel"
+    },
+    {
+      "from": "medical-grade support",
+      "to": "structured support feel"
+    },
+    {
+      "from": "therapeutic insole",
+      "to": "comfort-oriented insole"
+    },
+    {
+      "from": "reduces anxiety",
+      "to": "not_allowed"
+    },
+    {
+      "from": "regulates hormones",
+      "to": "not_allowed"
+    },
+    {
+      "from": "improves circulation",
+      "to": "not_allowed"
+    },
+    {
+      "from": "emotional prescription",
+      "to": "wear experience recommendation"
+    },
+    {
+      "from": "diagnosis signal",
+      "to": "input pattern"
+    },
+    {
+      "from": "bio findings",
+      "to": "fit observations"
+    }
+  ],
+  "output_requirements": {
+    "must_include_non_medical_boundary_when_user_facing": true,
+    "default_disclaimer_en": "ZILFIT output is for footwear fit and wear-experience guidance only. It is not medical advice, diagnosis, or treatment.",
+    "default_disclaimer_ar": "مخرجات ZILFIT مخصصة لإرشاد الملاءمة وتجربة الارتداء فقط، وليست نصيحة طبية أو تشخيصاً أو علاجاً.",
+    "must_not_reference_body_internal_effects": true,
+    "must_not_reference_disease_or_symptom_outcomes": true,
+    "must_not_use_medical_positioning": true
+  },
+  "validator_behavior": {
+    "on_prohibited_term": "fail",
+    "on_medical_claim": "fail",
+    "on_internal_body_outcome_claim": "fail",
+    "on_unsupported_benefit_claim": "fail",
+    "on_allowed_wear_experience_claim": "pass",
+    "on_rewritable_claim": "rewrite_then_pass",
+    "exit_code_on_fail": 1,
+    "exit_code_on_pass": 0
+  },
+  "safe_runtime_labels": {
+    "scan_result": "scan_based_fit_observation",
+    "pressure_result": "pressure_distribution_observation",
+    "recommendation": "wear_experience_recommendation",
+    "support_zone": "support_feel_zone",
+    "risk": "wording_policy_risk"
+  }
+}

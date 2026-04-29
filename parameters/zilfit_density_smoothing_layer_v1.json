@@ -1,0 +1,35 @@
+{
+  "schema_version": "v1",
+  "module_id": "zilfit_density_smoothing_layer",
+  "project": "ZILFIT",
+  "status": "engineering_draft",
+  "depends_on": [
+    "parameters/zilfit_formula_safety_layer_v1.json",
+    "parameters/zilfit_personalized_pressure_density_model_v1.json"
+  ],
+  "purpose": "reduce adjacent density jumps before pressure simulation or prototype preparation",
+  "rules": {
+    "max_adjacent_density_jump_pct": 15,
+    "preserve_wall_variants_mm": [0.5, 0.6, 0.7],
+    "physical_min_wall_mm": 0.5,
+    "preserve_baseline_comparison": true,
+    "preserve_non_medical_boundary": true,
+    "do_not_change_profile_target": true,
+    "do_not_create_medical_claims": true
+  },
+  "smoothing_method": {
+    "name": "bounded_neighbor_average",
+    "description": "If adjacent density jump exceeds limit, adjust current density toward previous smoothed zone within allowed jump limit.",
+    "validation_status": "simulation"
+  },
+  "output_requirements": [
+    "original_density_pct",
+    "smoothed_density_pct",
+    "density_delta_from_original",
+    "smoothing_applied",
+    "smoothing_reason",
+    "t_wall_mm",
+    "failure_flags",
+    "baseline_comparison"
+  ]
+}

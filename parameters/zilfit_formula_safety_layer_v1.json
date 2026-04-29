@@ -1,0 +1,37 @@
+{
+  "schema_version": "v1",
+  "module_id": "zilfit_formula_safety_layer",
+  "project": "ZILFIT",
+  "status": "engineering_draft",
+  "gyroid_wall_thickness_baseline_mm": 0.6,
+  "physical_wall_variants_mm": [0.5, 0.6, 0.7],
+  "simulation_reference_only_mm": [0.3],
+  "safe_formulas": {
+    "p_norm": "if max_zone_load == min_zone_load then 0.5 else clamp((zone_load_N - min_zone_load) / (max_zone_load - min_zone_load), 0, 1)",
+    "density_pct": "clamp(density_floor_pct + (density_ceiling_pct - density_floor_pct) * P_norm, density_floor_pct, density_ceiling_pct)",
+    "impact_damping_priority": "P_norm",
+    "softness_priority": "1 - P_norm",
+    "wall_thickness_assignment": "density<=30 -> 0.5, density<=55 -> 0.6, density>55 -> 0.7"
+  },
+  "failure_rules": {
+    "fail_if_wall_thickness_below_mm": 0.5,
+    "fail_if_p_norm_outside_0_1": true,
+    "fail_if_density_outside_profile_range": true,
+    "fail_if_density_jump_above_pct_without_smoothing": 15,
+    "require_density_source": true,
+    "require_confidence": true,
+    "require_validation_status": true,
+    "require_baseline_comparison": true,
+    "no_medical_claims": true
+  },
+  "required_density_metadata": [
+    "source",
+    "confidence",
+    "validation_status"
+  ],
+  "allowed_validation_status": [
+    "simulation",
+    "prototype",
+    "production"
+  ]
+}

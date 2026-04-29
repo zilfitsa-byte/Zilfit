@@ -1,0 +1,87 @@
+#!/usr/bin/env python3
+import json
+import sys
+from pathlib import Path
+
+REQUIRED = [
+    "agent_name",
+    "task_id",
+    "output_class",
+    "confidence",
+    "sources",
+    "assumptions",
+    "risks",
+    "decision",
+    "next_required_validation",
+    "approved_for_use",
+    "skills_used",
+]
+
+CLASSES = {
+    "FACT",
+    "ENGINEERING_ASSUMPTION",
+    "HYPOTHESIS",
+    "DESIGN_PROPOSAL",
+    "BLOCKER",
+}
+
+DECISIONS = {
+    "PASS",
+    "FAIL",
+    "CONDITIONAL_PASS",
+    "BLOCK",
+    "NEEDS_REVIEW",
+}
+
+def fail(msg: str) -> None:
+    print(f"VALIDATION_FAIL: {msg}")
+    sys.exit(1)
+
+if len(sys.argv) != 2:
+    fail("Usage: validate_agent_output.py file.json")
+
+path = Path(sys.argv[1])
+if not path.exists():
+    fail(f"File not found: {path}")
+
+try:
+    data = json.loads(path.read_text(encoding="utf-8"))
+except Exception as e:
+    fail(f"Invalid JSON: {e}")
+
+for key in REQUIRED:
+    if key not in data:
+        fail(f"Missing required field: {key}")
+
+if data["output_class"] not in CLASSES:
+    fail("Invalid output_class")
+
+if data["decision"] not in DECISIONS:
+    fail("Invalid decision")
+
+confidence = data["confidence"]
+if not isinstance(confidence, (int, float)) or not (0 <= confidence <= 1):
+    fail("confidence must be number between 0 and 1")
+
+if data["output_class"] == "FACT" and not data["sources"]:
+    fail("FACT requires at least one source")
+
+if confidence < 0.70 and data["decision"] != "BLOCK":
+    fail("confidence below 0.70 must be BLOCK")
+
+if data["approved_for_use"] is True and data["decision"] not in ["PASS", "CONDITIONAL_PASS"]:
+    fail("approved_for_use true requires PASS or CONDITIONAL_PASS")
+
+if not isinstance(data["skills_used"], list) or len(data["skills_used"]) == 0:
+    fail("No skills applied")
+
+for item in data["skills_used"]:
+    if not isinstance(item, str) or not item.strip():
+        fail("skills_used must contain non-empty strings only")
+
+text = json.dumps(data, ensure_ascii=False).lower()
+for forbidden in ["treats", "cures", "diagnoses", "prevents injury", "regulates hormones", "guarantees"]:
+    if forbidden in text and data["output_class"] != "HYPOTHESIS":
+        fail(f"Forbidden claim detected outside HYPOTHESIS: {forbidden}")
+
+print("VALIDATION_PASS")

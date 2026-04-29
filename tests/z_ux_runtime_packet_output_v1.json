@@ -1,0 +1,23 @@
+{
+  "packet_name": "z_guide_z_ux_runtime_packet_v1",
+  "schema_version": "v1",
+  "source_agent": "Z-Guide",
+  "target_agent": "Z-UX",
+  "trigger_stage": "scan_capture",
+  "trigger_screen_id": "scan_capture_top",
+  "guidance_type": "instruction",
+  "prompt_text": "Place your foot clearly in frame and capture the top view.",
+  "next_expected_action": "capture_top_view",
+  "user_goal_context": "daily_comfort",
+  "safe_for_display": true,
+  "blocked_phrase_flag": false,
+  "confidence": 0.97,
+  "scan_quality_context": "pending",
+  "configured_image_input_mode": "auto",
+  "model_capabilities": {
+    "supports_vision": true
+  },
+  "scan_processing_mode": "native",
+  "vision_supported": true,
+  "routing_input": "trigger_screen_id"
+}

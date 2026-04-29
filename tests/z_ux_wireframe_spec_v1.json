@@ -1,0 +1,70 @@
+{
+  "schema_version": "v1",
+  "agent_name": "Z-UX",
+  "task_id": "z_ux_wireframe_spec_v1",
+  "output_class": "DESIGN_PROPOSAL",
+  "confidence": 0.95,
+  "sources": [
+    "governance/Z_UX_SKILLS.md",
+    "docs/z_ux_live_brief_v1.md",
+    "docs/z_ux_mobile_flow_v1.md",
+    "docs/z_ux_wireframe_spec_v1.md",
+    "docs/CURRENT_SYSTEM_STATE.md"
+  ],
+  "assumptions": [
+    "the first commercial release should focus on one hero product",
+    "the first user journey should prioritize low friction and fast checkout",
+    "scan prompts should stay short, visual, and easy to retry",
+    "recommendation should remain single-path in the first release"
+  ],
+  "risks": [
+    "too many choices may reduce conversion",
+    "weak scan quality may increase drop-off",
+    "unclear microcopy may confuse first-time users",
+    "forced account creation may reduce completion rate"
+  ],
+  "decision": "NEEDS_REVIEW",
+  "next_required_validation": "Hermes review before wireframe implementation and UI build",
+  "approved_for_use": false,
+  "skills_used": [
+    "UI/UX Layout Advisor",
+    "Workflow Automation Agent",
+    "Knowledge Structuring"
+  ],
+  "wireframe_type": "mobile_conversion_scan_checkout",
+  "hero_product": "ZILFIT VITAL-RECOVER",
+  "screen_count": 10,
+  "screen_sequence": [
+    "welcome_first_impression",
+    "goal_selection",
+    "guided_scan_intro",
+    "scan_capture_top",
+    "scan_capture_side",
+    "scan_capture_gait_optional",
+    "scan_quality_check",
+    "smart_result_summary",
+    "product_recommendation",
+    "fast_checkout",
+    "order_confirmation",
+    "post_purchase_followup"
+  ],
+  "primary_user_goal": "Help a first-time user understand the product quickly, complete a guided foot scan, receive a simple recommendation, and finish checkout with minimal friction.",
+  "ux_recommendation": "Implement the first ZILFIT mobile journey as a guided, one-product, one-path flow with clear scan prompts, one primary CTA per screen, visible trust cues, and the shortest possible route to checkout.",
+  "friction_points": [
+    "too much explanation before scan",
+    "unclear scan framing",
+    "low-quality scan retry friction",
+    "too many product choices too early",
+    "slow checkout steps"
+  ],
+  "success_standard": [
+    "user understands product quickly",
+    "user completes guided scan",
+    "user receives one clear recommendation",
+    "user reaches checkout with minimal friction",
+    "user can submit post-purchase feedback"
+  ],
+  "next_design_step": "Convert this wireframe spec into implementation-ready screen wireframes, CTA microcopy, and state logic for the ZILFIT mobile app.",
+  "flow_type": "mobile_conversion_scan_checkout",
+  "conversion_risk": "MEDIUM"
+}

@@ -1,0 +1,21 @@
+{
+  "agent_name": "Hermes",
+  "task_id": "edition-test-001",
+  "output_class": "ENGINEERING_ASSUMPTION",
+  "confidence": 0.86,
+  "sources": [
+    "editions/EDITION_DECISION_ENGINE.md",
+    "products/VITAL_RECOVER_P001.md"
+  ],
+  "assumptions": [
+    "User is post-exertion and wants recovery comfort.",
+    "No acute injury warning was reported."
+  ],
+  "risks": [
+    "Requires Z-Sim validation before design approval.",
+    "Requires Z-Claims review before user-facing wording."
+  ],
+  "decision": "CONDITIONAL_PASS",
+  "next_required_validation": "Route to Z-Bio, Z-Physics, Z-CAD, Z-Sim, and Z-Claims.",
+  "approved_for_use": true
+}

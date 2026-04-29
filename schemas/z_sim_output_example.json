@@ -1,0 +1,22 @@
+{
+  "agent_name": "Z-Sim",
+  "task_id": "z_sim_demo_001",
+  "output_class": "FACT",
+  "confidence": 0.9,
+  "sources": ["internal simulation planning"],
+  "assumptions": [],
+  "risks": ["insufficient thickness validation"],
+  "decision": "NEEDS_REVIEW",
+  "next_required_validation": "Run structural print tests before prototype signoff",
+  "approved_for_use": false,
+  "skills_used": [
+    "Knowledge Structuring",
+    "Workflow Automation Agent",
+    "Source Validation"
+  ],
+  "test_scope": "printability and overstimulation risk screening",
+  "blockers": ["wall thickness not fully validated"],
+  "risk_level": "MEDIUM",
+  "go_no_go": "CONDITIONAL_GO",
+  "next_validation_step": "prototype load test"
+}

@@ -1,0 +1,21 @@
+{
+  "agent_name": "Z-Claims",
+  "task_id": "claims_review_demo_001",
+  "output_class": "FACT",
+  "confidence": 0.9,
+  "sources": ["internal wording policy"],
+  "assumptions": [],
+  "risks": ["public misunderstanding if wording is too strong"],
+  "decision": "NEEDS_REVIEW",
+  "next_required_validation": "Hermes review before public release",
+  "approved_for_use": false,
+  "skills_used": [
+    "Source Validation",
+    "Knowledge Structuring",
+    "SCQA Writing Framework"
+  ],
+  "claim_status": "NEEDS_SOFTENING",
+  "original_claim": "This shoe reduces cortisol and prevents injury.",
+  "safer_rewrite": "This shoe is designed to support comfort, recovery experience, and pressure-informed post-exercise use.",
+  "reason": "Original wording makes strong physiological and injury-prevention claims without validated evidence."
+}

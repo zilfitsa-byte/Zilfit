@@ -1,0 +1,33 @@
+{
+  "agent_name": "Z-Patent",
+  "task_id": "z_patent_live_001",
+  "output_class": "FACT",
+  "confidence": 0.89,
+  "sources": [
+    "patent/Z_PATENT_LIVE_BRIEF_V1.md",
+    "docs/ZILFIT_CLAIMS_MATRIX_V1.md",
+    "governance/Z_PATENT_SKILLS.md"
+  ],
+  "assumptions": [
+    "initial filing is focused on structured invention framing, not final claim set",
+    "medical treatment language is excluded from filing-facing product framing"
+  ],
+  "risks": [
+    "prior art overlap with generic insoles",
+    "prior art overlap with generic recovery footwear",
+    "overbroad sensory stimulation wording"
+  ],
+  "decision": "NEEDS_REVIEW",
+  "next_required_validation": "Hermes review before drafting formal patent claims",
+  "approved_for_use": false,
+  "skills_used": [
+    "Source Validation",
+    "Knowledge Structuring",
+    "Competitive Intelligence Skill"
+  ],
+  "novelty_assessment": "MODERATE_TO_HIGH",
+  "prior_art_risk": "MEDIUM",
+  "invention_boundary": "Pressure-informed full 3D-printed recovery footwear with controlled zone geometry, variable wall logic, and wording-safe non-medical framing.",
+  "filing_readiness": "PARTIAL",
+  "safer_claim_scope": "Focus filing scope on geometry logic, print architecture, variable structural zoning, and recovery-use embodiments; avoid treatment, diagnosis, injury-prevention, and hormone-regulation language."
+}

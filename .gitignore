@@ -1,0 +1,13 @@
+.env
+.env.*
+*.key
+*.pem
+*.token
+config.yaml
+config.yml
+/home/
+root/
+__pycache__/
+*.pyc
+.hermes/
+*.log

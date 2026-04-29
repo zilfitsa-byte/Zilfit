@@ -1,0 +1,21 @@
+{
+  "agent_name": "Z-Claims",
+  "task_id": "claims_real_test_001",
+  "output_class": "FACT",
+  "confidence": 0.95,
+  "sources": ["internal claims review"],
+  "assumptions": [],
+  "risks": ["medical overstatement risk"],
+  "decision": "NEEDS_REVIEW",
+  "next_required_validation": "Hermes review before public use",
+  "approved_for_use": false,
+  "skills_used": [
+    "Source Validation",
+    "Knowledge Structuring",
+    "SCQA Writing Framework"
+  ],
+  "claim_status": "FORBIDDEN",
+  "original_claim": "This shoe treats pain, prevents injury, and regulates hormones.",
+  "safer_rewrite": "This shoe is designed to support comfort, recovery experience, and pressure-informed post-exercise use.",
+  "reason": "The original statement includes treatment, injury-prevention, and hormone-regulation claims that are not appropriate without validated evidence."
+}

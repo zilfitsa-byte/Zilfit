@@ -1,0 +1,21 @@
+{
+  "agent_name": "Z-Patent",
+  "task_id": "z_patent_demo_001",
+  "output_class": "FACT",
+  "confidence": 0.88,
+  "sources": ["internal patent review"],
+  "assumptions": [],
+  "risks": ["prior art overlap risk"],
+  "decision": "NEEDS_REVIEW",
+  "next_required_validation": "Hermes review before claim drafting",
+  "approved_for_use": false,
+  "skills_used": [
+    "Source Validation",
+    "Knowledge Structuring",
+    "Competitive Intelligence Skill"
+  ],
+  "novelty_assessment": "MODERATE",
+  "prior_art_risk": "MEDIUM",
+  "invention_boundary": "Pressure-informed full-printed recovery geometry with controlled wording boundaries",
+  "filing_readiness": "PARTIAL"
+}

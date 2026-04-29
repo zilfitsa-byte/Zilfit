@@ -1,0 +1,53 @@
+{
+  "schema_version": "v1",
+  "agent_name": "Z-UX",
+  "task_id": "z_ux_z_sim_packet_schema_v1",
+  "output_class": "DESIGN_PROPOSAL",
+  "confidence": 0.95,
+  "sources": [
+    "governance/Z_UX_SKILLS.md",
+    "governance/Z_SIM_SKILLS.md",
+    "docs/z_ux_z_sim_packet_schema_v1.md",
+    "docs/z_ux_mobile_flow_v1.md",
+    "docs/z_ux_microcopy_v1.md",
+    "docs/CURRENT_SYSTEM_STATE.md"
+  ],
+  "assumptions": [
+    "scan-derived fit context can be routed to simulation-safe interpretation",
+    "movement-related guidance must remain non-medical",
+    "UX-to-simulation routing should stay simple and traceable"
+  ],
+  "risks": [
+    "movement interpretation may sound medical",
+    "fit guidance may overreach beyond simulation-safe language",
+    "scan context may be routed without enough structure"
+  ],
+  "decision": "NEEDS_REVIEW",
+  "next_required_validation": "Hermes review before runtime routing activation",
+  "approved_for_use": false,
+  "skills_used": [
+    "Workflow Structuring",
+    "Simulation Routing",
+    "Knowledge Structuring"
+  ],
+  "flow_type": "ux_to_sim_review",
+  "conversion_risk": "MEDIUM",
+  "screen_sequence": [
+    "scan_capture_top",
+    "scan_capture_side",
+    "scan_capture_gait_optional",
+    "smart_result_summary",
+    "product_recommendation"
+  ],
+  "friction_points": [
+    "unclear movement interpretation",
+    "fit-summary ambiguity",
+    "overreach risk"
+  ],
+  "primary_user_goal": "Route fit and movement context from UX into simulation-safe guidance logic.",
+  "fit_context": "Estimated fit profile from scan and user goal.",
+  "movement_context": "Optional gait and movement-related context from scan flow.",
+  "recommendation_context": "Use simulation-safe interpretation to support fit guidance only.",
+  "ux_recommendation": "Use simulation-safe interpretation to support fit guidance and movement-aware UX only.",
+  "next_design_step": "Route fit-summary, movement-context, and recommendation-support data into Z-Sim for simulation-safe interpretation only."
+}

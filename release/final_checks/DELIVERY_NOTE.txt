@@ -1,0 +1,17 @@
+LOCAL V1 DELIVERY NOTE
+======================
+
+Bundle:
+release/local_v1_bundle.tar.gz
+
+Checksum file:
+release/final_checks/local_v1_bundle.tar.gz.sha256
+
+SHA256:
+f5e021f0fa047f2d54f2deaaa11a137c1ea4e58cdd2ebb5a232472447b6c7a07
+
+Status:
+Local bundle verified
+Archive created
+Checksum created
+Ready for later transfer

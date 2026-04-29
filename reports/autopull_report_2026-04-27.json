@@ -1,0 +1,29 @@
+{
+  "agent_name": "Z-Research",
+  "task_id": "autopull-2026-04-27",
+  "output_class": "ENGINEERING_ASSUMPTION",
+  "confidence": 0.82,
+  "sources": [
+    "research/autopull/2026-04-27_autopull_raw.json",
+    "research/daily/2026-04-27_autopull.md",
+    "research/AUTOPULL_SOURCES.md",
+    "research/RESEARCH_PROTOCOL.md"
+  ],
+  "assumptions": [
+    "Autopulled metadata and abstracts require human or agent review before application.",
+    "Publication recency does not guarantee relevance or quality."
+  ],
+  "risks": [
+    "Some metadata may lack abstracts.",
+    "Some sources may be irrelevant or duplicated.",
+    "No therapeutic claim is approved from autopull alone."
+  ],
+  "decision": "NEEDS_REVIEW",
+  "next_required_validation": "Hermes must route findings to Z-Claims, Z-Patent, Z-CAD, and Z-Sim before use.",
+  "approved_for_use": false,
+  "skills_used": [
+    "Deep Research Synthesizer",
+    "Source Validation",
+    "Knowledge Structuring"
+  ]
+}

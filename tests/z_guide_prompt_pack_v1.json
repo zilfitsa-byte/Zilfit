@@ -1,0 +1,50 @@
+{
+  "schema_version": "v1",
+  "agent_name": "Z-Guide",
+  "task_id": "z_guide_prompt_pack_v1",
+  "output_class": "GUIDANCE",
+  "confidence": 0.95,
+  "sources": [
+    "governance/Z_GUIDE_SKILLS.md",
+    "docs/z_guide_live_brief_v1.md",
+    "docs/z_guide_prompt_pack_v1.md",
+    "docs/z_ux_mobile_flow_v1.md",
+    "docs/z_ux_microcopy_v1.md",
+    "docs/CURRENT_SYSTEM_STATE.md"
+  ],
+  "assumptions": [
+    "live prompts should stay short and calm",
+    "the first release should favor low-friction guidance",
+    "users respond better to one next step at a time"
+  ],
+  "risks": [
+    "too much prompting may feel intrusive",
+    "unclear prompt wording may slow scan completion",
+    "unsafe wording may sound medical",
+    "prompt length may reduce clarity"
+  ],
+  "decision": "NEEDS_REVIEW",
+  "next_required_validation": "Hermes review before live in-app prompt activation",
+  "approved_for_use": false,
+  "skills_used": [
+    "Live Guidance",
+    "Prompt Structuring",
+    "Friction Reduction"
+  ],
+  "guidance_scope": [
+    "welcome",
+    "goal_selection",
+    "scan_intro",
+    "scan_capture",
+    "scan_quality",
+    "fit_summary",
+    "recommendation",
+    "checkout",
+    "payment_retry",
+    "order_confirmation",
+    "post_purchase_followup"
+  ],
+  "primary_user_goal": "Help the user move smoothly through the app with clear, human, low-friction prompts.",
+  "live_behavior_mode": "supportive_guided_low_friction",
+  "fallback_rule": "If confidence is low, use the shortest neutral prompt and one next-step action."
+}

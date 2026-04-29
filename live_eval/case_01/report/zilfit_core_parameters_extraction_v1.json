@@ -1,0 +1,97 @@
+{
+  "project": "ZILFIT",
+  "extraction_type": "minimal_core_parameters",
+  "engineering_supported_parameters": {
+    "gyroid_wall_thickness_baseline_mm": 0.6,
+    "known_density_percent_candidates": [
+      15,
+      17,
+      18,
+      19,
+      20,
+      22,
+      23
+    ],
+    "footwear_profiles": [
+      "CALM",
+      "FEMME",
+      "FOCUS",
+      "VITAL",
+      "BALANCE"
+    ],
+    "system_layers": [
+      "adaptive_pressure_grid",
+      "gyroid_density_map",
+      "embedded_response_indicators",
+      "runtime_packet",
+      "live_output",
+      "local_handoff_gateway"
+    ]
+  },
+  "clinical_hypotheses": {
+    "status": "research_only",
+    "hypothesis": "Different pressure-density maps during walking may be associated with different user-reported wear responses.",
+    "possible_measures": [
+      "comfort_score",
+      "stability_feel",
+      "pressure_distribution_feel",
+      "calmness_self_report",
+      "focus_self_report",
+      "recovery_adjacent_feedback"
+    ]
+  },
+  "non_medical_boundaries": {
+    "do_not_claim": [
+      "treatment",
+      "diagnosis",
+      "healing",
+      "pain_reduction",
+      "hormone_regulation",
+      "organ_specific_effect",
+      "disease_prevention"
+    ],
+    "allowed_framing": [
+      "wear experience",
+      "fit feedback",
+      "pressure distribution",
+      "support feel",
+      "walking feel",
+      "comfort-oriented design"
+    ]
+  },
+  "source_files_checked": {
+    "docs/CURRENT_SYSTEM_STATE.md": {
+      "exists": true,
+      "size_bytes": 4110
+    },
+    "rules/zilfit_non_medical_wording_policy_v1.json": {
+      "exists": true,
+      "size_bytes": 6553
+    },
+    "tests/z_ux_runtime_input_v1.json": {
+      "exists": true,
+      "size_bytes": 488
+    },
+    "tests/z_ux_runtime_packet_output_v1.json": {
+      "exists": true,
+      "size_bytes": 734
+    },
+    "tests/z_ux_live_output_v1.json": {
+      "exists": true,
+      "size_bytes": 2091
+    },
+    "live_eval/case_01/report/live_eval_summary_v1.txt": {
+      "exists": true,
+      "size_bytes": 767
+    }
+  },
+  "missing_next_prototype_parameters": [
+    "exact pressure-zone geometry per footwear profile",
+    "material candidates and shore hardness",
+    "gyroid cell size",
+    "wall thickness variants around 0.6mm",
+    "indicator-piece placement map",
+    "pilot measurement protocol",
+    "doctor-approved outcome measures"
+  ]
+}
