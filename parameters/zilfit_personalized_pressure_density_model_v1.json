@@ -50,7 +50,14 @@
     },
     "profile_target": {
       "required": true,
-      "allowed": ["CALM", "FEMME", "FOCUS", "VITAL", "BALANCE"]
+      "allowed": ["CALM", "FEMME", "FOCUS", "VITAL", "BALANCE"],
+      "engineering_label_notes": {
+        "CALM": "legacy engineering profile label (non-medical), approximately heel-dominant damping intent",
+        "FOCUS": "legacy engineering profile label (non-medical), approximately forefoot-dominant feedback intent",
+        "BALANCE": "engineering profile label for balanced medial-lateral feel",
+        "VITAL": "engineering profile label for structured support feel",
+        "FEMME": "engineering profile label for adaptive surface feel"
+      }
     },
     "left_right_balance": {
       "required": true,
@@ -142,6 +149,7 @@
   ],
   "failure_rules": {
     "max_adjacent_density_jump_pct": 15,
+    "max_adjacent_density_jump_pct_note": "Configured engineering threshold (static config value), not a runtime-calculated value.",
     "physical_min_wall_mm": 0.5,
     "required_baseline_wall_mm": 0.6,
     "require_non_medical_language": true,

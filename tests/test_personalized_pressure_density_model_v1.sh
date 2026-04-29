@@ -27,6 +27,23 @@ for zone in data["zone_outputs"]:
     assert 0 <= zone["confidence"] <= 1
     assert zone["validation_status"] == "simulation"
     assert "baseline_comparison" in zone
+    assert 21 <= zone["density_pct"] <= 56
+
+expected = {
+    "Z01": {"P_norm": 1.0, "density_pct": 56.0, "t_wall_mm": 0.7},
+    "Z02": {"P_norm": 0.1949, "density_pct": 27.82, "t_wall_mm": 0.5},
+    "Z03": {"P_norm": 0.7987, "density_pct": 48.96, "t_wall_mm": 0.6},
+    "Z04": {"P_norm": 0.5246, "density_pct": 39.36, "t_wall_mm": 0.6},
+    "Z05": {"P_norm": 0.0064, "density_pct": 21.22, "t_wall_mm": 0.5},
+    "Z06": {"P_norm": 0.0051, "density_pct": 21.18, "t_wall_mm": 0.5},
+    "Z07": {"P_norm": 0.0, "density_pct": 21.0, "t_wall_mm": 0.5},
+}
+
+for zone in data["zone_outputs"]:
+    exp = expected[zone["zone_id"]]
+    assert zone["P_norm"] == exp["P_norm"]
+    assert zone["density_pct"] == exp["density_pct"]
+    assert zone["t_wall_mm"] == exp["t_wall_mm"]
 
 print("PERSONALIZED_OUTPUT_STRUCTURE_PASS")
 PY
