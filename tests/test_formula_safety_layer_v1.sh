@@ -3,7 +3,8 @@ set -e
 TEST_NAME="$(basename "$0")"
 trap 'rc=$?; echo "[FAIL] ${TEST_NAME}: line ${LINENO}"; exit $rc' ERR
 
-cd /root/hermes/zilfit-ip-core || exit 1
+REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$REPO_ROOT" || exit 1
 
 python3 validators/validate_formula_safety_layer.py parameters/zilfit_formula_safety_layer_v1.json
 
