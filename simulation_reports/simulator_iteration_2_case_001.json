@@ -1,0 +1,100 @@
+{
+  "schema_version": "v1",
+  "module_id": "zilfit_pressure_foot_simulator_iteration_2",
+  "project": "ZILFIT",
+  "case_id": "simulator_iteration_2_case_001",
+  "sample_type": "balanced sample",
+  "profile_target": "BALANCE",
+  "density_bounds_pct": {
+    "floor": 21,
+    "ceiling": 56
+  },
+  "max_adjacent_density_jump_allowed_pct": 15.0,
+  "peak_pressure_zone": {
+    "zone_id": "Z01",
+    "zone_name": "heel",
+    "zone_load_N": 187.0
+  },
+  "max_adjacent_density_jump_pct": 15.0,
+  "pass_fail_flags": {
+    "density_in_allowed_range": true,
+    "wall_thickness_allowed_set": true,
+    "adjacent_density_jump_within_threshold": true,
+    "valid_p_norm_no_division_by_zero": true,
+    "peak_pressure_zone_detected": true,
+    "all_checks_pass": true
+  },
+  "zone_outputs": [
+    {
+      "zone_id": "Z01",
+      "zone_name": "heel",
+      "zone_load_N": 187.0,
+      "P_norm": 1.0,
+      "raw_density_pct": 56,
+      "density_pct": 56,
+      "t_wall_mm": 0.7,
+      "smoothing_applied": false
+    },
+    {
+      "zone_id": "Z02",
+      "zone_name": "arch_midfoot",
+      "zone_load_N": 93.0,
+      "P_norm": 0.248,
+      "raw_density_pct": 29.68,
+      "density_pct": 41.0,
+      "t_wall_mm": 0.6,
+      "smoothing_applied": true
+    },
+    {
+      "zone_id": "Z03",
+      "zone_name": "metatarsal",
+      "zone_load_N": 126.0,
+      "P_norm": 0.512,
+      "raw_density_pct": 38.92,
+      "density_pct": 38.92,
+      "t_wall_mm": 0.6,
+      "smoothing_applied": false
+    },
+    {
+      "zone_id": "Z04",
+      "zone_name": "forefoot",
+      "zone_load_N": 118.0,
+      "P_norm": 0.448,
+      "raw_density_pct": 36.68,
+      "density_pct": 36.68,
+      "t_wall_mm": 0.6,
+      "smoothing_applied": false
+    },
+    {
+      "zone_id": "Z05",
+      "zone_name": "toe",
+      "zone_load_N": 62.0,
+      "P_norm": 0.0,
+      "raw_density_pct": 21,
+      "density_pct": 21.68,
+      "t_wall_mm": 0.5,
+      "smoothing_applied": true
+    },
+    {
+      "zone_id": "Z06",
+      "zone_name": "medial_edge",
+      "zone_load_N": 71.0,
+      "P_norm": 0.072,
+      "raw_density_pct": 23.52,
+      "density_pct": 23.52,
+      "t_wall_mm": 0.5,
+      "smoothing_applied": false
+    },
+    {
+      "zone_id": "Z07",
+      "zone_name": "lateral_edge",
+      "zone_load_N": 70.0,
+      "P_norm": 0.064,
+      "raw_density_pct": 23.24,
+      "density_pct": 23.24,
+      "t_wall_mm": 0.5,
+      "smoothing_applied": false
+    }
+  ],
+  "boundary": "Footwear pressure-density engineering only. No clinical or therapeutic claims."
+}
