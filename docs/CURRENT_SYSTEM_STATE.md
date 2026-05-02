@@ -151,3 +151,9 @@
 
 ## Current Focus
 - Start Z-Patent live path
+
+## Next Engineering Gate: Limited Coupon Testing
+- Status: planned
+- Objective: execute a 3x3 coupon matrix (density 30/45/60% x wall thickness 0.5/0.6/0.7 mm) to generate physical calibration data.
+- Scope boundary: engineering validation only; non-medical product development context remains in force.
+- Exit condition: complete CT-01 to CT-06 dataset and engineering review before any full prototype manufacturing gate.
