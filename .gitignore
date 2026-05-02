@@ -17,3 +17,9 @@ reports/autopull_report_*.json
 research/autopull/*_autopull_raw.json
 research/daily/*_autopull.md
 reports/nightly/
+
+# Local agent run outputs
+reports/agent_runs/
+
+# Local agent run outputs
+reports/agent_runs/
