@@ -112,6 +112,7 @@ PYJSON
 )"
   if [ "$preproduction_decision" = "sample_ready" ]; then
     preproduction_simulator_status="pass"
+      score=$((score + 15))
   else
     preproduction_simulator_status="fail"
   fi
