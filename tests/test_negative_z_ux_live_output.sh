@@ -8,8 +8,13 @@ trap 'rc=$?; echo "[FAIL] ${TEST_NAME}: line ${LINENO}"; exit $rc' ERR
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$REPO_ROOT" || exit 1
 
+TMP_DIR="$(mktemp -d)"
+export TMP_DIR
+trap 'rm -rf "$TMP_DIR"' EXIT
+
 python3 - <<'PY'
 import json
+import os
 from pathlib import Path
 
 src = Path("tests/z_ux_live_output_from_runtime_v1.json")
@@ -19,23 +24,23 @@ cases = []
 
 a = dict(data)
 a["task_id"] = "wrong_task"
-cases.append(("tests/bad_live_task_id.json", a))
+cases.append((Path(os.environ["TMP_DIR"]) / "bad_live_task_id.json", a))
 
 b = dict(data)
 b["routing_input"] = "wrong_field"
-cases.append(("tests/bad_live_routing_input.json", b))
+cases.append((Path(os.environ["TMP_DIR"]) / "bad_live_routing_input.json", b))
 
 c = dict(data)
 c["primary_cta"] = "wrong_cta"
-cases.append(("tests/bad_live_primary_cta.json", c))
+cases.append((Path(os.environ["TMP_DIR"]) / "bad_live_primary_cta.json", c))
 
 for path, payload in cases:
     Path(path).write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 PY
 
-python3 validators/validate_z_ux_live_output.py tests/bad_live_task_id.json && exit 1 || true
-python3 validators/validate_z_ux_live_output.py tests/bad_live_routing_input.json && exit 1 || true
-if python3 validators/validate_z_ux_live_output.py tests/bad_live_primary_cta.json; then
+python3 validators/validate_z_ux_live_output.py "$TMP_DIR/bad_live_task_id.json" && exit 1 || true
+python3 validators/validate_z_ux_live_output.py "$TMP_DIR/bad_live_routing_input.json" && exit 1 || true
+if python3 validators/validate_z_ux_live_output.py "$TMP_DIR/bad_live_primary_cta.json"; then
   echo "EXPECTED validator failure for bad_live_primary_cta.json"
   exit 1
 fi
