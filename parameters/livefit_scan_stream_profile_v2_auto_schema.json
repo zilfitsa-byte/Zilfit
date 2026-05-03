@@ -1,0 +1,102 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ZILFIT LiveFit Scan Stream Profile Schema v2 Auto",
+  "description": "Input schema for auto runner. scan_confidence and decision_status are computed outputs — not required in input. Engineering simulation only. No medical, diagnostic, or therapeutic claims.",
+  "type": "object",
+  "required": [
+    "report_type",
+    "schema_version",
+    "manual_photo_capture",
+    "hardware_required",
+    "stream_ready",
+    "foot_detected",
+    "floor_plane_anchor",
+    "stable_frame_count",
+    "lighting_quality",
+    "occlusion_detected",
+    "optional_depth_sensor",
+    "camera_angle_quality",
+    "motion_blur_score",
+    "scale_anchor_confidence",
+    "frame_consistency_score",
+    "estimated_foot_length_mm",
+    "estimated_foot_width_mm",
+    "estimated_arch_index"
+  ],
+  "properties": {
+    "report_type": {
+      "type": "string",
+      "const": "livefit_scan_profile"
+    },
+    "schema_version": {
+      "type": "string",
+      "const": "2"
+    },
+    "manual_photo_capture": {
+      "type": "boolean",
+      "const": false
+    },
+    "hardware_required": {
+      "type": "boolean",
+      "const": false
+    },
+    "stream_ready": {
+      "type": "boolean"
+    },
+    "foot_detected": {
+      "type": "boolean"
+    },
+    "floor_plane_anchor": {
+      "type": "boolean"
+    },
+    "stable_frame_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "lighting_quality": {
+      "type": "string",
+      "enum": ["good", "acceptable", "poor"]
+    },
+    "occlusion_detected": {
+      "type": "boolean"
+    },
+    "optional_depth_sensor": {
+      "type": "boolean"
+    },
+    "camera_angle_quality": {
+      "type": "string",
+      "enum": ["optimal", "acceptable", "poor"]
+    },
+    "motion_blur_score": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "scale_anchor_confidence": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "frame_consistency_score": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "estimated_foot_length_mm": {
+      "type": "number",
+      "minimum": 180,
+      "maximum": 340
+    },
+    "estimated_foot_width_mm": {
+      "type": "number",
+      "minimum": 60,
+      "maximum": 130
+    },
+    "estimated_arch_index": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0
+    }
+  },
+  "additionalProperties": false
+}
