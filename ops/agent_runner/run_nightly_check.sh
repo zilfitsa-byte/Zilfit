@@ -4,6 +4,18 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$REPO_ROOT"
 
+fail_if_dirty() {
+  local label="$1"
+  local status
+  status="$(git status --short)"
+  if [ -n "$status" ]; then
+    echo "FAIL: working tree dirty after ${label}"
+    echo "$status"
+    exit 1
+  fi
+}
+
+
 TS="$(date -u +"%Y-%m-%dT%H-%M-%SZ")"
 REPORT_JSON="reports/nightly/nightly_check_${TS}.json"
 REPORT_MD="reports/nightly/nightly_check_${TS}.md"
@@ -17,6 +29,7 @@ STATUS_SHORT="$(git status --short || true)"
 
 echo "Branch: $CURRENT_BRANCH" | tee -a "$LOG_FILE"
 echo "HEAD: $HEAD_COMMIT" | tee -a "$LOG_FILE"
+fail_if_dirty "nightly check start"
 
 TEST_STATUS="pass"
 
@@ -60,4 +73,5 @@ EOF_MD
 
 echo "Report JSON: $REPORT_JSON" | tee -a "$LOG_FILE"
 echo "Report MD: $REPORT_MD" | tee -a "$LOG_FILE"
+fail_if_dirty "nightly check end"
 echo "DONE"
