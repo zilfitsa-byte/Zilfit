@@ -34,3 +34,7 @@ logs/
 reports/readiness/
 reports/quality/
 reports/nightly/
+
+# Generated preproduction simulation artifacts
+reports/preproduction/*.json
+reports/preproduction/*.md
