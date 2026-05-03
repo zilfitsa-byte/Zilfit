@@ -28,3 +28,9 @@ reports/opportunities/
 # Generated quality gate artifacts
 reports/quality/
 logs/quality_gate_tests_*.log
+
+# Generated runtime logs and readiness reports
+logs/
+reports/readiness/
+reports/quality/
+reports/nightly/
