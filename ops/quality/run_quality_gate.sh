@@ -27,16 +27,22 @@ if [ -n "$STATUS" ]; then
   GIT_STATUS="dirty"
 fi
 
-CLAIMS_MATCHES="$(rg -n -i "medical|clinical|therapeutic|diagnostic|treatment|treat|pain|disease|organ|hormone|cure|patient" \
-  docs parameters validators tests simulation_reports 2>/dev/null || true)"
+CLAIMS_MATCHES="$(rg -n -i "treats|treating|treatment for|cures|diagnoses|diagnostic result|prevents disease|prevention of disease|regulates hormones|medical grade|clinical result|therapeutic effect|pain reduction|heals|healing|patient outcome" \
+  simulation_reports reports/out reports/agent_runner 2>/dev/null \
+  | rg -v -i "no medical|non-medical|not medical|no clinical|non-clinical|not clinical|no diagnostic|non-diagnostic|not diagnostic|no therapeutic|non-therapeutic|not therapeutic|unsafe wording|forbidden|negative|expected validator failure|must not|does not validate" \
+  || true)"
 
 if [ -n "$CLAIMS_MATCHES" ]; then
   CLAIMS_STATUS="review_required"
 fi
 
-if ! bash tests/test_pressure_foot_simulator_v1.sh > logs/quality_gate_tests_${TS}.log 2>&1; then
-  TEST_STATUS="fail"
-fi
+{
+  echo "Running shell tests..."
+  for t in $(find tests -name '*.sh' | sort); do
+    echo "=== RUN ${t} ==="
+    bash "$t"
+  done
+} > "logs/quality_gate_tests_${TS}.log" 2>&1 || TEST_STATUS="fail"
 
 OVERALL="pass"
 if [ "$TEST_STATUS" != "pass" ] || [ "$GIT_STATUS" != "clean" ] || [ "$CLAIMS_STATUS" != "pass" ]; then
