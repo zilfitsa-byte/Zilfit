@@ -38,3 +38,8 @@ reports/nightly/
 # Generated preproduction simulation artifacts
 reports/preproduction/*.json
 reports/preproduction/*.md
+
+# Generated sample readiness artifacts
+reports/samples/*.json
+reports/samples/*.md
+logs/sample_readiness_*.log*
