@@ -1,0 +1,133 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ZILFIT LiveFit Scan Stream Profile Schema v2",
+  "description": "Engineering simulation schema for live camera stream foot scan. No medical, diagnostic, or therapeutic claims.",
+  "type": "object",
+  "required": [
+    "report_type",
+    "schema_version",
+    "manual_photo_capture",
+    "hardware_required",
+    "stream_ready",
+    "foot_detected",
+    "floor_plane_anchor",
+    "stable_frame_count",
+    "lighting_quality",
+    "occlusion_detected",
+    "optional_depth_sensor",
+    "camera_angle_quality",
+    "motion_blur_score",
+    "scale_anchor_confidence",
+    "frame_consistency_score",
+    "estimated_foot_length_mm",
+    "estimated_foot_width_mm",
+    "estimated_arch_index",
+    "scan_confidence",
+    "decision_status"
+  ],
+  "properties": {
+    "report_type": {
+      "type": "string",
+      "const": "livefit_scan_profile",
+      "description": "Must always be livefit_scan_profile."
+    },
+    "schema_version": {
+      "type": "string",
+      "const": "2",
+      "description": "Must be 2 for this schema."
+    },
+    "manual_photo_capture": {
+      "type": "boolean",
+      "const": false,
+      "description": "Must always be false. LiveFit uses live stream only."
+    },
+    "hardware_required": {
+      "type": "boolean",
+      "const": false,
+      "description": "Must always be false. No external hardware required."
+    },
+    "stream_ready": {
+      "type": "boolean",
+      "description": "True if live camera stream is active and usable."
+    },
+    "foot_detected": {
+      "type": "boolean",
+      "description": "True if foot was detected across stable frames. False triggers rejection."
+    },
+    "floor_plane_anchor": {
+      "type": "boolean",
+      "description": "True if AR floor plane anchor was established for scale reference."
+    },
+    "stable_frame_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of stable frames collected from live stream."
+    },
+    "lighting_quality": {
+      "type": "string",
+      "enum": ["good", "acceptable", "poor"],
+      "description": "Estimated lighting condition across sampled frames."
+    },
+    "occlusion_detected": {
+      "type": "boolean",
+      "description": "True if occlusion was detected over the foot region."
+    },
+    "optional_depth_sensor": {
+      "type": "boolean",
+      "description": "True if a depth sensor was available and used."
+    },
+    "camera_angle_quality": {
+      "type": "string",
+      "enum": ["optimal", "acceptable", "poor"],
+      "description": "Quality of camera angle relative to foot. Optimal is near top-down."
+    },
+    "motion_blur_score": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Motion blur estimate across frames. 0.0 = no blur, 1.0 = severe blur. Lower is better."
+    },
+    "scale_anchor_confidence": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Confidence in the scale anchor used for measurement. Higher is better."
+    },
+    "frame_consistency_score": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Inter-frame consistency of foot detection across stable frames. Higher is better."
+    },
+    "estimated_foot_length_mm": {
+      "type": "number",
+      "minimum": 180,
+      "maximum": 340,
+      "description": "Estimated foot length in millimetres. Engineering estimate only."
+    },
+    "estimated_foot_width_mm": {
+      "type": "number",
+      "minimum": 60,
+      "maximum": 130,
+      "description": "Estimated foot width in millimetres. Engineering estimate only."
+    },
+    "estimated_arch_index": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Estimated arch index. 0.0 = flat, 1.0 = high arch. Engineering estimate only."
+    },
+    "scan_confidence": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Composite scan confidence. >=0.85 pass, 0.75-0.84 review_required, <0.75 rejected."
+    },
+    "decision_status": {
+      "type": "string",
+      "enum": ["pass", "review_required", "rejected"],
+      "description": "Final scan decision based on confidence, stream quality, and foot detection."
+    }
+  },
+  "additionalProperties": false
+}
