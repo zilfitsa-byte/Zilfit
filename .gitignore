@@ -24,3 +24,7 @@ reports/agent_runs/
 # Local agent run outputs
 reports/agent_runs/
 reports/opportunities/
+
+# Generated quality gate artifacts
+reports/quality/
+logs/quality_gate_tests_*.log
