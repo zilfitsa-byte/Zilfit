@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+if [ "${ZILFIT_SKIP_SAMPLE_READINESS_TEST:-0}" = "1" ]; then
+  echo "SAMPLE_READINESS_GATE_TEST_SKIPPED_DURING_PARENT_GATE"
+  exit 0
+fi
+
 cd "$(dirname "$0")/../.."
 
 bash -n ops/samples/run_sample_readiness_gate.sh

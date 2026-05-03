@@ -26,17 +26,17 @@ if [ -z "$(git status --short)" ]; then
   score=$((score + 20))
 fi
 
-if /usr/bin/bash ops/quality/run_quality_gate.sh > "${LOG_FILE}.quality" 2>&1; then
+if ZILFIT_SKIP_SAMPLE_READINESS_TEST=1 /usr/bin/bash ops/quality/run_quality_gate.sh > "${LOG_FILE}.quality" 2>&1; then
   quality_gate_status="pass"
   score=$((score + 20))
 fi
 
-if /usr/bin/bash ops/agent_runner/run_nightly_check.sh > "${LOG_FILE}.nightly" 2>&1; then
+if ZILFIT_SKIP_SAMPLE_READINESS_TEST=1 /usr/bin/bash ops/agent_runner/run_nightly_check.sh > "${LOG_FILE}.nightly" 2>&1; then
   nightly_status="pass"
   score=$((score + 20))
 fi
 
-if /usr/bin/bash ops/readiness/run_business_readiness_index.sh > "${LOG_FILE}.business_readiness" 2>&1; then
+if ZILFIT_SKIP_SAMPLE_READINESS_TEST=1 /usr/bin/bash ops/readiness/run_business_readiness_index.sh > "${LOG_FILE}.business_readiness" 2>&1; then
   latest_business_json="$(ls -t reports/readiness/business_readiness_*.json 2>/dev/null | head -n 1 || true)"
   if [ -n "$latest_business_json" ]; then
     business_readiness_score="$(python3 - <<PY
