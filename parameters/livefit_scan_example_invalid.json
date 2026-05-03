@@ -1,0 +1,17 @@
+{
+  "report_type": "livefit_scan_profile",
+  "manual_photo_capture": false,
+  "hardware_required": false,
+  "stream_ready": true,
+  "foot_detected": false,
+  "floor_plane_anchor": false,
+  "stable_frame_count": 2,
+  "lighting_quality": "poor",
+  "occlusion_detected": true,
+  "optional_depth_sensor": false,
+  "estimated_foot_length_mm": 260.0,
+  "estimated_foot_width_mm": 90.0,
+  "estimated_arch_index": 0.35,
+  "scan_confidence": 0.61,
+  "decision_status": "rejected"
+}
