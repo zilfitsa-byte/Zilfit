@@ -16,7 +16,7 @@ if not source.exists():
 runtime_packet = json.loads(source.read_text(encoding="utf-8"))
 out = build_z_ux_live_output(runtime_packet)
 
-target = Path("tests/z_ux_live_output_from_runtime_v1.json")
+target = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("tests/z_ux_live_output_from_runtime_v1.json")
 target.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
 
 print(f"WROTE: {target}")
