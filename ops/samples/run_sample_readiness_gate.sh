@@ -57,47 +57,63 @@ PY
   fi
 fi
 
-tmp_dir="$(mktemp -d)"
-trap 'rm -rf "$tmp_dir"' EXIT
 
-sample_input="$tmp_dir/preproduction_sample_input.json"
-sample_report="$tmp_dir/preproduction_sample_output.json"
 
-cat > "$sample_input" <<JSON
+TMP_DIR="${TMP_DIR:-$(mktemp -d)}"
+trap 'rm -rf "$TMP_DIR"' EXIT
+INPUT="${INPUT:-$TMP_DIR/preproduction_input.json}"
+OUT="${OUT:-$TMP_DIR/preproduction_output.json}"
+sample_input="${INPUT}"
+sample_report="${OUT}"
+
+cat > "$INPUT" <<'JSON'
 {
   "schema_version": "v1",
   "project": "ZILFIT",
+  "sample_id": "engineering_sample_001",
   "sample_batch_id": "engineering_sample_batch_001",
   "sample_count": 5,
-  "purpose": "engineering fit, pressure-density, and sensor-readiness review only",
-  "allowed_use": "doctor/reviewer supervised engineering feedback",
-  "blocked_claims": [
-    "medical",
-    "diagnostic",
-    "therapeutic",
-    "clinical",
-    "psychological treatment",
-    "pain reduction",
-    "hormone regulation"
-  ],
-  "required_before_public_claims": [
-    "physical coupon validation",
-    "reviewer feedback",
-    "documented test protocol",
-    "formal approvals if medical claims are ever considered"
-  ]
+  "edition": "CALM",
+  "purpose": "engineering fit pressure-density sensor-readiness and reviewer feedback only",
+  "allowed_use": "supervised engineering review by selected professional reviewers",
+  "prototype_stage": "preproduction_engineering_samples",
+  "public_marketing": false,
+  "mass_production": false,
+  "customer_measurement_profile": {
+    "height_cm": 175,
+    "weight_kg": 75,
+    "shoe_size": 42,
+    "foot_length_mm": 265,
+    "foot_width_mm": 100,
+    "usage_mode": "daily",
+    "fit_preference": "balanced",
+    "arch_index": 0.24
+  },
+  "customer": {
+    "height_cm": 175,
+    "weight_kg": 75,
+    "shoe_size": 42,
+    "foot_length_mm": 265,
+    "foot_width_mm": 100,
+    "usage_mode": "daily",
+    "fit_preference": "balanced",
+    "arch_index": 0.24
+  }
 }
 JSON
 
 if python3 runtime/preproduction_sample_simulator.py "$sample_input" "$sample_report" > "${LOG_FILE}.preproduction" 2>&1; then
-  preproduction_simulator_status="$(python3 - <<PY
-import json
-d=json.load(open("$sample_report", encoding="utf-8"))
-print(d.get("status", "unknown"))
-PY
+  preproduction_decision="$(python3 - "$sample_report" <<'PYJSON'
+import json, sys
+p = sys.argv[1]
+d = json.load(open(p, encoding="utf-8"))
+print(d.get("manufacturing_decision", {}).get("status", "unknown"))
+PYJSON
 )"
-  if [ "$preproduction_simulator_status" = "sample_ready" ]; then
-    score=$((score + 15))
+  if [ "$preproduction_decision" = "sample_ready" ]; then
+    preproduction_simulator_status="pass"
+  else
+    preproduction_simulator_status="fail"
   fi
 fi
 
