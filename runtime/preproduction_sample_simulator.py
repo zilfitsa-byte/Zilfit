@@ -51,9 +51,9 @@ def clamp(v, lo, hi):
 
 
 def wall_from_density(density_pct):
-    if density_pct < 30:
+    if density_pct <= 30:
         return 0.5
-    if density_pct < 46:
+    if density_pct <= 55:
         return 0.6
     return 0.7
 
