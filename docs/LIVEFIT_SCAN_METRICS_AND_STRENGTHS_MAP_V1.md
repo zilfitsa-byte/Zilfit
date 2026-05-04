@@ -177,7 +177,9 @@ Density-to-wall assignment:
 | Z06 | 0.0051 | 21.18 | 0.5 |
 | Z07 | 0.0000 | 21.00 | 0.5 |
 
-Note: 22 percent density should be treated only as a low-density engineering variant near the lower example range.
+> **Z01 note:** `density_pct` `56.00` is intentionally one unit above the `>55` boundary to demonstrate wall-thickness step-up from `0.6 mm` to `0.7 mm`. This is not a rounding artifact.
+
+Note: Density values below `25%` appearing in zone examples, such as `Z05`-`Z07`, reflect low-load zones in the normalized pressure model. They do not represent a standalone product density specification.
 
 ## 9. Strength-To-Metric Mapping
 
