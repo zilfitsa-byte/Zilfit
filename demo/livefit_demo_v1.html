@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZILFIT LiveFit Engineering Demo v1</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+         background: #0a0a0a; color: #e0e0e0; min-height: 100vh; padding: 24px; }
+  h1 { font-size: 1.4rem; font-weight: 700; letter-spacing: 0.08em;
+       color: #c8a96e; margin-bottom: 4px; }
+  .subtitle { font-size: 0.75rem; color: #666; margin-bottom: 24px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 900px; }
+  @media(max-width:600px){ .grid { grid-template-columns: 1fr; } }
+  .card { background: #141414; border: 1px solid #222; border-radius: 10px; padding: 18px; }
+  .card h2 { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em;
+             color: #888; margin-bottom: 14px; }
+  .field { margin-bottom: 12px; }
+  .field label { display: flex; justify-content: space-between;
+                 font-size: 0.75rem; color: #aaa; margin-bottom: 4px; }
+  .field label span { color: #c8a96e; font-weight: 600; min-width: 36px; text-align: right; }
+  input[type=range] { width: 100%; accent-color: #c8a96e; height: 4px; }
+  input[type=number] { width: 80px; background: #1e1e1e; border: 1px solid #333;
+                       color: #e0e0e0; padding: 4px 8px; border-radius: 4px;
+                       font-size: 0.8rem; }
+  select { background: #1e1e1e; border: 1px solid #333; color: #e0e0e0;
+           padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; width: 100%; }
+  .toggle { display: flex; gap: 8px; }
+  .toggle button { flex: 1; padding: 5px; border-radius: 4px; border: 1px solid #333;
+                   background: #1e1e1e; color: #888; font-size: 0.75rem; cursor: pointer; }
+  .toggle button.active { background: #c8a96e22; border-color: #c8a96e; color: #c8a96e; }
+  .results { max-width: 900px; margin-top: 16px; }
+  .result-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+  .metric { background: #141414; border: 1px solid #222; border-radius: 10px;
+            padding: 16px; text-align: center; }
+  .metric .label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em;
+                   color: #666; margin-bottom: 8px; }
+  .metric .value { font-size: 1.1rem; font-weight: 700; }
+  .badge { display: inline-block; padding: 4px 12px; border-radius: 20px;
+           font-size: 0.72rem; font-weight: 600; letter-spacing: 0.05em; }
+  .green  { background: #0d2b1a; color: #4caf7d; border: 1px solid #1e5c38; }
+  .yellow { background: #2b2200; color: #f0c040; border: 1px solid #5c4400; }
+  .red    { background: #2b0d0d; color: #e05555; border: 1px solid #5c1a1a; }
+  .grey   { background: #1a1a1a; color: #888;    border: 1px solid #333; }
+  .conf-bar-wrap { background: #1e1e1e; border-radius: 6px; height: 8px;
+                   margin-top: 8px; overflow: hidden; }
+  .conf-bar { height: 8px; border-radius: 6px; transition: width 0.3s, background 0.3s; }
+  .boundary { max-width: 900px; margin-top: 16px; background: #0f0f0f;
+              border: 1px solid #1e1e1e; border-radius: 8px; padding: 14px;
+              font-size: 0.68rem; color: #555; line-height: 1.6; }
+  .boundary strong { color: #888; }
+  .signals { max-width: 900px; margin-top: 12px; background: #141414;
+             border: 1px solid #222; border-radius: 10px; padding: 16px; }
+  .signals h2 { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em;
+                color: #888; margin-bottom: 12px; }
+  .sig-row { display: flex; justify-content: space-between; font-size: 0.72rem;
+             color: #aaa; padding: 3px 0; border-bottom: 1px solid #1a1a1a; }
+  .sig-row:last-child { border-bottom: none; }
+  .sig-val { color: #c8a96e; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<h1>ZILFIT LiveFit · Engineering Demo v1</h1>
+<p class="subtitle">Internal engineering simulation — no medical or therapeutic claims</p>
+
+<div class="grid">
+  <!-- Stream Quality -->
+  <div class="card">
+    <h2>Stream Quality Signals</h2>
+
+    <div class="field">
+      <label>Frame Consistency Score <span id="fcs_v">0.90</span></label>
+      <input type="range" id="fcs" min="0" max="1" step="0.01" value="0.90" oninput="sync('fcs')">
+    </div>
+    <div class="field">
+      <label>Scale Anchor Confidence <span id="sac_v">0.93</span></label>
+      <input type="range" id="sac" min="0" max="1" step="0.01" value="0.93" oninput="sync('sac')">
+    </div>
+    <div class="field">
+      <label>Motion Blur Score (lower=better) <span id="mbs_v">0.05</span></label>
+      <input type="range" id="mbs" min="0" max="1" step="0.01" value="0.05" oninput="sync('mbs')">
+    </div>
+    <div class="field">
+      <label>Stable Frame Count <span id="sfc_v">18</span></label>
+      <input type="range" id="sfc" min="0" max="30" step="1" value="18" oninput="sync('sfc')">
+    </div>
+    <div class="field">
+      <label>Camera Angle Quality</label>
+      <select id="caq" onchange="compute()">
+        <option value="optimal">Optimal</option>
+        <option value="acceptable">Acceptable</option>
+        <option value="poor">Poor</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Scan Context -->
+  <div class="card">
+    <h2>Scan Context</h2>
+
+    <div class="field">
+      <label>Foot Detected</label>
+      <div class="toggle">
+        <button id="fd_t" class="active" onclick="setBool('fd',true)">Yes</button>
+        <button id="fd_f" onclick="setBool('fd',false)">No</button>
+      </div>
+    </div>
+    <div class="field">
+      <label>Stream Ready</label>
+      <div class="toggle">
+        <button id="sr_t" class="active" onclick="setBool('sr',true)">Yes</button>
+        <button id="sr_f" onclick="setBool('sr',false)">No</button>
+      </div>
+    </div>
+    <div class="field">
+      <label>Lighting Quality</label>
+      <select id="lq" onchange="compute()">
+        <option value="good">Good</option>
+        <option value="acceptable">Acceptable</option>
+        <option value="poor">Poor</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Foot Length (mm) <span id="fl_v">267</span></label>
+      <input type="range" id="fl" min="180" max="340" step="1" value="267" oninput="sync('fl')">
+    </div>
+    <div class="field">
+      <label>Foot Width (mm) <span id="fw_v">96</span></label>
+      <input type="range" id="fw" min="60" max="130" step="1" value="96" oninput="sync('fw')">
+    </div>
+    <div class="field">
+      <label>Arch Index <span id="ai_v">0.43</span></label>
+      <input type="range" id="ai" min="0" max="1" step="0.01" value="0.43" oninput="sync('ai')">
+    </div>
+  </div>
+</div>
+
+<!-- Results -->
+<div class="results">
+  <div class="result-grid">
+    <div class="metric">
+      <div class="label">Computed Confidence</div>
+      <div class="value" id="r_conf">—</div>
+      <div class="conf-bar-wrap"><div class="conf-bar" id="r_bar" style="width:0%"></div></div>
+    </div>
+    <div class="metric">
+      <div class="label">Scan Decision</div>
+      <div class="value" id="r_scan">—</div>
+    </div>
+    <div class="metric">
+      <div class="label">Sample Readiness</div>
+      <div class="value" id="r_sample">—</div>
+    </div>
+    <div class="metric">
+      <div class="label">Fit Status</div>
+      <div class="value" id="r_fit">—</div>
+    </div>
+    <div class="metric">
+      <div class="label">Trial Readiness</div>
+      <div class="value" id="r_trial">—</div>
+    </div>
+  </div>
+</div>
+
+<!-- Signal Contributions -->
+<div class="signals">
+  <h2>Signal Contributions</h2>
+  <div id="sig_rows"></div>
+</div>
+
+<!-- Boundary -->
+<div class="boundary">
+  <strong>Engineering Boundary:</strong>
+  This demo is for internal engineering simulation and validation only.
+  All outputs represent estimated scan quality, geometric measurements, and
+  engineering readiness classifications for footwear sample development.
+  No medical, diagnostic, therapeutic, clinical, treatment, pain, disease,
+  or cure claims are made or implied. ZILFIT LiveFit Engineering Demo v1 —
+  Internal Use Only.
+</div>
+
+<script>
+const state = { fd: true, sr: true };
+const WEIGHTS = { fcs:0.30, sac:0.25, mbs_inv:0.20, sfn:0.15, caq:0.10 };
+const ANGLE = { optimal:1.0, acceptable:0.6, poor:0.0 };
+
+function sync(id) {
+  const el = document.getElementById(id);
+  document.getElementById(id+'_v').textContent = el.value;
+  compute();
+}
+
+function setBool(key, val) {
+  state[key] = val;
+  document.getElementById(key+'_t').classList.toggle('active', val);
+  document.getElementById(key+'_f').classList.toggle('active', !val);
+  compute();
+}
+
+function v(id) { return parseFloat(document.getElementById(id).value); }
+function sel(id) { return document.getElementById(id).value; }
+
+function badge(text, color) {
+  return `<span class="badge ${color}">${text}</span>`;
+}
+
+function compute() {
+  const fcs = v('fcs'), sac = v('sac'), mbs = v('mbs');
+  const sfc = v('sfc'), fl = v('fl'), fw = v('fw'), ai = v('ai');
+  const caq = sel('caq'), lq = sel('lq');
+  const fd = state.fd, sr = state.sr;
+
+  const angle_score = ANGLE[caq] ?? 0;
+  const sfn = Math.min(sfc / 20, 1.0);
+  const mbs_inv = 1.0 - mbs;
+
+  const contrib = {
+    'frame_consistency': WEIGHTS.fcs * fcs,
+    'scale_anchor':      WEIGHTS.sac * sac,
+    'blur_inverted':     WEIGHTS.mbs_inv * mbs_inv,
+    'stable_frames':     WEIGHTS.sfn * sfn,
+    'camera_angle':      WEIGHTS.caq * angle_score,
+  };
+  const conf = Object.values(contrib).reduce((a,b)=>a+b,0);
+  const confR = Math.round(conf * 1000) / 1000;
+
+  // Scan decision
+  let scan_dec, scan_color;
+  if (!sr)      { scan_dec='rejected';        scan_color='red'; }
+  else if (!fd) { scan_dec='rejected';        scan_color='red'; }
+  else if (conf>=0.85) { scan_dec='pass';     scan_color='green'; }
+  else if (conf>=0.75) { scan_dec='review_required'; scan_color='yellow'; }
+  else          { scan_dec='rejected';        scan_color='red'; }
+
+  // Major quality gate
+  const mq_fail = (sfc<5)||(mbs>0.70)||(sac<0.50)||(fcs<0.50)||(caq==='poor');
+
+  // Sample readiness
+  let sample, sample_color;
+  if (!fd||!sr||conf<0.75||mq_fail) { sample='needs_rescan';   sample_color='red'; }
+  else if (conf<0.85||scan_dec==='review_required') { sample='manual_review'; sample_color='yellow'; }
+  else { sample='sample_ready'; sample_color='green'; }
+
+  // Fit status
+  let fit, fit_color;
+  const size = fl<230?'sample_small':fl<=280?'sample_medium':'sample_large';
+  const width_cat = fw<80?'narrow':fw<=105?'standard':fw<=115?'wide':'extra_wide';
+  const arch_cat = ai<0.35?'low_arch_band':ai<=0.65?'mid_arch_band':'high_arch_band';
+  if (sample==='needs_rescan')    { fit='review_required'; fit_color='red'; }
+  else if (sample==='manual_review') { fit='review_required'; fit_color='yellow'; }
+  else { fit='sample_candidate'; fit_color='green'; }
+
+  // Trial readiness
+  let trial, trial_color;
+  if (!fd||!sr||conf<0.75||mq_fail) {
+    trial='needs_more_scan_quality'; trial_color='red';
+  } else if (sample==='manual_review'||scan_dec==='review_required'||fit==='review_required') {
+    trial='needs_fit_review'; trial_color='yellow';
+  } else if (sample==='sample_ready'&&scan_dec==='pass'&&fit==='sample_candidate') {
+    trial='ready_for_physical_trial'; trial_color='green';
+  } else {
+    trial='needs_fit_review'; trial_color='yellow';
+  }
+
+  // Confidence bar color
+  const bar_color = conf>=0.85?'#4caf7d':conf>=0.75?'#f0c040':'#e05555';
+
+  document.getElementById('r_conf').innerHTML =
+    `<span style="color:${bar_color}">${confR.toFixed(3)}</span>`;
+  document.getElementById('r_bar').style.width = (conf*100).toFixed(1)+'%';
+  document.getElementById('r_bar').style.background = bar_color;
+  document.getElementById('r_scan').innerHTML   = badge(scan_dec,   scan_color);
+  document.getElementById('r_sample').innerHTML = badge(sample,     sample_color);
+  document.getElementById('r_fit').innerHTML    = badge(fit+' · '+size, fit_color);
+  document.getElementById('r_trial').innerHTML  = badge(trial,      trial_color);
+
+  // Signal rows
+  const rows = Object.entries(contrib).map(([k,val])=>
+    `<div class="sig-row"><span>${k}</span><span class="sig-val">${val.toFixed(4)}</span></div>`
+  ).join('');
+  document.getElementById('sig_rows').innerHTML = rows +
+    `<div class="sig-row"><strong>total confidence</strong>
+     <span class="sig-val" style="color:${bar_color}">${confR.toFixed(4)}</span></div>`;
+}
+
+compute();
+</script>
+</body>
+</html>
