@@ -1,0 +1,113 @@
+{
+  "_schema": "zilfit-zone-handoff-v1",
+  "_contract": "docs/ZILFIT_DENSITY_TO_PRINT_SPEC_CONTRACT_V1.md",
+  "_validation_scope": "simulation",
+  "_fixture_type": "normalized_reference",
+  "_note": "Normalized reference fixture only. Not derived from runtime output. Not a manufacturing handoff record. Zone ordering chosen to satisfy the 15-point adjacent density jump cap with failure_flags empty and smoothing_flag false. All zones carry validation_status: simulation.",
+  "scan_id": "reference_scan_001",
+  "foot": "right",
+  "zone_outputs": [
+    {
+      "zone_id": "Z01",
+      "zone_name": "heel",
+      "zone_load_N": 320.0,
+      "P_norm": 0.82,
+      "density_pct": 56.0,
+      "t_wall_mm": 0.7,
+      "source": "plantar_pressure_map",
+      "confidence": 0.91,
+      "validation_status": "simulation",
+      "failure_flags": [],
+      "baseline_comparison": {
+        "baseline_wall_mm": 0.6,
+        "delta_from_baseline_mm": 0.1
+      },
+      "smoothing_flag": false
+    },
+    {
+      "zone_id": "Z06",
+      "zone_name": "heel_boundary_check",
+      "zone_load_N": 215.0,
+      "P_norm": 0.55,
+      "density_pct": 55.0,
+      "t_wall_mm": 0.6,
+      "source": "plantar_pressure_map",
+      "confidence": 0.88,
+      "validation_status": "simulation",
+      "failure_flags": [],
+      "baseline_comparison": {
+        "baseline_wall_mm": 0.6,
+        "delta_from_baseline_mm": 0.0
+      },
+      "smoothing_flag": false
+    },
+    {
+      "zone_id": "Z04",
+      "zone_name": "forefoot_metatarsal",
+      "zone_load_N": 210.0,
+      "P_norm": 0.54,
+      "density_pct": 43.0,
+      "t_wall_mm": 0.6,
+      "source": "plantar_pressure_map",
+      "confidence": 0.89,
+      "validation_status": "simulation",
+      "failure_flags": [],
+      "baseline_comparison": {
+        "baseline_wall_mm": 0.6,
+        "delta_from_baseline_mm": 0.0
+      },
+      "smoothing_flag": false
+    },
+    {
+      "zone_id": "Z02",
+      "zone_name": "midfoot_medial",
+      "zone_load_N": 180.0,
+      "P_norm": 0.46,
+      "density_pct": 38.0,
+      "t_wall_mm": 0.6,
+      "source": "plantar_pressure_map",
+      "confidence": 0.87,
+      "validation_status": "simulation",
+      "failure_flags": [],
+      "baseline_comparison": {
+        "baseline_wall_mm": 0.6,
+        "delta_from_baseline_mm": 0.0
+      },
+      "smoothing_flag": false
+    },
+    {
+      "zone_id": "Z05",
+      "zone_name": "toe_box",
+      "zone_load_N": 130.0,
+      "P_norm": 0.33,
+      "density_pct": 30.0,
+      "t_wall_mm": 0.5,
+      "source": "plantar_pressure_map",
+      "confidence": 0.85,
+      "validation_status": "simulation",
+      "failure_flags": [],
+      "baseline_comparison": {
+        "baseline_wall_mm": 0.6,
+        "delta_from_baseline_mm": -0.1
+      },
+      "smoothing_flag": false
+    },
+    {
+      "zone_id": "Z03",
+      "zone_name": "midfoot_lateral",
+      "zone_load_N": 95.0,
+      "P_norm": 0.24,
+      "density_pct": 22.0,
+      "t_wall_mm": 0.5,
+      "source": "plantar_pressure_map",
+      "confidence": 0.83,
+      "validation_status": "simulation",
+      "failure_flags": [],
+      "baseline_comparison": {
+        "baseline_wall_mm": 0.6,
+        "delta_from_baseline_mm": -0.1
+      },
+      "smoothing_flag": false
+    }
+  ]
+}
