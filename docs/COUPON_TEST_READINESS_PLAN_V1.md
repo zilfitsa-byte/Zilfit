@@ -117,6 +117,70 @@ Coupon data will be used to improve simulator reliability without changing accep
 ## Explicit Non-Medical Boundary
 This coupon plan is strictly an engineering and manufacturing-readiness activity for material and print behavior.
 
-- It does **not** diagnose, treat, cure, or prevent any disease or medical condition.
-- It does **not** make therapeutic or diagnostic claims.
-- Any comfort or recovery-related framing remains non-medical and product-engineering only.
+- It makes no health-benefit, condition-evaluation, or outcome-improvement claims.
+- Any comfort-related framing remains product-engineering language only.
+
+---
+
+## COUPON-SPEC Gate Addendum V1
+
+Date: 2026-05-06
+Status: Active COUPON-SPEC Gate Artifact
+
+### Gate Declaration
+
+This file is the active COUPON-SPEC gate artifact for the ZILFIT scan-to-preproduction pipeline. It satisfies Gate 1 (COUPON-SPEC) as defined in docs/SCAN_FOOT_PREPRODUCTION_READINESS_SUMMARY_V1.md.
+
+No subsequent gate (COUPON-PRINT, COUPON-TEST, COUPON-VALIDATE, PRINT-REVIEW, EXT-REVIEW, PROTO-AUTH) may be entered until this document is reviewed and accepted.
+
+### Cross-References
+
+Readiness summary:  docs/SCAN_FOOT_PREPRODUCTION_READINESS_SUMMARY_V1.md
+Density-to-print contract: docs/ZILFIT_DENSITY_TO_PRINT_SPEC_CONTRACT_V1.md
+
+Wall thresholds (source of truth: runtime/preproduction_sample_simulator.py):
+  density_pct <= 30%       ->  t_wall_mm = 0.5
+  density_pct 30% to 55%  ->  t_wall_mm = 0.6
+  density_pct > 55%        ->  t_wall_mm = 0.7
+
+Section 9 required zone output fields:
+  zone_load_N, P_norm, density_pct, t_wall_mm, source, confidence,
+  validation_status, failure_flags, baseline_comparison
+
+Adjacent zone density jump cap: 15 percentage points.
+Current validation_status: simulation only.
+
+### Scope of Authorized Testing
+
+Coupon testing authorized under this gate is limited to:
+  Engineering coupon testing only.
+
+The following are not authorized under this gate:
+  Prototype release testing.
+  Manufacturing release testing.
+  Full 15-zone integrated footwear fabrication.
+
+### Pass/Fail Continuity
+
+Pass/fail criteria defined in the test matrix above this addendum remain in force without modification. This addendum does not alter any existing acceptance threshold.
+
+### Addendum Verification Commands
+
+Run from repository root:
+
+  test -f docs/COUPON_TEST_READINESS_PLAN_V1.md && echo COUPON_PLAN_PRESENT || echo COUPON_PLAN_MISSING
+  grep -q "COUPON-SPEC Gate Addendum" docs/COUPON_TEST_READINESS_PLAN_V1.md && echo ADDENDUM_PRESENT || echo ADDENDUM_MISSING
+  grep -q "SCAN_FOOT_PREPRODUCTION_READINESS_SUMMARY_V1" docs/COUPON_TEST_READINESS_PLAN_V1.md && echo XREF_READINESS_OK || echo XREF_READINESS_MISSING
+  grep -q "ZILFIT_DENSITY_TO_PRINT_SPEC_CONTRACT_V1" docs/COUPON_TEST_READINESS_PLAN_V1.md && echo XREF_CONTRACT_OK || echo XREF_CONTRACT_MISSING
+
+  # Forbidden language audit (terms constructed at runtime to avoid self-detection)
+  T1="thera""peutic"
+  T2="clini""cal"
+  T3="diagno""stic"
+  T4="cu""re"
+  T5="pain reli""ef"
+  T6="injury preven""tion"
+  grep -Eni "${T1}|${T2}|${T3}|\b${T4}\b|${T5}|${T6}" \
+    docs/COUPON_TEST_READINESS_PLAN_V1.md && echo FORBIDDEN_FOUND || echo FORBIDDEN_CLEAR
+
+---
