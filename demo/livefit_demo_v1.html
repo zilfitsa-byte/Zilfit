@@ -58,6 +58,13 @@
              color: #aaa; padding: 3px 0; border-bottom: 1px solid #1a1a1a; }
   .sig-row:last-child { border-bottom: none; }
   .sig-val { color: #c8a96e; font-weight: 600; }
+
+  .camera-wrap { max-width: 900px; margin-top: 18px; }
+  .camera-shell { position: relative; background:#111; border:1px solid #222; border-radius:12px; overflow:hidden; }
+  #live_video { width:100%; display:block; background:#000; }
+  .camera-controls { display:flex; gap:8px; margin-top:10px; }
+  .camera-controls button { background:#1e1e1e; color:#d8d8d8; border:1px solid #333; border-radius:8px; padding:8px 10px; cursor:pointer; }
+  .camera-note { color:#7f8ca3; font-size:0.72rem; margin-top:8px; }
 </style>
 </head>
 <body>
@@ -137,6 +144,20 @@
   </div>
 </div>
 
+
+<div class="camera-wrap card">
+  <h2>Live Camera Frame</h2>
+  <div class="camera-shell">
+    <video id="live_video" playsinline autoplay muted></video>
+  </div>
+  <div class="camera-controls">
+    <button id="start_cam_btn" type="button">Start Camera</button>
+    <button id="capture_frame_btn" type="button">Capture Frame</button>
+    <button id="stop_cam_btn" type="button">Stop Camera</button>
+  </div>
+  <p class="camera-note">Engineering simulation camera preview only.</p>
+</div>
+
 <!-- Results -->
 <div class="results">
   <div class="result-grid">
@@ -205,6 +226,35 @@ function sel(id) { return document.getElementById(id).value; }
 function badge(text, color) {
   return `<span class="badge ${color}">${text}</span>`;
 }
+
+
+
+const liveState = { stream:null, frozenAt:null };
+const videoEl = document.getElementById('live_video');
+
+async function startCamera() {
+  if (liveState.stream) return;
+  const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio:false });
+  liveState.stream = stream;
+  videoEl.srcObject = stream;
+  await videoEl.play();
+}
+
+function captureFrame() {
+  liveState.frozenAt = Date.now();
+  compute();
+}
+
+function stopCamera() {
+  if (!liveState.stream) return;
+  liveState.stream.getTracks().forEach(t => t.stop());
+  liveState.stream = null;
+  videoEl.srcObject = null;
+}
+
+document.getElementById('start_cam_btn').addEventListener('click', () => startCamera().catch(()=>{}));
+document.getElementById('capture_frame_btn').addEventListener('click', captureFrame);
+document.getElementById('stop_cam_btn').addEventListener('click', stopCamera);
 
 function compute() {
   const fcs = v('fcs'), sac = v('sac'), mbs = v('mbs');
