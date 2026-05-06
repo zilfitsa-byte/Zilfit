@@ -62,9 +62,15 @@
   .camera-wrap { max-width: 900px; margin-top: 18px; }
   .camera-shell { position: relative; background:#111; border:1px solid #222; border-radius:12px; overflow:hidden; }
   #live_video { width:100%; display:block; background:#000; }
+  #live_hud { position:absolute; top:8px; left:8px; background:rgba(0,0,0,.55); border:1px solid #333; border-radius:8px; padding:8px 10px; font-size:.68rem; line-height:1.4; color:#d7c08a; }
   .camera-controls { display:flex; gap:8px; margin-top:10px; }
   .camera-controls button { background:#1e1e1e; color:#d8d8d8; border:1px solid #333; border-radius:8px; padding:8px 10px; cursor:pointer; }
   .camera-note { color:#7f8ca3; font-size:0.72rem; margin-top:8px; }
+  .calibration { margin-top:12px; padding:12px; border:1px solid #242424; border-radius:10px; background:#101010; }
+  .cal-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:8px; }
+  .cal-row input { width:100%; }
+  .json-panel { margin-top:12px; background:#101010; border:1px solid #272727; border-radius:10px; padding:10px; }
+  #live_result_json { width:100%; min-height:220px; background:#0b0b0b; color:#c8d3e0; border:1px solid #2a2a2a; border-radius:8px; padding:10px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size:.68rem; }
 </style>
 </head>
 <body>
@@ -149,13 +155,37 @@
   <h2>Live Camera Frame</h2>
   <div class="camera-shell">
     <video id="live_video" playsinline autoplay muted></video>
+    <div id="live_hud">LIVE SCAN MVP</div>
+  </div>
+  <div class="calibration">
+    <h2>Calibration Mode</h2>
+    <p class="camera-note">Place foot and reference object in the camera frame. Capture is engineering-only; estimates require visible reference scale.</p>
+    <div class="field">
+      <label>Reference Object</label>
+      <select id="ref_object">
+        <option value="none">No reference selected</option>
+        <option value="a4">A4 paper (297mm × 210mm)</option>
+        <option value="us_letter">US Letter (279.4mm × 215.9mm)</option>
+        <option value="custom">Custom card/manual</option>
+      </select>
+    </div>
+    <div class="cal-row">
+      <div class="field"><label>Custom width_mm</label><input id="custom_width_mm" type="number" min="10" max="500" value="85"></div>
+      <div class="field"><label>Custom height_mm</label><input id="custom_height_mm" type="number" min="10" max="500" value="54"></div>
+    </div>
   </div>
   <div class="camera-controls">
     <button id="start_cam_btn" type="button">Start Camera</button>
     <button id="capture_frame_btn" type="button">Capture Frame</button>
+    <button id="reset_capture_btn" type="button">Reset Capture</button>
+    <button id="copy_result_btn" type="button">Copy Result JSON</button>
     <button id="stop_cam_btn" type="button">Stop Camera</button>
   </div>
-  <p class="camera-note">Engineering simulation camera preview only.</p>
+  <p class="camera-note">scale estimate: manual/reference-assisted</p>
+  <div class="json-panel">
+    <h2>Live Scan Result JSON</h2>
+    <textarea id="live_result_json" readonly>{}</textarea>
+  </div>
 </div>
 
 <!-- Results -->
@@ -229,8 +259,83 @@ function badge(text, color) {
 
 
 
-const liveState = { stream:null, frozenAt:null };
+const liveState = { stream:null, frozenAt:null, frameTimer:null, prevGray:null, analysis:null, captureData:null };
 const videoEl = document.getElementById('live_video');
+const hudEl = document.getElementById('live_hud');
+const resultJsonEl = document.getElementById('live_result_json');
+const workCanvas = document.createElement('canvas');
+const workCtx = workCanvas.getContext('2d', { willReadFrequently: true });
+const freezeCanvas = document.createElement('canvas');
+const freezeCtx = freezeCanvas.getContext('2d');
+
+function getReferenceDims() {
+  const ref = document.getElementById('ref_object').value;
+  if (ref === 'a4') return { reference_object:'A4', width_mm:297, height_mm:210 };
+  if (ref === 'us_letter') return { reference_object:'US_LETTER', width_mm:279.4, height_mm:215.9 };
+  if (ref === 'custom') return { reference_object:'CUSTOM_MANUAL', width_mm:parseFloat(document.getElementById('custom_width_mm').value)||0, height_mm:parseFloat(document.getElementById('custom_height_mm').value)||0 };
+  return { reference_object:'NONE', width_mm:0, height_mm:0 };
+}
+
+function analyzeFrame() {
+  if (!liveState.stream || videoEl.readyState < 2) return;
+  const dw = 160, dh = Math.round((videoEl.videoHeight / (videoEl.videoWidth||1)) * 160) || 120;
+  workCanvas.width = dw; workCanvas.height = dh;
+  workCtx.drawImage(videoEl, 0, 0, dw, dh);
+  const image = workCtx.getImageData(0, 0, dw, dh).data;
+  const gray = new Float32Array(dw * dh);
+  let sum=0, sumSq=0, edge=0, motion=0;
+  const threshold = 24;
+  let minX=dw, minY=dh, maxX=0, maxY=0, hits=0;
+  for (let i=0, p=0; i<gray.length; i++, p+=4) {
+    const lum = 0.2126*image[p] + 0.7152*image[p+1] + 0.0722*image[p+2];
+    gray[i] = lum; sum += lum; sumSq += lum*lum;
+    if (liveState.prevGray) motion += Math.abs(lum - liveState.prevGray[i]);
+    const x = i % dw, y = (i/dw)|0;
+    if (x>0 && y>0) {
+      const gx = Math.abs(lum - gray[i-1]), gy = Math.abs(lum - gray[i-dw]); const g = gx + gy; edge += g;
+      if (g > threshold && lum < 180) { hits++; if (x<minX) minX=x; if (y<minY) minY=y; if (x>maxX) maxX=x; if (y>maxY) maxY=y; }
+    }
+  }
+  const n = gray.length;
+  const mean = sum/n;
+  const variance = Math.max(0, (sumSq/n) - (mean*mean));
+  const contrast = Math.sqrt(variance);
+  const motionDelta = liveState.prevGray ? motion/n : 0;
+  const edgeScore = edge/n;
+  liveState.prevGray = gray;
+  const hasCandidate = hits > (n * 0.015);
+  const candidate = hasCandidate ? { x:minX, y:minY, w:Math.max(1,maxX-minX), h:Math.max(1,maxY-minY) } : null;
+  const coverage = candidate ? (candidate.w * candidate.h / n) * 100 : 0;
+  const stable = Math.max(0, 1 - (motionDelta / 20));
+  const sharpness = Math.min(1, edgeScore / 28);
+  const lighting = Math.max(0, Math.min(1, (mean - 30) / 120));
+  const captureReady = Boolean(candidate && lighting > 0.35 && contrast > 20 && motionDelta < 8 && stable > 0.45);
+  const refDims = getReferenceDims();
+  const warnings = [];
+  if (lighting < 0.35) warnings.push('LOW_LIGHT');
+  if (motionDelta >= 8) warnings.push('MOTION_TOO_HIGH');
+  if (contrast < 20) warnings.push('LOW_CONTRAST');
+  if (!refDims.width_mm || !refDims.height_mm) warnings.push('NO_REFERENCE_SCALE');
+  if (stable < 0.45 || !candidate) warnings.push('FOOT_CANDIDATE_UNSTABLE');
+  warnings.push('ESTIMATE_ONLY_NOT_PRODUCTION');
+  const pxToMm = (refDims.width_mm && refDims.height_mm && candidate) ? ((refDims.width_mm / candidate.w) + (refDims.height_mm / candidate.h)) / 2 : null;
+  const foot_length_mm_est = (candidate && pxToMm) ? Number((Math.max(candidate.w, candidate.h) * pxToMm).toFixed(1)) : null;
+  const foot_width_mm_est = (candidate && pxToMm) ? Number((Math.min(candidate.w, candidate.h) * pxToMm).toFixed(1)) : null;
+  const confidence = Math.max(0, Math.min(1, (stable*0.35) + (sharpness*0.25) + (lighting*0.20) + (contrast>20?0.1:0) + (pxToMm?0.1:0)));
+  liveState.analysis = {
+    timestamp: new Date().toISOString(),
+    frame_metrics: { luminance_mean:Number(mean.toFixed(2)), contrast:Number(contrast.toFixed(2)), motion_delta:Number(motionDelta.toFixed(2)), edge_texture_score:Number(edgeScore.toFixed(2)), frame_coverage_pct:Number(coverage.toFixed(2)), stability_score:Number(stable.toFixed(3)), sharpness_score:Number(sharpness.toFixed(3)), lighting_score:Number(lighting.toFixed(3)), capture_ready:captureReady },
+    candidate_region: candidate ? { candidate_box_x:candidate.x, candidate_box_y:candidate.y, candidate_box_w:candidate.w, candidate_box_h:candidate.h, candidate_aspect_ratio:Number((candidate.w/candidate.h).toFixed(3)) } : null,
+    calibration: { scale_estimate_label:'manual/reference-assisted', px_to_mm_est:pxToMm ? Number(pxToMm.toFixed(4)) : null },
+    estimated_measurements_mm: { foot_length_mm_est, foot_width_mm_est },
+    confidence: Number(confidence.toFixed(3)),
+    warnings
+  };
+  hudEl.textContent = `LIVE SCAN MVP\n${lighting>0.35?'LIGHT OK':'LOW LIGHT'}\n${stable>0.45?'STABLE':'HOLD STILL'}\n${pxToMm?'SCALE SET':'NO SCALE'}\n${captureReady?'CAPTURE READY':'NEEDS RESCAN'}`;
+}
+
+function startAnalysisLoop(){ if (liveState.frameTimer) return; liveState.frameTimer = setInterval(analyzeFrame, 250); }
+function stopAnalysisLoop(){ if (liveState.frameTimer) clearInterval(liveState.frameTimer); liveState.frameTimer = null; liveState.prevGray = null; }
 
 async function startCamera() {
   if (liveState.stream) return;
@@ -238,10 +343,32 @@ async function startCamera() {
   liveState.stream = stream;
   videoEl.srcObject = stream;
   await videoEl.play();
+  startAnalysisLoop();
 }
 
 function captureFrame() {
   liveState.frozenAt = Date.now();
+  if (videoEl.videoWidth && videoEl.videoHeight) {
+    freezeCanvas.width = videoEl.videoWidth; freezeCanvas.height = videoEl.videoHeight;
+    freezeCtx.drawImage(videoEl, 0, 0);
+    videoEl.srcObject = null;
+    videoEl.poster = freezeCanvas.toDataURL('image/jpeg', 0.92);
+  }
+  const refDims = getReferenceDims();
+  const analysis = liveState.analysis || {};
+  liveState.captureData = {
+    scan_mode: "live_camera_calibrated_mvp",
+    timestamp: new Date().toISOString(),
+    reference_object: refDims.reference_object,
+    calibration: { ...analysis.calibration, reference_width_mm: refDims.width_mm, reference_height_mm: refDims.height_mm },
+    frame_metrics: analysis.frame_metrics || null,
+    candidate_region: analysis.candidate_region || null,
+    estimated_measurements_mm: analysis.estimated_measurements_mm || { foot_length_mm_est:null, foot_width_mm_est:null },
+    confidence: analysis.confidence ?? 0,
+    warnings: analysis.warnings || ['NO_REFERENCE_SCALE','ESTIMATE_ONLY_NOT_PRODUCTION'],
+    non_medical_boundary: "Engineering-only estimate for scan workflow validation. Not for medical, diagnostic, or treatment use."
+  };
+  resultJsonEl.value = JSON.stringify(liveState.captureData, null, 2);
   compute();
 }
 
@@ -250,10 +377,21 @@ function stopCamera() {
   liveState.stream.getTracks().forEach(t => t.stop());
   liveState.stream = null;
   videoEl.srcObject = null;
+  stopAnalysisLoop();
 }
 
 document.getElementById('start_cam_btn').addEventListener('click', () => startCamera().catch(()=>{}));
 document.getElementById('capture_frame_btn').addEventListener('click', captureFrame);
+document.getElementById('reset_capture_btn').addEventListener('click', () => {
+  videoEl.poster = '';
+  liveState.frozenAt = null;
+  liveState.captureData = null;
+  resultJsonEl.value = '{}';
+  if (liveState.stream) videoEl.srcObject = liveState.stream;
+});
+document.getElementById('copy_result_btn').addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText(resultJsonEl.value); } catch(_) {}
+});
 document.getElementById('stop_cam_btn').addEventListener('click', stopCamera);
 
 function compute() {
