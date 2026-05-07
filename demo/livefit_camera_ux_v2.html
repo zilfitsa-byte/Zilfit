@@ -1,0 +1,1049 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>ZILFIT LiveFit Camera UX v2</title>
+  <style>
+    :root { color-scheme: dark;
+      --bg: #07090d; --fg: #f3f6fb; --muted: #94a3b8;
+      --green: #22c55e; --green-bg: #0d2b1a; --blue: #3b82f6;
+      --amber: #f59e0b; --red: #ef4444; --card-bg: #0f172a;
+      --border: #1f2937; --border-light: #263244;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; overflow-x: hidden; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg); color: var(--fg); min-height: 100vh;
+      -webkit-user-select: none; user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .app { max-width: 980px; margin: 0 auto; padding: 8px 10px 20px; }
+
+    /* header */
+    .app-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+    .app-header h1 { font-size: 18px; font-weight: 700; margin: 0; }
+    .app-header .brand-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--green), #16a34a);
+      flex-shrink: 0;
+    }
+    .subtitle { color: var(--muted); font-size: 12px; margin: 0 0 8px; }
+
+    /* step progress bar */
+    .steps { display: flex; gap: 0; margin: 8px 0 10px; }
+    .step-item {
+      flex: 1; text-align: center; padding: 6px 2px; font-size: 10px;
+      font-weight: 700; letter-spacing: 0.03em; color: var(--muted);
+      border-top: 3px solid var(--border); transition: all 0.25s;
+      line-height: 1.3;
+    }
+    .step-item.active { color: var(--fg); border-top-color: var(--blue); }
+    .step-item.done { color: var(--green); border-top-color: var(--green); }
+    .step-item .step-num {
+      display: inline-block; width: 18px; height: 18px; line-height: 18px;
+      border-radius: 50%; font-size: 10px; font-weight: 800;
+      background: var(--border); color: var(--muted); margin-bottom: 2px;
+    }
+    .step-item.active .step-num { background: var(--blue); color: #fff; }
+    .step-item.done .step-num { background: var(--green); color: #fff; }
+
+    /* buttons */
+    .btn-row {
+      display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0;
+    }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 6px; min-height: 48px; padding: 10px 18px; font-size: 14px;
+      font-weight: 800; border: 0; border-radius: 12px; cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+      flex-shrink: 0; touch-action: manipulation;
+    }
+    .btn:active { transform: scale(0.96); }
+    .btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+    .btn-primary { background: var(--green); color: #04110a; }
+    .btn-secondary { background: var(--blue); color: #03121a; }
+    .btn-amber { background: var(--amber); color: #170d00; }
+    .btn-danger { background: var(--red); color: #fff; }
+    .btn-outline {
+      background: transparent; border: 2px solid var(--border-light);
+      color: var(--fg);
+    }
+    .btn-confirm { background: var(--green); color: #04110a; min-width: 100px; }
+    .btn-cancel { background: transparent; border: 2px solid var(--red); color: var(--red); min-width: 100px; }
+    .btn-sm { min-height: 40px; padding: 8px 14px; font-size: 12px; }
+    .btn-full { width: 100%; }
+
+    /* camera stage */
+    .stage-wrap {
+      position: relative; background: #000; border-radius: 16px; overflow: hidden;
+      border: 1px solid var(--border); max-height: 52vh;
+    }
+    .stage-wrap video,
+    .stage-wrap canvas {
+      width: 100%; display: block; background: #000;
+    }
+    .stage-wrap video { max-height: 52vh; object-fit: contain; }
+    #frameCanvas { display: none; }
+    #debugOverlayCanvas {
+      display: block; position: absolute; inset: 0; width: 100%; height: 100%;
+      background: transparent; touch-action: none; pointer-events: none; z-index: 5;
+    }
+    .stage-badge {
+      position: absolute; z-index: 6; color: #fff; border-radius: 999px;
+      padding: 5px 12px; font-size: 11px; font-weight: 900;
+      letter-spacing: 0.04em; top: 8px; right: 8px;
+    }
+    #cardBadge { background: #1d4ed8; }
+    #footBadge { background: #16a34a; top: 38px; }
+
+    /* confirmation overlay inside stage */
+    .confirm-overlay {
+      display: none; position: absolute; bottom: 0; left: 0; right: 0;
+      z-index: 10; padding: 12px 14px 14px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.85));
+    }
+    .confirm-overlay.visible { display: flex; gap: 8px; justify-content: center; }
+
+    /* status */
+    .status-bar {
+      display: flex; align-items: flex-start; gap: 6px;
+      margin: 8px 0; padding: 8px 10px;
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: 10px; font-size: 13px; line-height: 1.4;
+      color: var(--fg); min-height: 40px;
+    }
+    .status-bar .icon { flex-shrink: 0; font-size: 16px; }
+
+    /* diagnostics */
+    .diag-bar {
+      font-size: 11px; color: #93c5fd; margin: 6px 2px 0;
+      line-height: 1.35; font-family: monospace;
+    }
+
+    /* JSON output */
+    .json-section { margin-top: 8px; }
+    .json-section summary {
+      cursor: pointer; font-size: 12px; font-weight: 700;
+      color: var(--muted); padding: 4px 0;
+    }
+    pre {
+      white-space: pre-wrap; word-break: break-word;
+      background: var(--card-bg); color: #dbeafe;
+      border: 1px solid var(--border-light); border-radius: 12px;
+      padding: 10px; min-height: 100px; max-height: 30vh;
+      overflow: auto; font-size: 11px; line-height: 1.4;
+      margin: 4px 0 0;
+    }
+
+    /* guide indicators */
+    .guide-overlay {
+      display: none; position: absolute; z-index: 4;
+      pointer-events: none;
+    }
+    .guide-overlay.visible { display: block; }
+    .guide-text {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      color: rgba(255,255,255,0.3); font-size: 18px; font-weight: 800;
+      text-align: center; line-height: 1.4; letter-spacing: 0.05em;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+    }
+    .guide-card-frame {
+      position: absolute; border: 2px dashed rgba(59,130,246,0.35);
+      border-radius: 8px; pointer-events: none;
+    }
+    .guide-foot-frame {
+      position: absolute; border: 2px dashed rgba(34,197,94,0.35);
+      border-radius: 12px; pointer-events: none;
+    }
+
+    /* responsive */
+    @media (max-width: 480px) {
+      .app { padding: 4px 6px; }
+      .step-item { font-size: 9px; }
+      .btn { font-size: 12px; min-height: 44px; padding: 8px 12px; }
+    }
+    @media (min-width: 768px) {
+      .btn-row { gap: 8px; }
+      .btn { padding: 12px 24px; font-size: 15px; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="app-header">
+    <div class="brand-dot"></div>
+    <h1>ZILFIT LiveFit Camera</h1>
+  </div>
+  <div class="subtitle">Manual two-box scan guide &mdash; place card &amp; foot, draw boxes, confirm each step.</div>
+
+  <!-- Step Progress -->
+  <div class="steps" id="stepBar">
+    <div class="step-item active" data-step="1"><span class="step-num">1</span><br/>Camera</div>
+    <div class="step-item" data-step="2"><span class="step-num">2</span><br/>Card Box</div>
+    <div class="step-item" data-step="3"><span class="step-num">3</span><br/>Foot Box</div>
+    <div class="step-item" data-step="4"><span class="step-num">4</span><br/>Capture</div>
+  </div>
+
+  <!-- Button Row -->
+  <div class="btn-row" id="controlBar">
+    <button id="startBtn" class="btn btn-primary btn-full">Start Camera</button>
+    <button id="setCardBtn" class="btn btn-secondary" disabled>Draw Card Box</button>
+    <button id="confirmCardBtn" class="btn btn-confirm" disabled style="display:none">Confirm Card</button>
+    <button id="cancelCardBtn" class="btn btn-cancel" disabled style="display:none">Reset</button>
+    <button id="setFootBtn" class="btn btn-secondary" disabled>Draw Foot Box</button>
+    <button id="confirmFootBtn" class="btn btn-confirm" disabled style="display:none">Confirm Foot</button>
+    <button id="cancelFootBtn" class="btn btn-cancel" disabled style="display:none">Reset</button>
+    <button id="clearCardBtn" class="btn btn-amber btn-sm" disabled>Clear Card</button>
+    <button id="clearFootBtn" class="btn btn-amber btn-sm" disabled>Clear Foot</button>
+    <button id="captureBtn" class="btn btn-primary btn-full" disabled>Capture &amp; Measure</button>
+    <button id="retakeBtn" class="btn btn-outline btn-full" disabled style="display:none">Retake</button>
+  </div>
+
+  <!-- Camera Stage -->
+  <div class="stage-wrap" id="stageWrap">
+    <video id="video" autoplay muted playsinline webkit-playsinline></video>
+    <canvas id="debugOverlayCanvas" aria-label="manual two-box overlay"></canvas>
+    <div id="cardBadge" class="stage-badge" hidden>CARD SET</div>
+    <div id="footBadge" class="stage-badge" hidden>FOOT SET</div>
+    <div class="guide-overlay" id="guideOverlay">
+      <div class="guide-card-frame" id="guideCardFrame"></div>
+      <div class="guide-foot-frame" id="guideFootFrame"></div>
+      <div class="guide-text" id="guideText">Place a standard bank card on the surface</div>
+    </div>
+    <div class="confirm-overlay" id="confirmOverlay">
+      <button class="btn btn-confirm" id="confirmBoxBtn">Confirm</button>
+      <button class="btn btn-cancel" id="cancelBoxBtn">Reset</button>
+    </div>
+  </div>
+
+  <canvas id="frameCanvas"></canvas>
+
+  <!-- Status -->
+  <div class="status-bar" id="statusBar">
+    <span class="icon">&#9654;</span>
+    <span id="statusText">Press &ldquo;Start Camera&rdquo; to begin</span>
+  </div>
+
+  <!-- Diagnostics -->
+  <div class="diag-bar" id="diagBar">video: unset | card: unset | foot: unset | scale: fallback</div>
+
+  <!-- JSON Output -->
+  <div class="json-section">
+    <details>
+      <summary>JSON Output</summary>
+      <pre id="jsonOut">{}</pre>
+    </details>
+  </div>
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  const NON_MEDICAL_BOUNDARY =
+    "Engineering-only estimate. Not medical, diagnostic, therapeutic, clinical, pain, disease, or treatment use.";
+
+  // DOM refs
+  const video = document.getElementById("video");
+  const frameCanvas = document.getElementById("frameCanvas");
+  const overlay = document.getElementById("debugOverlayCanvas");
+  const jsonOut = document.getElementById("jsonOut");
+  const statusText = document.getElementById("statusText");
+  const diagBar = document.getElementById("diagBar");
+  const cardBadge = document.getElementById("cardBadge");
+  const footBadge = document.getElementById("footBadge");
+  const guideOverlay = document.getElementById("guideOverlay");
+  const guideText = document.getElementById("guideText");
+  const guideCardFrame = document.getElementById("guideCardFrame");
+  const guideFootFrame = document.getElementById("guideFootFrame");
+  const confirmOverlay = document.getElementById("confirmOverlay");
+
+  // Buttons
+  const startBtn = document.getElementById("startBtn");
+  const setCardBtn = document.getElementById("setCardBtn");
+  const confirmCardBtn = document.getElementById("confirmCardBtn");
+  const cancelCardBtn = document.getElementById("cancelCardBtn");
+  const setFootBtn = document.getElementById("setFootBtn");
+  const confirmFootBtn = document.getElementById("confirmFootBtn");
+  const cancelFootBtn = document.getElementById("cancelFootBtn");
+  const clearCardBtn = document.getElementById("clearCardBtn");
+  const clearFootBtn = document.getElementById("clearFootBtn");
+  const captureBtn = document.getElementById("captureBtn");
+  const retakeBtn = document.getElementById("retakeBtn");
+  const confirmBoxBtn = document.getElementById("confirmBoxBtn");
+  const cancelBoxBtn = document.getElementById("cancelBoxBtn");
+
+  const stepItems = document.querySelectorAll(".step-item");
+
+  // State
+  let stream = null;
+  let lastSampleLuma = null;
+  let pendingConfirmBox = null; // {type:'card'|'foot', box}
+  let currentStep = 1; // 1=camera, 2=card box, 3=foot box, 4=capture
+
+  const liveState = {
+    activeMode: null,
+    pointerStart: null,
+    draftBox: null,
+    manualCardBox: null,
+    manualFootBox: null,
+    referenceObject: "BANK_CARD",
+    referenceWidthMm: 85.60,
+    referenceHeightMm: 53.98,
+    lastJson: null
+  };
+
+  // ---- Helpers ----
+  function round(n, d = 3) {
+    if (typeof n !== "number" || !Number.isFinite(n)) return null;
+    const p = Math.pow(10, d);
+    return Math.round(n * p) / p;
+  }
+
+  function setStatus(msg, icon) {
+    statusText.textContent = msg;
+    const iconEl = document.querySelector("#statusBar .icon");
+    if (iconEl) iconEl.textContent = icon || "\u25B6";
+  }
+
+  function advanceStep(step) {
+    currentStep = Math.max(1, Math.min(4, step));
+    stepItems.forEach((el) => {
+      const s = parseInt(el.dataset.step, 10);
+      el.classList.toggle("active", s === currentStep);
+      el.classList.toggle("done", s < currentStep);
+    });
+  }
+
+  function updateButtonVisibility() {
+    const cardSet = !!liveState.manualCardBox;
+    const footSet = !!liveState.manualFootBox;
+
+    // Always show primary actions based on step and state
+    setCardBtn.style.display = cardSet ? "none" : "";
+    confirmCardBtn.style.display = "none";
+    cancelCardBtn.style.display = "none";
+    setFootBtn.style.display = (cardSet && !footSet) ? "" : "none";
+    confirmFootBtn.style.display = "none";
+    cancelFootBtn.style.display = "none";
+    clearCardBtn.style.display = cardSet ? "" : "none";
+    clearFootBtn.style.display = footSet ? "" : "none";
+    captureBtn.style.display = (cardSet && footSet) ? "" : "none";
+    retakeBtn.style.display = (cardSet && footSet) ? "" : "none";
+
+    // Enable/disable
+    clearCardBtn.disabled = !cardSet;
+    clearFootBtn.disabled = !footSet;
+    captureBtn.disabled = !(cardSet && footSet);
+    retakeBtn.disabled = !(cardSet && footSet);
+
+    // Draw buttons enabled when camera running
+    const camOk = !!(video.videoWidth && video.videoHeight);
+    setCardBtn.disabled = !camOk || cardSet;
+    setFootBtn.disabled = !camOk || !cardSet || footSet;
+  }
+
+  function showGuide(visible, text, type) {
+    guideOverlay.classList.toggle("visible", visible);
+    guideCardFrame.style.display = "none";
+    guideFootFrame.style.display = "none";
+    if (!visible) { guideText.textContent = ""; return; }
+    guideText.textContent = text || "";
+    if (type === "card") guideCardFrame.style.display = "block";
+    if (type === "foot") guideFootFrame.style.display = "block";
+  }
+
+  function updateGuideFrames() {
+    const rect = overlay.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+
+    // Card frame guide - show approximate card aspect ratio overlay
+    const guideW = rect.width * 0.5;
+    const guideH = guideW * (53.98 / 85.60);
+    guideCardFrame.style.width = Math.round(guideW) + "px";
+    guideCardFrame.style.height = Math.round(guideH) + "px";
+    guideCardFrame.style.left = Math.round((rect.width - guideW) / 2) + "px";
+    guideCardFrame.style.top = Math.round((rect.height - guideH) * 0.2) + "px";
+
+    // Foot frame guide
+    const footW = rect.width * 0.35;
+    const footH = footW * 2.2;
+    guideFootFrame.style.width = Math.round(footW) + "px";
+    guideFootFrame.style.height = Math.round(footH) + "px";
+    guideFootFrame.style.left = Math.round((rect.width - footW) / 2) + "px";
+    guideFootFrame.style.top = Math.round((rect.height - footH) / 2) + "px";
+  }
+
+  // ---- Video helpers ----
+  function videoReadyState() {
+    return {
+      videoWidth: Number(video.videoWidth || 0),
+      videoHeight: Number(video.videoHeight || 0),
+      readyState: Number(video.readyState || 0),
+      paused: Boolean(video.paused),
+      currentTime: round(Number(video.currentTime || 0), 3)
+    };
+  }
+
+  function getDisplayedVideoRect() {
+    const rect = overlay.getBoundingClientRect();
+    const vw = Math.max(1, video.videoWidth || 1);
+    const vh = Math.max(1, video.videoHeight || 1);
+    const videoRatio = vw / vh;
+    const boxRatio = rect.width / Math.max(1, rect.height);
+
+    let displayedWidth, displayedHeight, offsetX, offsetY;
+    if (boxRatio > videoRatio) {
+      displayedHeight = rect.height;
+      displayedWidth = displayedHeight * videoRatio;
+      offsetX = (rect.width - displayedWidth) / 2;
+      offsetY = 0;
+    } else {
+      displayedWidth = rect.width;
+      displayedHeight = displayedWidth / videoRatio;
+      offsetX = 0;
+      offsetY = (rect.height - displayedHeight) / 2;
+    }
+    return { rect, displayedWidth, displayedHeight, offsetX, offsetY, vw, vh };
+  }
+
+  function videoPointFromPointerEvent(ev) {
+    const m = getDisplayedVideoRect();
+    const rawX = (ev.clientX - m.rect.left - m.offsetX) * m.vw / Math.max(1, m.displayedWidth);
+    const rawY = (ev.clientY - m.rect.top - m.offsetY) * m.vh / Math.max(1, m.displayedHeight);
+    return {
+      x: Math.round(Math.max(0, Math.min(m.vw, rawX))),
+      y: Math.round(Math.max(0, Math.min(m.vh, rawY)))
+    };
+  }
+
+  function normalizeBox(a, b) {
+    return {
+      x: Math.round(Math.min(a.x, b.x)),
+      y: Math.round(Math.min(a.y, b.y)),
+      w: Math.round(Math.abs(b.x - a.x)),
+      h: Math.round(Math.abs(b.y - a.y))
+    };
+  }
+
+  // ---- Overlay drawing ----
+  function drawOverlay() {
+    const rect = overlay.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    overlay.width = Math.max(1, Math.round(rect.width * dpr));
+    overlay.height = Math.max(1, Math.round(rect.height * dpr));
+
+    const ctx = overlay.getContext("2d");
+    if (!ctx) return;
+    ctx.clearRect(0, 0, overlay.width, overlay.height);
+    ctx.save();
+    ctx.scale(dpr, dpr);
+
+    const m = getDisplayedVideoRect();
+    const sx = m.displayedWidth / m.vw;
+    const sy = m.displayedHeight / m.vh;
+    const ox = m.offsetX;
+    const oy = m.offsetY;
+
+    function strokeBox(box, color, label, yText, lineWidth) {
+      if (!box || box.w <= 0 || box.h <= 0) return;
+      ctx.strokeStyle = color;
+      ctx.fillStyle = color;
+      ctx.lineWidth = lineWidth || 3;
+      ctx.font = "bold 13px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+      ctx.strokeRect(ox + box.x * sx, oy + box.y * sy, box.w * sx, box.h * sy);
+      ctx.fillText(label, 10, yText);
+
+      // Draw corner handles (large touch points visual)
+      const corners = [
+        { x: box.x * sx + ox, y: box.y * sy + oy },
+        { x: (box.x + box.w) * sx + ox, y: box.y * sy + oy },
+        { x: box.x * sx + ox, y: (box.y + box.h) * sy + oy },
+        { x: (box.x + box.w) * sx + ox, y: (box.y + box.h) * sy + oy }
+      ];
+      ctx.fillStyle = color;
+      corners.forEach(c => {
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = "#fff";
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      });
+    }
+
+    strokeBox(liveState.manualCardBox, "#3b82f6", "CARD", 22, 3);
+    strokeBox(liveState.manualFootBox, "#22c55e", "FOOT", 42, 3);
+
+    if (liveState.draftBox) {
+      const color = liveState.activeMode === "reference_select" ? "#60a5fa" : "#86efac";
+      const label = liveState.activeMode === "reference_select" ? "DRAWING CARD..." : "DRAWING FOOT...";
+      strokeBox(liveState.draftBox, color, label, 62, 2);
+    }
+
+    ctx.restore();
+    updateDiagnostics();
+  }
+
+  function updateDiagnostics(scaleSource) {
+    const vs = videoReadyState();
+    const card = liveState.manualCardBox;
+    const foot = liveState.manualFootBox;
+    const videoText = vs.videoWidth && vs.videoHeight ? `${vs.videoWidth}x${vs.videoHeight}` : "unset";
+    const cardText = card ? `${card.x},${card.y} ${card.w}x${card.h}` : "unset";
+    const footText = foot ? `${foot.x},${foot.y} ${foot.w}x${foot.h}` : "unset";
+    const scale = scaleSource || (card ? "manual_card_box" : "fallback");
+    diagBar.textContent = `video: ${videoText} | card: ${cardText} | foot: ${footText} | scale: ${scale}`;
+    cardBadge.hidden = !card;
+    footBadge.hidden = !foot;
+    updateGuideFrames();
+  }
+
+  // ---- JSON / Analysis (reused from v1) ----
+  function fnv1aMix(hash, value) {
+    hash ^= value & 255;
+    hash = Math.imul(hash, 16777619);
+    return hash >>> 0;
+  }
+
+  function baseJson(captureSource) {
+    return {
+      scan_mode: "live_camera_calibrated_mvp",
+      timestamp: new Date().toISOString(),
+      reference_object: "BANK_CARD",
+      video_ready_state: videoReadyState(),
+      frame_fingerprint: 0,
+      calibration: {
+        scale_estimate_label: "manual/card-assisted",
+        reference_width_mm: 85.60,
+        reference_height_mm: 53.98,
+        px_to_mm_est: null,
+        scale_source: "frame_width_fallback",
+        px_to_mm_long: null,
+        px_to_mm_short: null
+      },
+      frame_metrics: null,
+      reference_region: null,
+      reference_region_debug: null,
+      manual_reference_box_debug: null,
+      foot_region: null,
+      manual_foot_box_debug: null,
+      candidate_region: null,
+      candidate_region_debug: null,
+      candidate_components_debug: [],
+      estimated_measurements_mm: {
+        foot_length_mm_est: null,
+        foot_width_mm_est: null
+      },
+      confidence: 0,
+      warnings: [],
+      capture_source: captureSource || "manual",
+      auto_capture_enabled: false,
+      auto_capture_reason: null,
+      non_medical_boundary: NON_MEDICAL_BOUNDARY
+    };
+  }
+
+  function computeFrameMetricsAndFingerprint(data, w, h) {
+    const totalPixels = w * h;
+    const targetSamples = 22000;
+    const pixelStride = Math.max(1, Math.floor(totalPixels / targetSamples));
+    const byteStride = pixelStride * 4;
+
+    let count = 0, sum = 0, sumSq = 0, informative = 0;
+    let hash = 2166136261 >>> 0;
+    const sampleLuma = [];
+
+    hash = fnv1aMix(hash, w & 255);
+    hash = fnv1aMix(hash, (w >>> 8) & 255);
+    hash = fnv1aMix(hash, h & 255);
+    hash = fnv1aMix(hash, (h >>> 8) & 255);
+
+    for (let i = 0; i < data.length; i += byteStride) {
+      const r = data[i], g = data[i + 1], b = data[i + 2];
+      const y = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      sum += y;
+      sumSq += y * y;
+      count++;
+      if (y > 12 && y < 245) informative++;
+      if (sampleLuma.length < 2048) sampleLuma.push(y);
+      hash = fnv1aMix(hash, r);
+      hash = fnv1aMix(hash, g);
+      hash = fnv1aMix(hash, b);
+    }
+
+    const mean = count ? sum / count : 0;
+    const variance = count ? Math.max(0, (sumSq / count) - mean * mean) : 0;
+    const contrast = Math.sqrt(variance);
+
+    let textureSum = 0, textureCount = 0;
+    const gridStep = Math.max(4, Math.floor(Math.sqrt(totalPixels / 5000)));
+    for (let y = gridStep; y < h; y += gridStep) {
+      for (let x = gridStep; x < w; x += gridStep) {
+        const idx = (y * w + x) * 4;
+        const leftIdx = (y * w + (x - gridStep)) * 4;
+        const upIdx = ((y - gridStep) * w + x) * 4;
+        const lum = 0.2126 * data[idx] + 0.7152 * data[idx + 1] + 0.0722 * data[idx + 2];
+        const left = 0.2126 * data[leftIdx] + 0.7152 * data[leftIdx + 1] + 0.0722 * data[leftIdx + 2];
+        const up = 0.2126 * data[upIdx] + 0.7152 * data[upIdx + 1] + 0.0722 * data[upIdx + 2];
+        textureSum += Math.abs(lum - left) + Math.abs(lum - up);
+        textureCount += 2;
+      }
+    }
+
+    let motionDelta = 0;
+    if (lastSampleLuma && lastSampleLuma.length && sampleLuma.length) {
+      const n = Math.min(lastSampleLuma.length, sampleLuma.length);
+      let delta = 0;
+      for (let i = 0; i < n; i++) delta += Math.abs(sampleLuma[i] - lastSampleLuma[i]);
+      motionDelta = delta / n;
+    }
+    lastSampleLuma = sampleLuma;
+
+    const edgeTextureScore = textureCount ? textureSum / textureCount : 0;
+    const stabilityScore = 1 - Math.min(1, motionDelta / 45);
+    const sharpnessScore = Math.min(1, edgeTextureScore / 32);
+    const lightingBase = 1 - Math.min(1, Math.abs(mean - 128) / 128);
+    const lightingScore = Math.max(0, Math.min(1, lightingBase * Math.min(1, contrast / 28 + 0.25)));
+
+    return {
+      hash,
+      metrics: {
+        frame_w_px: w,
+        frame_h_px: h,
+        luminance_mean: round(mean, 3),
+        contrast: round(contrast, 3),
+        motion_delta: round(motionDelta, 3),
+        edge_texture_score: round(edgeTextureScore, 3),
+        frame_coverage_pct: round(count ? (informative / count) * 100 : 0, 3),
+        stability_score: round(stabilityScore, 3),
+        sharpness_score: round(sharpnessScore, 3),
+        lighting_score: round(lightingScore, 3),
+        capture_ready: true,
+        foreground_pct: null,
+        component_count: 0,
+        accepted_component_count: 0,
+        reference_detected: Boolean(liveState.manualCardBox),
+        scale_source: liveState.manualCardBox ? "manual_card_box" : "frame_width_fallback"
+      }
+    };
+  }
+
+  function applyManualCardCalibration(out, w, h, warnings) {
+    const card = liveState.manualCardBox;
+    if (!card) {
+      warnings.push("REFERENCE_CARD_BOX_REQUIRED");
+      return;
+    }
+    const longPx = Math.max(card.w, card.h);
+    const shortPx = Math.max(1, Math.min(card.w, card.h));
+    const pxToMmLong = 85.60 / longPx;
+    const pxToMmShort = 53.98 / shortPx;
+    const pxToMmEst = (pxToMmLong + pxToMmShort) / 2;
+
+    out.calibration = {
+      scale_estimate_label: "manual/card-assisted",
+      reference_width_mm: 85.60,
+      reference_height_mm: 53.98,
+      px_to_mm_est: round(pxToMmEst, 6),
+      scale_source: "manual_card_box",
+      px_to_mm_long: round(pxToMmLong, 6),
+      px_to_mm_short: round(pxToMmShort, 6)
+    };
+
+    out.reference_region = {
+      reference_box_x: card.x,
+      reference_box_y: card.y,
+      reference_box_w: card.w,
+      reference_box_h: card.h,
+      reference_aspect_ratio: round(card.w / Math.max(1, card.h), 3),
+      reference_area_pct: round((card.w * card.h) / (w * h) * 100, 3),
+      reference_score: 1
+    };
+
+    out.manual_reference_box_debug = {
+      x: card.x, y: card.y, w: card.w, h: card.h,
+      long_px: longPx, short_px: shortPx,
+      reference_long_mm: 85.60, reference_short_mm: 53.98
+    };
+
+    if (out.frame_metrics) {
+      out.frame_metrics.reference_detected = true;
+      out.frame_metrics.scale_source = "manual_card_box";
+    }
+  }
+
+  function applyManualFootMeasurement(out, w, h, warnings) {
+    const foot = liveState.manualFootBox;
+    if (!foot) {
+      warnings.push("FOOT_BOX_REQUIRED");
+      return;
+    }
+    out.foot_region = {
+      foot_box_x: foot.x, foot_box_y: foot.y,
+      foot_box_w: foot.w, foot_box_h: foot.h,
+      foot_aspect_ratio: round(foot.w / Math.max(1, foot.h), 3),
+      foot_area_pct: round((foot.w * foot.h) / (w * h) * 100, 3)
+    };
+    out.manual_foot_box_debug = {
+      x: foot.x, y: foot.y, w: foot.w, h: foot.h,
+      long_px: Math.max(foot.w, foot.h),
+      short_px: Math.min(foot.w, foot.h)
+    };
+    if (!liveState.manualCardBox || out.calibration.scale_source !== "manual_card_box") return;
+
+    const footLongPx = Math.max(foot.w, foot.h);
+    const footShortPx = Math.min(foot.w, foot.h);
+    const lengthMm = footLongPx * out.calibration.px_to_mm_est;
+    const widthMm = footShortPx * out.calibration.px_to_mm_est;
+
+    const lengthOk = lengthMm >= 180 && lengthMm <= 340;
+    const widthOk = widthMm >= 60 && widthMm <= 130;
+
+    if (lengthOk && widthOk) {
+      out.estimated_measurements_mm = {
+        foot_length_mm_est: round(lengthMm, 1),
+        foot_width_mm_est: round(widthMm, 1)
+      };
+      out.confidence = 0.65;
+      if (out.frame_metrics) out.frame_metrics.capture_ready = true;
+    } else {
+      if (!lengthOk) warnings.push("LENGTH_OUT_OF_RANGE");
+      if (!widthOk) warnings.push("WIDTH_OUT_OF_RANGE");
+      out.estimated_measurements_mm = { foot_length_mm_est: null, foot_width_mm_est: null };
+    }
+  }
+
+  function analyzeFrame(captureSource) {
+    const out = baseJson(captureSource);
+    const vs = out.video_ready_state;
+    const warnings = [];
+
+    if (!vs.videoWidth || !vs.videoHeight || vs.readyState < 2) {
+      warnings.push("VIDEO_NOT_READY", "ESTIMATE_ONLY_NOT_PRODUCTION");
+      out.warnings = warnings;
+      return out;
+    }
+
+    const w = vs.videoWidth, h = vs.videoHeight;
+    frameCanvas.width = w;
+    frameCanvas.height = h;
+    const ctx = frameCanvas.getContext("2d", { willReadFrequently: true });
+    if (!ctx) {
+      warnings.push("CANVAS_CONTEXT_FAILED", "ESTIMATE_ONLY_NOT_PRODUCTION");
+      out.warnings = warnings;
+      return out;
+    }
+
+    ctx.drawImage(video, 0, 0, w, h);
+    let image;
+    try {
+      image = ctx.getImageData(0, 0, w, h);
+    } catch (err) {
+      warnings.push("GET_IMAGE_DATA_FAILED", String(err && err.message ? err.message : err), "ESTIMATE_ONLY_NOT_PRODUCTION");
+      out.warnings = warnings;
+      return out;
+    }
+
+    const computed = computeFrameMetricsAndFingerprint(image.data, w, h);
+    out.frame_fingerprint = computed.hash;
+    out.frame_metrics = computed.metrics;
+
+    applyManualCardCalibration(out, w, h, warnings);
+    applyManualFootMeasurement(out, w, h, warnings);
+
+    if (!warnings.includes("ESTIMATE_ONLY_NOT_PRODUCTION")) warnings.push("ESTIMATE_ONLY_NOT_PRODUCTION");
+    out.warnings = warnings;
+    return out;
+  }
+
+  function renderJson(obj) {
+    liveState.lastJson = obj;
+    jsonOut.textContent = JSON.stringify(obj, null, 2);
+  }
+
+  function captureFrame() {
+    const obj = analyzeFrame("manual");
+    renderJson(obj);
+    updateDiagnostics(obj.calibration ? obj.calibration.scale_source : null);
+    drawOverlay();
+
+    if (obj.estimated_measurements_mm && obj.estimated_measurements_mm.foot_length_mm_est !== null) {
+      setStatus("Measurement captured! Review JSON below.", "\u2705");
+    } else if (obj.warnings.includes("WIDTH_OUT_OF_RANGE") || obj.warnings.includes("LENGTH_OUT_OF_RANGE")) {
+      const reasons = obj.warnings.filter(w => w === "WIDTH_OUT_OF_RANGE" || w === "LENGTH_OUT_OF_RANGE").join(" / ");
+      setStatus("Measurement out of range: " + reasons, "\u26A0\uFE0F");
+    } else if (!liveState.manualCardBox) {
+      setStatus("Card reference required", "\u26A0\uFE0F");
+    } else if (!liveState.manualFootBox) {
+      setStatus("Card set. Now set foot box.", "\u26A0\uFE0F");
+    } else {
+      setStatus("Measurement ready. Review JSON below.", "\u2705");
+    }
+  }
+
+  // ---- Camera startup ----
+  function waitForVideoReady(timeoutMs = 8000) {
+    return new Promise((resolve, reject) => {
+      const started = performance.now();
+      function check() {
+        if (video.videoWidth > 0 && video.videoHeight > 0 && video.readyState >= 2) return resolve();
+        if (performance.now() - started > timeoutMs) return reject(new Error("Video not ready"));
+        requestAnimationFrame(check);
+      }
+      check();
+    });
+  }
+
+  async function startCamera() {
+    startBtn.disabled = true;
+    setStatus("Requesting camera permission...", "\u23F3");
+
+    try {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia)
+        throw new Error("getUserMedia unavailable. Use HTTPS.");
+
+      if (stream) stream.getTracks().forEach(t => t.stop());
+
+      stream = await navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: { facingMode: { ideal: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 } }
+      });
+
+      video.srcObject = stream;
+      video.muted = true;
+      video.playsInline = true;
+      await video.play();
+      await waitForVideoReady();
+
+      startBtn.textContent = "Camera Active";
+      startBtn.style.background = "#16a34a";
+      startBtn.disabled = false; // allow restart
+
+      // Activate step 2
+      advanceStep(2);
+      setCardBtn.disabled = false;
+      setStatus("Place a standard bank card on the surface, then tap \u201CDraw Card Box\u201D", "\uD83D\uDCB3");
+      showGuide(true, "Place bank card on surface", "card");
+      updateDiagnostics();
+      drawOverlay();
+      updateButtonVisibility();
+    } catch (err) {
+      startBtn.disabled = false;
+      const obj = baseJson("manual");
+      obj.warnings = ["CAMERA_START_FAILED", String(err && err.message ? err.message : err), "ESTIMATE_ONLY_NOT_PRODUCTION"];
+      renderJson(obj);
+      setStatus("Camera failed: " + (err && err.message ? err.message : err), "\u274C");
+    }
+  }
+
+  // ---- Selection mode ----
+  function beginSelect(mode) {
+    if (!video.videoWidth || !video.videoHeight) {
+      setStatus("Start camera first", "\u26A0\uFE0F");
+      return;
+    }
+    liveState.activeMode = mode;
+    liveState.pointerStart = null;
+    liveState.draftBox = null;
+    pendingConfirmBox = null;
+    overlay.style.pointerEvents = "auto";
+    confirmOverlay.classList.remove("visible");
+
+    if (mode === "reference_select") {
+      setStatus("Drag a box tightly around the bank card. Then confirm.", "\uD83D\uDCB3");
+      showGuide(true, "Drag tightly around the card", "card");
+    }
+    if (mode === "foot_select") {
+      setStatus("Drag a box tightly around the full foot. Then confirm.", "\uD83E\uDDB6");
+      showGuide(true, "Drag tightly around the full foot", "foot");
+    }
+    drawOverlay();
+  }
+
+  function finalizeSelection(box) {
+    const frameArea = Math.max(1, (video.videoWidth || 1) * (video.videoHeight || 1));
+    const areaPct = (box.w * box.h) / frameArea * 100;
+
+    if (box.w < 20 || box.h < 20) {
+      setStatus(liveState.activeMode === "reference_select" ? "Card box too small. Try again." : "Foot box too small. Try again.", "\u26A0\uFE0F");
+      return;
+    }
+    if (areaPct > 90) {
+      setStatus(liveState.activeMode === "reference_select" ? "Box too large; select card only" : "Box too large; select foot only", "\u26A0\uFE0F");
+      return;
+    }
+
+    // Store pending for confirmation
+    pendingConfirmBox = { type: liveState.activeMode, box };
+    confirmOverlay.classList.add("visible");
+
+    if (liveState.activeMode === "reference_select") {
+      setStatus("Does this box tightly surround the card? Confirm or reset.", "\u2753");
+    } else {
+      setStatus("Does this box tightly surround the foot? Confirm or reset.", "\u2753");
+    }
+  }
+
+  function confirmPendingBox() {
+    if (!pendingConfirmBox) return;
+    const { type, box } = pendingConfirmBox;
+
+    if (type === "reference_select") {
+      liveState.manualCardBox = box;
+      advanceStep(3);
+      setStatus("Card set! Now place your foot and tap \u201CDraw Foot Box\u201D", "\u2705");
+      showGuide(true, "Place your foot", "foot");
+      setFootBtn.disabled = false;
+    } else if (type === "foot_select") {
+      liveState.manualFootBox = box;
+      advanceStep(4);
+      setStatus("Foot set! Tap \u201CCapture & Measure\u201D to get measurements.", "\u2705");
+      showGuide(false);
+    }
+
+    pendingConfirmBox = null;
+    liveState.activeMode = null;
+    liveState.pointerStart = null;
+    liveState.draftBox = null;
+    overlay.style.pointerEvents = "none";
+    confirmOverlay.classList.remove("visible");
+    updateDiagnostics();
+    drawOverlay();
+    updateButtonVisibility();
+  }
+
+  function cancelPendingBox() {
+    pendingConfirmBox = null;
+    liveState.activeMode = null;
+    liveState.pointerStart = null;
+    liveState.draftBox = null;
+    overlay.style.pointerEvents = "none";
+    confirmOverlay.classList.remove("visible");
+
+    if (liveState.manualCardBox) {
+      setStatus("Foot box cancelled. Try again.", "\uD83D\uDD04");
+    } else {
+      setStatus("Card box cancelled. Try again.", "\uD83D\uDD04");
+    }
+    drawOverlay();
+  }
+
+  // ---- Pointer events ----
+  overlay.addEventListener("pointerdown", (ev) => {
+    if (!liveState.activeMode) return;
+    ev.preventDefault();
+    overlay.setPointerCapture(ev.pointerId);
+    liveState.pointerStart = videoPointFromPointerEvent(ev);
+    liveState.draftBox = { x: liveState.pointerStart.x, y: liveState.pointerStart.y, w: 1, h: 1 };
+    confirmOverlay.classList.remove("visible");
+    pendingConfirmBox = null;
+    drawOverlay();
+  });
+
+  overlay.addEventListener("pointermove", (ev) => {
+    if (!liveState.activeMode || !liveState.pointerStart) return;
+    ev.preventDefault();
+    liveState.draftBox = normalizeBox(liveState.pointerStart, videoPointFromPointerEvent(ev));
+    drawOverlay();
+  });
+
+  overlay.addEventListener("pointerup", (ev) => {
+    if (!liveState.activeMode || !liveState.pointerStart) return;
+    ev.preventDefault();
+    const box = normalizeBox(liveState.pointerStart, videoPointFromPointerEvent(ev));
+    finalizeSelection(box);
+  });
+
+  overlay.addEventListener("pointercancel", () => {
+    liveState.activeMode = null;
+    liveState.pointerStart = null;
+    liveState.draftBox = null;
+    overlay.style.pointerEvents = "none";
+    confirmOverlay.classList.remove("visible");
+    drawOverlay();
+  });
+
+  // ---- Clear / Reset ----
+  function clearCard() {
+    liveState.manualCardBox = null;
+    liveState.manualFootBox = null;
+    advanceStep(2);
+    setStatus("Card cleared. Place card and draw box.", "\uD83D\uDD04");
+    showGuide(true, "Place bank card on surface", "card");
+    pendingConfirmBox = null;
+    confirmOverlay.classList.remove("visible");
+    updateDiagnostics("fallback");
+    drawOverlay();
+    updateButtonVisibility();
+    setFootBtn.disabled = true;
+  }
+
+  function clearFoot() {
+    liveState.manualFootBox = null;
+    advanceStep(3);
+    setStatus(liveState.manualCardBox ? "Foot cleared. Place foot and draw box." : "Card reference required", "\uD83D\uDD04");
+    showGuide(liveState.manualCardBox, "Place your foot", "foot");
+    pendingConfirmBox = null;
+    confirmOverlay.classList.remove("visible");
+    updateDiagnostics();
+    drawOverlay();
+    updateButtonVisibility();
+  }
+
+  function retakeAll() {
+    liveState.manualCardBox = null;
+    liveState.manualFootBox = null;
+    advanceStep(2);
+    setStatus("Retake. Place card and draw box.", "\uD83D\uDD04");
+    showGuide(true, "Place bank card on surface", "card");
+    updateDiagnostics("fallback");
+    drawOverlay();
+    updateButtonVisibility();
+    setFootBtn.disabled = true;
+    captureBtn.disabled = true;
+    retakeBtn.style.display = "none";
+    captureBtn.style.display = "none";
+  }
+
+  // ---- Button wiring ----
+  startBtn.addEventListener("click", startCamera);
+
+  setCardBtn.addEventListener("click", () => {
+    beginSelect("reference_select");
+  });
+
+  setFootBtn.addEventListener("click", () => {
+    beginSelect("foot_select");
+  });
+
+  confirmBoxBtn.addEventListener("click", confirmPendingBox);
+  cancelBoxBtn.addEventListener("click", cancelPendingBox);
+
+  clearCardBtn.addEventListener("click", clearCard);
+  clearFootBtn.addEventListener("click", clearFoot);
+  captureBtn.addEventListener("click", captureFrame);
+  retakeBtn.addEventListener("click", retakeAll);
+
+  window.addEventListener("resize", () => {
+    drawOverlay();
+    updateGuideFrames();
+  });
+  window.addEventListener("orientationchange", () => {
+    setTimeout(() => { drawOverlay(); updateGuideFrames(); }, 300);
+  });
+
+  // Init
+  renderJson(baseJson("manual"));
+  updateDiagnostics("fallback");
+  updateButtonVisibility();
+  showGuide(false);
+
+  // ---- Expose state for devtools ----
+  window.__livefit = { liveState, captureFrame, startCamera, drawOverlay };
+})();
+</script>
+</body>
+</html>
