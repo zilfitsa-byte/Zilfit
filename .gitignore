@@ -43,3 +43,4 @@ reports/preproduction/*.md
 reports/samples/*.json
 reports/samples/*.md
 logs/sample_readiness_*.log*
+.worktrees/
