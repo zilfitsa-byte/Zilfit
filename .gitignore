@@ -44,3 +44,6 @@ reports/samples/*.json
 reports/samples/*.md
 logs/sample_readiness_*.log*
 .worktrees/
+
+# Local backups generated during agent/demo work
+_local_backups/
