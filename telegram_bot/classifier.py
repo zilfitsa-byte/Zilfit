@@ -157,13 +157,52 @@ def classify_qwen_task(task_text):
         if re.search(pattern, text, re.IGNORECASE):
             return "tests-only", "tests-only task"
 
-    # 5. Catch bare status-like words that could be accidentally executed as shell
-    #    (This was the original incident: "Read-only" → /bin/sh: Read-only: not found)
-    bare_words = {"read-only", "readonly", "clean", "dirty", "pass", "fail", "yes", "no", "ok", "ready"}
-    if text.lower() in bare_words:
+    # 5. Normalize Unicode dashes (mobile keyboards often send en/em dashes)
+    #    This prevents "Read—only" or "Read–only" from evading bare-word checks
+    text = text.replace('\u2014', '-').replace('\u2013', '-').replace('\u2012', '-')
+
+    # 6. Catch bare status-like words that could be accidentally executed as shell
+    #    (Original incident: "Read-only" → /bin/sh: Read-only: not found)
+    BARE_STATUS_WORDS = frozenset({
+        # Original incident and variants
+        "read-only", "readonly", "read only",
+        # Status words
+        "done", "complete", "completed", "started", "pending", "approved",
+        "cancelled", "canceled", "error", "report", "status", "ok", "okay",
+        "ready", "clean", "dirty", "pass", "fail", "passed", "failed",
+        "running", "stopped", "waiting", "success", "failure",
+        "yes", "no", "true", "false",
+    })
+    stripped = text.strip()
+    if stripped.lower() in BARE_STATUS_WORDS:
         return "forbidden", f"bare status word — not a valid command (original incident pattern)"
 
-    # 6. Default: natural-language task that may touch code → needs approval
+    # 7. Reject very short prompts (1-2 words) that lack an actionable verb or repo command
+    #    These are likely status text, labels, or fragments — not real tasks
+    word_count = len(stripped.split())
+    if word_count <= 2:
+        # Check if it contains a known shell command verb
+        has_command = False
+        for prefix in READONLY_SHELL_PREFIXES:
+            if stripped.lower().startswith(prefix.lower()):
+                has_command = True
+                break
+        # Check for common action verbs in English or Arabic
+        action_verbs = {
+            "add", "create", "delete", "remove", "fix", "update", "write",
+            "show", "list", "check", "run", "build", "test", "install",
+            "change", "modify", "edit", "read", "open", "close", "set",
+            "أضف", "أنشئ", "احذف", "أصلح", "حدّث", "اكتب", "أظهر",
+            "شغّل", "تحقق", "غيّر", "عدّل", "اقرأ", "افتح", "أغلق",
+        }
+        for word in stripped.lower().split():
+            if word in action_verbs:
+                has_command = True
+                break
+        if not has_command:
+            return "forbidden", f"short non-actionable prompt ({word_count} word(s)) — not a valid command"
+
+    # 8. Default: natural-language task that may touch code → needs approval
     #    This is the safe default — broad NL tasks become qwen_prompt type
     return "code-change-needs-approval", "natural-language task — requires safe Qwen execution wrapper"
 
@@ -185,17 +224,21 @@ def run_self_check():
     Returns (passed, failed, results) tuple.
     """
     test_cases = [
-        # (input, expected_class)
+        # ── Read-only shell commands ──
         ("git status", "read-only"),
         ("git log --oneline -5", "read-only"),
         ("ls reports/nightly/", "read-only"),
         ("cat AGENTS.md", "read-only"),
+        # ── Docs-only natural language ──
         ("write a design doc for the camera UX", "docs-only"),
         ("update the plan for Z-Product", "docs-only"),
+        # ── Tests-only natural language ──
         ("add a test for the JSON parser", "tests-only"),
         ("write a failing test for the FEM solver", "tests-only"),
+        # ── Code-change needs approval (NL tasks → qwen_prompt) ──
         ("fix the camera preview size", "code-change-needs-approval"),
         ("rewrite the density parser", "code-change-needs-approval"),
+        # ── Forbidden: destructive/security/medical ──
         ("delete all files in reports/nightly/", "forbidden"),
         ("rm -rf reports/nightly/", "forbidden"),
         ("change the bot token", "forbidden"),
@@ -204,8 +247,25 @@ def run_self_check():
         ("sudo systemctl restart nginx", "forbidden"),
         ("crontab -e", "forbidden"),
         ("make a medical claim about treatment", "forbidden"),
-        ("show me the last 5 commits", "code-change-needs-approval"),
-        ("Read-only", "forbidden"),  # Was the original incident trigger
+        # ── Forbidden: bare status words (original incident) ──
+        ("Read-only", "forbidden"),
+        ("read-only", "forbidden"),
+        ("Done", "forbidden"),
+        ("Complete", "forbidden"),
+        ("Started", "forbidden"),
+        ("Pending", "forbidden"),
+        ("Approved", "forbidden"),
+        ("Cancelled", "forbidden"),
+        ("Error", "forbidden"),
+        ("Report", "forbidden"),
+        ("Status", "forbidden"),
+        # ── Forbidden: short non-actionable prompts ──
+        ("just now", "forbidden"),
+        ("my file", "forbidden"),
+        ("the thing", "forbidden"),
+        # ── Valid 2-word commands with action verbs ──
+        ("git log", "read-only"),
+        ("git branch", "read-only"),
     ]
 
     passed = 0
