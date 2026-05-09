@@ -91,6 +91,36 @@ def read_file_safe(path, max_bytes=4000):
     except Exception as e:
         return f"Error reading file: {e}"
 
+def run_cmd_safe(cmd_list, cwd=None, timeout=30):
+    """Run a fixed allowlisted command safely — no shell=True, with timeout.
+
+    Only permits a small set of read-only git commands used by /agents.
+    Returns stripped stdout, or a short error string on failure.
+    """
+    ALLOWLIST = {
+        ("git", "status", "--short"),
+        ("git", "branch", "--show-current"),
+        ("git", "log", "--oneline", "-1"),
+    }
+    key = tuple(cmd_list)
+    if key not in ALLOWLIST:
+        return "[غير متوفر]"
+    try:
+        result = subprocess.run(
+            cmd_list,
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+        )
+        out = result.stdout.strip()
+        return out[:2000] if out else ""
+    except subprocess.TimeoutExpired:
+        return "[غير متوفر]"
+    except Exception:
+        return "[غير متوفر]"
+
+
 def run_cmd(cmd, cwd=None, timeout=60):
     """Run a shell command safely, return stdout+stderr."""
     try:
@@ -650,24 +680,217 @@ def cmd_agents(cfg):
         f"Last agent run: `{a_ts}`"
     )
 
-def cmd_agents_ar(cfg):
-    """Arabic agents status."""
-    repo = cfg["repo_root"]
-    ap = read_file_safe(f"{repo}/agents/ACTIVE_PROJECTS.md", 1500)
-    nl = latest_file(f"{repo}/reports/nightly", "*.json")
-    nl_ts = os.path.basename(nl).replace("nightly_check_", "").replace(".json", "") if nl else "لا يوجد"
-    qf = latest_file(f"{repo}/reports/quality", "*.json")
-    q_ts = os.path.basename(qf).replace("quality_gate_", "").replace(".json", "") if qf else "لا يوجد"
-    af = latest_file(f"{repo}/reports/agent_runs", "*.md")
-    a_ts = os.path.basename(af).replace("command_center_", "").replace(".md", "") if af else "لا يوجد"
-    return (
-        f"⬡ نظام الوكلاء\n\n"
-        f"المشاريع النشطة:\n```\n{ap}\n```\n"
-        f"آخر تقرير ليلي: `{nl_ts}`\n"
-        f"آخر فحص جودة: `{q_ts}`\n"
-        f"آخر تشغيل وكيل: `{a_ts}`"
-    )
+# ── Agent status helpers for /agents dashboard (Control Room v1) ──
 
+_AGENT_DIRS = {
+    "Z-Product":    ("product",    "📦"),
+    "Z-Design":     ("design",     "🎨"),
+    "Z-QA":         ("qa",         "🔍"),
+    "Z-Ops":        ("ops",        "⚙️"),
+    "Z-Research":   ("research",   "🔬"),
+    "Z-Claims":     ("claims",     "🛡️"),
+    "Z-CAD":        ("cad",        "📐"),
+    "Z-Sim":        ("sim",        "🧪"),
+}
+
+_STATUS_ICONS_AR = {
+    "idle":         "🟢 خامل",
+    "active":       "🔵 نشط",
+    "blocked":      "🟡 محجوز",
+    "failed":       "🔴 فاشل",
+    "needs_sultan": "🟠 يحتاج سلطان",
+}
+
+_FUTURE_AGENTS = {"Z-CAD", "Z-Sim"}
+
+import datetime as _dt
+
+def _safe_parse_report_line(text, label):
+    """Extract value after a label like 'Sultan decisions needed:' from report text."""
+    if not text:
+        return "لا يوجد"
+    for line in text.splitlines():
+        # Match patterns like "label: value" or "المفتاح: القيمة"
+        if label.lower() in line.lower():
+            # Split on first colon
+            parts = line.split(":", 1)
+            if len(parts) == 2:
+                val = parts[1].strip()
+                if val:
+                    return val
+    return "لا يوجد"
+
+
+def _get_agent_status(agent_name, dir_name, repo_root):
+    """Return dict with status fields for one agent.
+
+    Reads from reports/{dir_name}/ for the latest report file.
+    All operations are read-only file reads — no shell execution.
+    """
+    report_dir = os.path.join(repo_root, "reports", dir_name)
+    result = {
+        "status": "idle",
+        "current_task": "لا يوجد",
+        "last_run": "لم يعمل بعد",
+        "last_report": "لا يوجد",
+        "last_failure": "لا يوجد",
+        "next_sultan_action": "لا يوجد",
+    }
+
+    try:
+        if not os.path.isdir(report_dir):
+            return result
+
+        files = [
+            os.path.join(report_dir, f)
+            for f in os.listdir(report_dir)
+            if os.path.isfile(os.path.join(report_dir, f))
+        ]
+        if not files:
+            return result
+
+        latest = max(files, key=os.path.getmtime)
+        result["last_report"] = os.path.basename(latest)
+
+        # Get file modification time
+        mtime = os.path.getmtime(latest)
+        dt_obj = _dt.datetime.fromtimestamp(mtime, tz=_dt.timezone.utc)
+        result["last_run"] = dt_obj.strftime("%Y-%m-%d %H:%M UTC")
+
+        # Read report content
+        report_text = read_file_safe(latest, max_bytes=3000)
+
+        # Extract fields from report
+        sultan = _safe_parse_report_line(report_text, "Sultan decisions needed")
+        if sultan and sultan != "لا يوجد":
+            result["next_sultan_action"] = sultan
+            result["status"] = "needs_sultan"
+        else:
+            failure = _safe_parse_report_line(report_text, "Blocked items")
+            if failure == "لا يوجد":
+                failure = _safe_parse_report_line(report_text, "Risks identified")
+            if failure and failure != "لا يوجد":
+                result["last_failure"] = failure
+                result["status"] = "failed"
+            else:
+                task = _safe_parse_report_line(report_text, "Task")
+                if task == "لا يوجد":
+                    task = _safe_parse_report_line(report_text, "current_task")
+                if task and task != "لا يوجد":
+                    result["current_task"] = task
+                    # Check if last_run is within 2 hours
+                    now_utc = _dt.datetime.now(_dt.timezone.utc)
+                    diff = now_utc - dt_obj
+                    if diff.total_seconds() < 7200:
+                        result["status"] = "active"
+                    else:
+                        result["status"] = "idle"
+                else:
+                    result["status"] = "idle"
+    except Exception:
+        pass  # gracefully degrade — keep defaults
+
+    return result
+
+
+def cmd_agents_ar(cfg):
+    """Arabic Telegram Control Room v1 — /agents dashboard."""
+    repo = cfg["repo_root"]
+
+    # ── Header: repo health (safe subprocess) ──
+    branch = run_cmd_safe(["git", "branch", "--show-current"], cwd=repo, timeout=10)
+    head_line = run_cmd_safe(["git", "log", "--oneline", "-1"], cwd=repo, timeout=10)
+    git_status = run_cmd_safe(["git", "status", "--short"], cwd=repo, timeout=10)
+
+    if not branch:
+        branch = "غير متوفر"
+    tree_state = "نظيف ✅" if not git_status else "متغير ⚠️"
+
+    # Parse HEAD
+    if head_line:
+        parts_head = head_line.split(" ", 1)
+        head_hash = parts_head[0] if parts_head else "غير متوفر"
+        head_rest = parts_head[1] if len(parts_head) > 1 else ""
+    else:
+        head_hash = "غير متوفر"
+        head_rest = ""
+
+    # ── Nightly & Quality latest ──
+    nl_file = latest_file(os.path.join(repo, "reports", "nightly"), "nightly_check_*.json")
+    if nl_file:
+        try:
+            nl_data = json.loads(Path(nl_file).read_text(encoding="utf-8"))
+            nl_tests = nl_data.get("test_status", "?")
+            if nl_tests == "pass":
+                nightly_status = "ناجح ✅"
+            elif nl_tests == "fail":
+                nightly_status = "فاشل ❌"
+            else:
+                nightly_status = str(nl_tests)
+        except Exception:
+            nightly_status = "غير متوفر"
+    else:
+        nightly_status = "لا يوجد"
+
+    qf_file = latest_file(os.path.join(repo, "reports", "quality"), "quality_gate_*.json")
+    if qf_file:
+        try:
+            qf_data = json.loads(Path(qf_file).read_text(encoding="utf-8"))
+            qf_overall = qf_data.get("overall", qf_data.get("status", "?"))
+            if isinstance(qf_overall, bool):
+                quality_status = "ناجح ✅" if qf_overall else "فاشل ❌"
+            elif str(qf_overall).lower() in ("pass", "true", "ok"):
+                quality_status = "ناجح ✅"
+            else:
+                quality_status = "فاشل ❌"
+        except Exception:
+            quality_status = "غير متوفر"
+    else:
+        quality_status = "لا يوجد"
+
+    # ── Build header ──
+    lines = []
+    lines.append("🤖 غرفة تحكم وكلاء ZILFIT")
+    lines.append("━" * 29)
+    lines.append(f"🌿 الفرع: {branch}")
+    if head_rest:
+        lines.append(f"📌 HEAD: {head_hash} {head_rest}")
+    else:
+        lines.append(f"📌 HEAD: {head_hash}")
+    lines.append(f"📁 حالة الشجرة: {tree_state}")
+    lines.append(f"🌙 آخر تقرير ليلي: {nightly_status}")
+    lines.append(f"🔍 آخر فحص جودة: {quality_status}")
+    lines.append("━" * 29)
+
+    # ── Agent rows ──
+    counts = {"active": 0, "idle": 0, "blocked": 0, "failed": 0, "needs_sultan": 0}
+    for agent_name, (dir_name, icon) in _AGENT_DIRS.items():
+        is_future = agent_name in _FUTURE_AGENTS
+        info = _get_agent_status(agent_name, dir_name, repo_root=repo)
+        status_key = info["status"]
+        status_ar = _STATUS_ICONS_AR.get(status_key, "🟢 خامل")
+        counts[status_key] = counts.get(status_key, 0) + 1
+
+        suffix = " *(مستقبلي)*" if is_future else ""
+        lines.append("")
+        lines.append(f"{icon} {agent_name}{suffix}")
+        lines.append(f"   الحالة: {status_ar}")
+        lines.append(f"   📋 المهمة الحالية: {info['current_task']}")
+        lines.append(f"   ⏱ آخر تشغيل: {info['last_run']}")
+        lines.append(f"   📄 آخر تقرير: {info['last_report']}")
+        lines.append(f"   ❌ آخر فشل: {info['last_failure']}")
+        lines.append(f"   🔜 إجراء سلطان المطلوب: {info['next_sultan_action']}")
+
+    # ── Summary ──
+    lines.append("")
+    lines.append("━" * 29)
+    summary_parts = []
+    for key, ar_label in [("active", "نشط"), ("idle", "خامل"), ("blocked", "محجوز"), ("failed", "فاشل"), ("needs_sultan", "يحتاج سلطان")]:
+        c = counts.get(key, 0)
+        if c > 0:
+            summary_parts.append(f"{c} {ar_label}")
+    lines.append(f"📊 الملخص: {' | '.join(summary_parts)}")
+    return "\n".join(lines)
 def cmd_research(cfg):
     """Autopull research stats."""
     repo = cfg["repo_root"]
@@ -863,13 +1086,21 @@ def cmd_help_ar(*_args):
 
 COMMANDS = {
     "status": cmd_status,
+    "status_ar": cmd_status_ar,
     "nightly": cmd_nightly,
+    "nightly_ar": cmd_nightly_ar,
     "tests": cmd_tests,
+    "tests_ar": cmd_tests_ar,
     "agents": cmd_agents,
+    "agents_ar": cmd_agents_ar,
     "research": cmd_research,
+    "research_ar": cmd_research_ar,
     "claims": cmd_claims,
+    "claims_ar": cmd_claims_ar,
     "demo": cmd_demo,
+    "demo_ar": cmd_demo_ar,
     "help": cmd_help,
+    "help_ar": cmd_help_ar,
     "start": cmd_help,
 }
 
