@@ -37,11 +37,10 @@ JSON
 echo "=== test_negative_z_livefit_scan_claims_v1 ==="
 
 # Test 1: runtime must exit non-zero
-python3 "$REPO_ROOT/runtime/run_z_livefit_scan_from_json.py" "$TMP" > /tmp/zilfit_claims_runtime.json 2>&1
-if [ $? -ne 0 ]; then
-  pass "runtime rejected forbidden claims profile"
-else
+if python3 "$REPO_ROOT/runtime/run_z_livefit_scan_from_json.py" "$TMP" > /tmp/zilfit_claims_runtime.json 2>&1; then
   fail "runtime did not reject forbidden claims profile"
+else
+  pass "runtime rejected forbidden claims profile"
 fi
 
 # Test 2: runtime output contains forbidden_terms_detected
@@ -52,11 +51,10 @@ else
 fi
 
 # Test 3: validator must exit non-zero
-python3 "$REPO_ROOT/validators/validate_z_livefit_scan_profile.py" "$TMP" > /tmp/zilfit_claims_validator.json 2>&1
-if [ $? -ne 0 ]; then
-  pass "validator rejected forbidden claims profile"
-else
+if python3 "$REPO_ROOT/validators/validate_z_livefit_scan_profile.py" "$TMP" > /tmp/zilfit_claims_validator.json 2>&1; then
   fail "validator did not reject forbidden claims profile"
+else
+  pass "validator rejected forbidden claims profile"
 fi
 
 # Test 4: validator output contains forbidden_terms_detected
