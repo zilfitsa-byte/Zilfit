@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ZILFIT Telegram Command Center — Launch Script
+# ZILFIT Telegram Command Center v2 — Launch Script
 # Run from repo root: bash telegram_bot/run.sh
 # Or from tmux: tmux new -s zilfit-bot 'bash telegram_bot/run.sh'
 set -euo pipefail
@@ -8,7 +8,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$REPO_ROOT"
 
-echo "⬡ ZILFIT Telegram Command Center v1"
+echo "⬡ ZILFIT Telegram Command Center v2"
 echo "===================================="
 
 # Validate required env vars
