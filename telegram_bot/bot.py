@@ -703,6 +703,61 @@ _STATUS_ICONS_AR = {
 
 _FUTURE_AGENTS = {"Z-CAD", "Z-Sim"}
 
+# Agent metadata: read/write/forbidden paths + escalation rules
+# Source: governance/ZILFIT_AGENT_ROLES.md
+_AGENT_META = {
+    "Z-Product": {
+        "read": ["reports/**", "research/**", "demo/**", "tasks/**", "governance/SKILL_ENGINE.md"],
+        "write": ["reports/product/**", "reports/readiness/**", "tasks/ (new only)"],
+        "forbidden": ["telegram_bot/**", ".env", "governance/SKILL_ENGINE.md (write)", "cron/**"],
+        "escalation": ["Reprioritize top-3 tasks", "Public product claims", "Paid API work"],
+    },
+    "Z-Design": {
+        "read": ["demo/**", "governance/Z_UX_SKILLS.md", "reports/quality/**"],
+        "write": ["demo/ (new files only)", "reports/design/**"],
+        "forbidden": ["telegram_bot/**", ".env", "CAD geometry files", "Watermark generation"],
+        "escalation": ["Overwrite existing demo", "New brand color", "External assets"],
+    },
+    "Z-QA": {
+        "read": ["** (full repo read)"],
+        "write": ["reports/qa/**", "reports/quality/**", "tasks/ (bug reports)"],
+        "forbidden": ["telegram_bot/bot.py", "telegram_bot/run.sh", ".env", "File deletion"],
+        "escalation": ["Production-affecting test", "Production rollback needed"],
+    },
+    "Z-Ops": {
+        "read": ["reports/**", "research/**", "logs/**", "cron/** (read-only)"],
+        "write": ["reports/ops/**", "logs/ (append-only)", "tasks/ (ops proposals)"],
+        "forbidden": ["telegram_bot/**", ".env", "cron/** (write)", "systemd units", "File deletion"],
+        "escalation": ["Cron job change", "systemd/tmux modification", "Production restart"],
+    },
+    "Z-Research": {
+        "read": ["research/**", "governance/Z_CLAIMS_SKILLS.md", "governance/Z_PATENT_SKILLS.md"],
+        "write": ["research/daily/**", "research/autopull/**", "reports/research/**"],
+        "forbidden": [".env", "telegram_bot/**", "AUTOPULL_SOURCES.md (write)", "Medical claims"],
+        "escalation": ["New research source", "Patent-worthy finding", "Paid journal access"],
+    },
+    "Z-Claims": {
+        "read": ["reports/**", "demo/**", "governance/Z_CLAIMS_SKILLS.md"],
+        "write": ["reports/claims/**", "tasks/ (remediation proposals)"],
+        "forbidden": ["Modify other agents' output", ".env", "telegram_bot/**", "Medical approvals"],
+        "escalation": ["Borderline medical claim", "Critical FORBIDDEN classification", "Z_CLAIMS_SKILLS.md change"],
+    },
+    "Z-CAD": {
+        "read": ["governance/Z_CAD_SKILLS.md", "governance/Z_UX_SKILLS.md", "demo/**"],
+        "write": ["cad/** (future)", "reports/cad/**"],
+        "forbidden": ["Print-ready files without Z-Sim PASS", ".env", "Meshy output as final"],
+        "escalation": ["Geometry affecting primary templates", "Monolithic design change", "3D print export"],
+    },
+    "Z-Sim": {
+        "read": ["governance/Z_SIM_SKILLS.md", "governance/Z_CAD_SKILLS.md", "reports/**"],
+        "write": ["reports/sim/**", "reports/samples/**", "tasks/"],
+        "forbidden": ["GO without complete scope", "Override BLOCKER without Sultan", ".env"],
+        "escalation": ["GO for physical print", "Override BLOCKER", "Paid compute"],
+    },
+}
+
+
+
 import datetime as _dt
 
 def _safe_parse_report_line(text, label):
@@ -944,11 +999,8 @@ def _get_agent_status(agent_name, dir_name, repo_root):
         pass  # gracefully degrade
 
     return result
-def cmd_agents_ar(cfg):
-    """Arabic Telegram Control Room v1 — /agents dashboard."""
-    repo = cfg["repo_root"]
-
-    # ── Header: repo health (safe subprocess) ──
+def _build_header(repo):
+    """Build the dashboard header (reused by compact and detail views)."""
     branch = run_cmd_safe(["git", "branch", "--show-current"], cwd=repo, timeout=10)
     head_line = run_cmd_safe(["git", "log", "--oneline", "-1"], cwd=repo, timeout=10)
     git_status = run_cmd_safe(["git", "status", "--short"], cwd=repo, timeout=10)
@@ -957,7 +1009,6 @@ def cmd_agents_ar(cfg):
         branch = "غير متوفر"
     tree_state = "نظيف ✅" if not git_status else "متغير ⚠️"
 
-    # Parse HEAD
     if head_line:
         parts_head = head_line.split(" ", 1)
         head_hash = parts_head[0] if parts_head else "غير متوفر"
@@ -966,74 +1017,68 @@ def cmd_agents_ar(cfg):
         head_hash = "غير متوفر"
         head_rest = ""
 
-    # ── Nightly & Quality latest ──
+    # Nightly
     nl_file = latest_file(os.path.join(repo, "reports", "nightly"), "nightly_check_*.json")
     if nl_file:
         try:
             nl_data = json.loads(Path(nl_file).read_text(encoding="utf-8"))
             nl_tests = nl_data.get("test_status", "?")
-            if nl_tests == "pass":
-                nightly_status = "ناجح ✅"
-            elif nl_tests == "fail":
-                nightly_status = "فاشل ❌"
-            else:
-                nightly_status = str(nl_tests)
+            nightly_status = "ناجح ✅" if nl_tests == "pass" else ("فاشل ❌" if nl_tests == "fail" else str(nl_tests))
         except Exception:
             nightly_status = "غير متوفر"
     else:
         nightly_status = "لا يوجد"
 
+    # Quality
     qf_file = latest_file(os.path.join(repo, "reports", "quality"), "quality_gate_*.json")
     if qf_file:
         try:
             qf_data = json.loads(Path(qf_file).read_text(encoding="utf-8"))
             qf_overall = qf_data.get("overall", qf_data.get("status", "?"))
-            if isinstance(qf_overall, bool):
-                quality_status = "ناجح ✅" if qf_overall else "فاشل ❌"
-            elif str(qf_overall).lower() in ("pass", "true", "ok"):
-                quality_status = "ناجح ✅"
-            else:
-                quality_status = "فاشل ❌"
+            quality_status = "ناجح ✅" if (isinstance(qf_overall, bool) and qf_overall) or str(qf_overall).lower() in ("pass", "true", "ok") else "فاشل ❌"
         except Exception:
             quality_status = "غير متوفر"
     else:
         quality_status = "لا يوجد"
 
-    # ── Build header ──
-    lines = []
-    lines.append("🤖 غرفة تحكم وكلاء ZILFIT")
-    lines.append("━" * 29)
-    lines.append(f"🌿 الفرع: {branch}")
+    header_lines = [
+        "🤖 غرفة تحكم وكلاء ZILFIT",
+        "━" * 29,
+        f"🌿 الفرع: {branch}",
+    ]
     if head_rest:
-        lines.append(f"📌 HEAD: {head_hash} {head_rest}")
+        header_lines.append(f"📌 HEAD: {head_hash} {head_rest}")
     else:
-        lines.append(f"📌 HEAD: {head_hash}")
-    lines.append(f"📁 حالة الشجرة: {tree_state}")
-    lines.append(f"🌙 آخر تقرير ليلي: {nightly_status}")
-    lines.append(f"🔍 آخر فحص جودة: {quality_status}")
-    lines.append("━" * 29)
+        header_lines.append(f"📌 HEAD: {head_hash}")
+    header_lines.append(f"📁 حالة الشجرة: {tree_state}")
+    header_lines.append(f"🌙 ليلي: {nightly_status}")
+    header_lines.append(f"🔍 جودة: {quality_status}")
+    header_lines.append("━" * 29)
+    return header_lines
 
-    # ── Agent rows ──
+
+def _build_agent_compact_row(agent_name, icon, is_future, info):
+    """Build a single-line compact agent row for the overview."""
+    suffix = " *(مستقبلي)*" if is_future else ""
+    status_ar = _STATUS_ICONS_AR.get(info["status"], "🟢 خامل")
+    sultan_hint = f" ← {info['next_sultan_action'][:40]}" if info["next_sultan_action"] != "لا يوجد" else ""
+    report_hint = f" | {info['last_report']}" if info["last_report"] != "لا يوجد" else ""
+    return f"{icon} {agent_name}{suffix}: {status_ar}{report_hint}{sultan_hint}"
+
+
+def cmd_agents_ar(cfg):
+    """Compact Arabic overview — /agents dashboard (mobile-friendly)."""
+    repo = cfg["repo_root"]
+
+    lines = _build_header(repo)
+
     counts = {"active": 0, "idle": 0, "blocked": 0, "failed": 0, "needs_sultan": 0}
     for agent_name, (dir_name, icon) in _AGENT_DIRS.items():
         is_future = agent_name in _FUTURE_AGENTS
         info = _get_agent_status(agent_name, dir_name, repo_root=repo)
-        status_key = info["status"]
-        status_ar = _STATUS_ICONS_AR.get(status_key, "🟢 خامل")
-        counts[status_key] = counts.get(status_key, 0) + 1
+        counts[info["status"]] = counts.get(info["status"], 0) + 1
+        lines.append(_build_agent_compact_row(agent_name, icon, is_future, info))
 
-        suffix = " *(مستقبلي)*" if is_future else ""
-        lines.append("")
-        lines.append(f"{icon} {agent_name}{suffix}")
-        lines.append(f"   الحالة: {status_ar}")
-        lines.append(f"   📋 المهمة الحالية: {info['current_task']}")
-        lines.append(f"   ⏱ آخر تشغيل: {info['last_run']}")
-        lines.append(f"   📄 آخر تقرير: {info['last_report']}")
-        lines.append(f"   ❌ آخر فشل: {info['last_failure']}")
-        lines.append(f"   🔜 إجراء سلطان المطلوب: {info['next_sultan_action']}")
-
-    # ── Summary ──
-    lines.append("")
     lines.append("━" * 29)
     summary_parts = []
     for key, ar_label in [("active", "نشط"), ("idle", "خامل"), ("blocked", "محجوز"), ("failed", "فاشل"), ("needs_sultan", "يحتاج سلطان")]:
@@ -1041,7 +1086,101 @@ def cmd_agents_ar(cfg):
         if c > 0:
             summary_parts.append(f"{c} {ar_label}")
     lines.append(f"📊 الملخص: {' | '.join(summary_parts)}")
+    lines.append("")
+    lines.append("للتفاصيل: /agents_qa أو /agents_research أو /agents_product")
     return "\n".join(lines)
+
+
+# ═══════════════════════════════════════════════════════════
+# Per-agent detail views (B4 — focused single-agent status)
+# ═══════════════════════════════════════════════════════════
+
+def _build_agent_detail(agent_name, icon, repo_root):
+    """Build a detailed single-agent status message.
+
+    Reuses B3 _get_agent_status for local signals.
+    Adds metadata (read/write/forbidden paths, escalation).
+    """
+    dir_name = _AGENT_DIRS.get(agent_name, ("unknown", "❓"))[0]
+    info = _get_agent_status(agent_name, dir_name, repo_root)
+    meta = _AGENT_META.get(agent_name, {})
+    is_future = agent_name in _FUTURE_AGENTS
+
+    status_ar = _STATUS_ICONS_AR.get(info["status"], "🟢 خامل")
+    suffix = " (مستقبلي)" if is_future else ""
+
+    lines = [
+        f"{icon} {agent_name}{suffix}",
+        "━" * 29,
+        f"الحالة: {status_ar}",
+        f"📋 المهمة الحالية: {info['current_task']}",
+        f"⏱ آخر تشغيل: {info['last_run']}",
+        f"📄 آخر تقرير: {info['last_report']}",
+        f"❌ آخر فشل: {info['last_failure']}",
+        f"🔜 إجراء سلطان المطلوب: {info['next_sultan_action']}",
+    ]
+
+    # Metadata sections
+    if meta.get("read"):
+        lines.append("")
+        lines.append("📖 مسارات القراءة:")
+        for p in meta["read"][:5]:
+            lines.append(f"  ✅ {p}")
+
+    if meta.get("write"):
+        lines.append("")
+        lines.append("✏️ مسارات الكتابة:")
+        for p in meta["write"][:5]:
+            lines.append(f"  ✍️ {p}")
+
+    if meta.get("forbidden"):
+        lines.append("")
+        lines.append("🚫 مسارات ممنوعة:")
+        for p in meta["forbidden"][:5]:
+            lines.append(f"  ⛔ {p}")
+
+    if meta.get("escalation"):
+        lines.append("")
+        lines.append("⚡ قواعد التصعيد لسلطان:")
+        for p in meta["escalation"][:4]:
+            lines.append(f"  🔺 {p}")
+
+    return "\n".join(lines)
+
+
+# Agent detail command mapping: command_suffix -> (agent_name, icon)
+_AGENT_DETAIL_CMDS = {
+    "product":   ("Z-Product", "📦"),
+    "design":    ("Z-Design",  "🎨"),
+    "qa":        ("Z-QA",      "🔍"),
+    "ops":       ("Z-Ops",     "⚙️"),
+    "research":  ("Z-Research","🔬"),
+    "claims":    ("Z-Claims",  "🛡️"),
+    "cad":       ("Z-CAD",     "📐"),
+    "sim":       ("Z-Sim",     "🧪"),
+}
+
+
+def _make_agent_detail_handler(agent_name, icon):
+    """Factory: returns a handler function for a specific agent."""
+    def handler(cfg):
+        return _build_agent_detail(agent_name, icon, cfg["repo_root"])
+    handler.__name__ = f"cmd_agents_{agent_name.lower().replace('-', '_')}_ar"
+    handler.__doc__ = f"Detail view for {agent_name}"
+    return handler
+
+
+# Create handlers for each agent
+cmd_agents_product_ar = _make_agent_detail_handler("Z-Product", "📦")
+cmd_agents_design_ar  = _make_agent_detail_handler("Z-Design",  "🎨")
+cmd_agents_qa_ar      = _make_agent_detail_handler("Z-QA",      "🔍")
+cmd_agents_ops_ar     = _make_agent_detail_handler("Z-Ops",     "⚙️")
+cmd_agents_research_ar = _make_agent_detail_handler("Z-Research", "🔬")
+cmd_agents_claims_ar  = _make_agent_detail_handler("Z-Claims",  "🛡️")
+cmd_agents_cad_ar     = _make_agent_detail_handler("Z-CAD",     "📐")
+cmd_agents_sim_ar     = _make_agent_detail_handler("Z-Sim",     "🧪")
+
+
 def cmd_research(cfg):
     """Autopull research stats."""
     repo = cfg["repo_root"]
@@ -1244,6 +1383,22 @@ COMMANDS = {
     "tests_ar": cmd_tests_ar,
     "agents": cmd_agents,
     "agents_ar": cmd_agents_ar,
+    "agents_product": cmd_agents,
+    "agents_product_ar": cmd_agents_product_ar,
+    "agents_design": cmd_agents,
+    "agents_design_ar": cmd_agents_design_ar,
+    "agents_qa": cmd_agents,
+    "agents_qa_ar": cmd_agents_qa_ar,
+    "agents_ops": cmd_agents,
+    "agents_ops_ar": cmd_agents_ops_ar,
+    "agents_research": cmd_agents,
+    "agents_research_ar": cmd_agents_research_ar,
+    "agents_claims": cmd_agents,
+    "agents_claims_ar": cmd_agents_claims_ar,
+    "agents_cad": cmd_agents,
+    "agents_cad_ar": cmd_agents_cad_ar,
+    "agents_sim": cmd_agents,
+    "agents_sim_ar": cmd_agents_sim_ar,
     "research": cmd_research,
     "research_ar": cmd_research_ar,
     "claims": cmd_claims,
