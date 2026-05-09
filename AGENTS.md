@@ -48,6 +48,27 @@ Ask Sultan before:
 - merging to main
 - spending paid API/cloud resources
 
+## Superpowers Integration
+
+ZILFIT agents must follow the **Superpowers workflow** for all engineering tasks. Superpowers defines *how* agents behave (process discipline); the ZILFIT Skill Engine (`governance/SKILL_ENGINE.md`) defines *what* outputs must contain (structure and contracts). Both must be satisfied.
+
+### Required workflow cycle
+Every task must follow: **inspect → classify → plan → approval → small edit → test → report**
+
+1. **Inspect** — Read AGENTS.md, git status, and relevant files. Understand current state.
+2. **Classify** — Determine which ZILFIT agent role applies and which Superpowers skills to invoke.
+3. **Plan** — Write a concrete plan with exact files and changes. No placeholders.
+4. **Approval** — Present the plan to Sultan (or the approval gate). Do not proceed without approval for non-trivial changes.
+5. **Small Edit** — Make the smallest useful change. One file at a time.
+6. **Test** — Run relevant tests. If tests cannot run, explain why.
+7. **Report** — Write a structured report in English. Final summary for Sultan in Arabic.
+
+### Non-negotiable boundaries
+- **No main/production merge** without explicit Sultan approval.
+- **No medical, diagnostic, therapeutic, clinical, pain, disease, or treatment claims.** All outputs are engineering-only unless reviewed by Z-Claims.
+- **No secrets, auth files, API keys, cron jobs, systemd units, tunnels, or tmux sessions** unless explicitly approved by Sultan.
+- **Arabic summaries/reports** must be used when reporting work to Sultan.
+
 ## Daily report format
 Each agent should write:
 - Date/time
