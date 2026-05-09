@@ -721,13 +721,165 @@ def _safe_parse_report_line(text, label):
     return "لا يوجد"
 
 
+def _latest_file(directory, pattern="*"):
+    """Return the most recently modified file in a directory matching a glob pattern."""
+    import fnmatch
+    if not os.path.isdir(directory):
+        return None
+    files = [
+        os.path.join(directory, f)
+        for f in os.listdir(directory)
+        if os.path.isfile(os.path.join(directory, f)) and fnmatch.fnmatch(f, pattern)
+    ]
+    return max(files, key=os.path.getmtime) if files else None
+
+
+def _file_age_hours(filepath):
+    """Return hours since file was last modified (UTC)."""
+    mtime = os.path.getmtime(filepath)
+    dt_obj = _dt.datetime.fromtimestamp(mtime, tz=_dt.timezone.utc)
+    diff = _dt.datetime.now(_dt.timezone.utc) - dt_obj
+    return diff.total_seconds() / 3600.0
+
+
+def _extract_signal(text, max_bytes=2000):
+    """Extract a short meaningful signal from report text.
+
+    Handles plain text, Markdown, JSON, and HTML files.
+    Returns a concise Arabic-friendly summary.
+    """
+    if not text:
+        return "لا يوجد"
+
+    # If JSON, try to parse structured fields
+    stripped = text.strip()
+    if stripped.startswith("{"):
+        try:
+            import json as _json
+            data = _json.loads(stripped[:max_bytes])
+            # Look for status-like fields
+            for key in ["overall_status", "test_status", "status", "result"]:
+                if key in data:
+                    val = str(data[key])
+                    return "ناجح ✅" if val.lower() in ("pass", "passed", "ok", "clean", "true") else val
+            # Fallback: first meaningful value
+            for k, v in data.items():
+                if isinstance(v, str) and len(v) > 3 and k not in ("schema_version", "project", "report_type", "boundary", "engineering_boundary", "timestamp_utc", "branch", "head_commit", "head", "log_file", "module"):
+                    return str(v)[:200]
+            return "لا يوجد"
+        except Exception:
+            pass  # fall through to text parsing
+
+    # If HTML, extract title or first meaningful text
+    if "<!DOCTYPE" in text[:100].upper() or "<html" in text[:200].lower():
+        # Try to find a title or h1
+        import re as _re
+        m = _re.search(r"<title>(.*?)</title>", text, _re.IGNORECASE | _re.DOTALL)
+        if m:
+            return _re.sub(r"<[^>]+>", "", m.group(1)).strip()[:200]
+        m = _re.search(r"<h[12][^>]*>(.*?)</h[12]>", text, _re.IGNORECASE | _re.DOTALL)
+        if m:
+            return _re.sub(r"<[^>]+>", "", m.group(1)).strip()[:200]
+        # Fallback: strip all tags and take first meaningful line
+        plain = _re.sub(r"<[^>]+>", " ", text)
+        plain = _re.sub(r"\s+", " ", plain).strip()
+        return plain[:200] if plain else "لا يوجد"
+
+    lines = text.splitlines()
+
+    # Priority 1: explicit "needed" or "required" lines
+    for line in lines:
+        low = line.lower().strip()
+        for kw in ["human intervention needed", "human decisions needed", "sultan decisions needed", "human approval", "approval needed"]:
+            if kw in low:
+                val = line.split(":", 1)[1].strip() if ":" in line else line.strip()
+                return val[:200] if val else "يحتاج موافقة"
+
+    # Priority 2: next action / next recommended
+    for line in lines:
+        low = line.lower().strip()
+        for kw in ["next recommended action", "next action", "الإجراء التالي"]:
+            if kw in low:
+                val = line.split(":", 1)[1].strip() if ":" in line else line.strip()
+                return val[:200] if val else "لا يوجد"
+
+    # Priority 3: status line
+    for line in lines:
+        low = line.lower().strip()
+        if low.startswith("status:") or "الحالة:" in low:
+            val = line.split(":", 1)[1].strip()
+            return val[:200] if val else "لا يوجد"
+
+    # Priority 4: first non-empty, non-heading line
+    for line in lines:
+        stripped = line.strip()
+        if stripped and not stripped.startswith("#") and len(stripped) > 10:
+            return stripped[:200]
+
+    return "لا يوجد"
+
+
+def _derive_status_from_signal(signal, age_hours):
+    """Derive agent status from signal text and age."""
+    low = signal.lower() if signal else ""
+    # Check for failure/error indicators
+    for kw in ["error", "fail", "خطأ", "فاشل", "crash", "blocker"]:
+        if kw in low:
+            return "failed"
+    # Check for blocked/needs Sultan
+    for kw in ["needs sultan", "يحتاج سلطان", "approval", "موافقة", "human intervention", "blocked", "محجوز", "waiting"]:
+        if kw in low:
+            return "needs_sultan"
+    # Check for active (recent activity with a task signal)
+    if signal and signal != "لا يوجد" and age_hours < 48:
+        return "active"
+    return "idle"
+
+
+# Agent source configuration: maps agent name to list of (directory, glob_pattern)
+_AGENT_SOURCES = {
+    "Z-Product": [
+        ("reports/daily", "*.md"),
+        ("tasks", "*.md"),
+    ],
+    "Z-Design": [
+        ("demo", "*.html"),
+        ("tasks", "*.md"),
+    ],
+    "Z-QA": [
+        ("reports/quality", "*.json"),
+        ("reports/nightly", "*.json"),
+    ],
+    "Z-Ops": [
+        ("reports/nightly", "*.json"),
+        ("reports/telegram_actions", "*.jsonl"),
+    ],
+    "Z-Research": [
+        ("research/daily", "*.md"),
+        ("reports/daily", "*.md"),
+    ],
+    "Z-Claims": [
+        ("reports/daily", "*.md"),
+        ("governance", "Z_CLAIMS_SKILLS.md"),
+    ],
+    "Z-CAD": [
+        ("governance", "Z_CAD_SKILLS.md"),
+        ("tasks", "*.md"),
+    ],
+    "Z-Sim": [
+        ("governance", "Z_SIM_SKILLS.md"),
+        ("tasks", "*.md"),
+    ],
+}
+
+
 def _get_agent_status(agent_name, dir_name, repo_root):
     """Return dict with status fields for one agent.
 
-    Reads from reports/{dir_name}/ for the latest report file.
+    Reads from configured local sources per agent.
     All operations are read-only file reads — no shell execution.
+    If no signal found, defaults to idle with 'لا يوجد' fields.
     """
-    report_dir = os.path.join(repo_root, "reports", dir_name)
     result = {
         "status": "idle",
         "current_task": "لا يوجد",
@@ -737,62 +889,61 @@ def _get_agent_status(agent_name, dir_name, repo_root):
         "next_sultan_action": "لا يوجد",
     }
 
+    sources = _AGENT_SOURCES.get(agent_name, [])
+    if not sources:
+        return result
+
     try:
-        if not os.path.isdir(report_dir):
+        best_file = None
+        best_age = float("inf")
+
+        # Find the most recent file across all configured sources
+        for rel_dir, pattern in sources:
+            full_dir = os.path.join(repo_root, rel_dir)
+            if not os.path.isdir(full_dir):
+                continue
+            f = _latest_file(full_dir, pattern)
+            if f:
+                age = _file_age_hours(f)
+                if age < best_age:
+                    best_age = age
+                    best_file = f
+
+        if not best_file:
             return result
 
-        files = [
-            os.path.join(report_dir, f)
-            for f in os.listdir(report_dir)
-            if os.path.isfile(os.path.join(report_dir, f))
-        ]
-        if not files:
-            return result
+        result["last_report"] = os.path.basename(best_file)
+        result["last_run"] = _dt.datetime.fromtimestamp(
+            os.path.getmtime(best_file), tz=_dt.timezone.utc
+        ).strftime("%Y-%m-%d %H:%M UTC")
 
-        latest = max(files, key=os.path.getmtime)
-        result["last_report"] = os.path.basename(latest)
+        # Read and parse signal
+        report_text = read_file_safe(best_file, max_bytes=3000)
+        signal = _extract_signal(report_text)
+        age = _file_age_hours(best_file)
 
-        # Get file modification time
-        mtime = os.path.getmtime(latest)
-        dt_obj = _dt.datetime.fromtimestamp(mtime, tz=_dt.timezone.utc)
-        result["last_run"] = dt_obj.strftime("%Y-%m-%d %H:%M UTC")
+        result["current_task"] = signal
+        result["status"] = _derive_status_from_signal(signal, age)
 
-        # Read report content
-        report_text = read_file_safe(latest, max_bytes=3000)
+        # Check for explicit Sultan/action-needed indicators
+        for kw in ["human intervention needed", "sultan decisions needed", "human approval"]:
+            if kw in report_text.lower():
+                result["next_sultan_action"] = _safe_parse_report_line(report_text, kw)
+                if result["next_sultan_action"] != "لا يوجد":
+                    result["status"] = "needs_sultan"
+                break
 
-        # Extract fields from report
-        sultan = _safe_parse_report_line(report_text, "Sultan decisions needed")
-        if sultan and sultan != "لا يوجد":
-            result["next_sultan_action"] = sultan
-            result["status"] = "needs_sultan"
-        else:
-            failure = _safe_parse_report_line(report_text, "Blocked items")
-            if failure == "لا يوجد":
-                failure = _safe_parse_report_line(report_text, "Risks identified")
-            if failure and failure != "لا يوجد":
-                result["last_failure"] = failure
-                result["status"] = "failed"
-            else:
-                task = _safe_parse_report_line(report_text, "Task")
-                if task == "لا يوجد":
-                    task = _safe_parse_report_line(report_text, "current_task")
-                if task and task != "لا يوجد":
-                    result["current_task"] = task
-                    # Check if last_run is within 2 hours
-                    now_utc = _dt.datetime.now(_dt.timezone.utc)
-                    diff = now_utc - dt_obj
-                    if diff.total_seconds() < 7200:
-                        result["status"] = "active"
-                    else:
-                        result["status"] = "idle"
-                else:
-                    result["status"] = "idle"
+        # Check for failure indicators
+        for kw in ["fail", "error", "blocked", "blocker"]:
+            if kw in report_text.lower() and result["status"] not in ("needs_sultan",):
+                failure_line = _safe_parse_report_line(report_text, kw)
+                if failure_line != "لا يوجد":
+                    result["last_failure"] = failure_line[:200]
+                break
     except Exception:
-        pass  # gracefully degrade — keep defaults
+        pass  # gracefully degrade
 
     return result
-
-
 def cmd_agents_ar(cfg):
     """Arabic Telegram Control Room v1 — /agents dashboard."""
     repo = cfg["repo_root"]
