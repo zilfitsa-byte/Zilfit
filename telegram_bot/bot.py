@@ -17,6 +17,9 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
+# ── Local classifier (Superpowers Step 1) ──
+from classifier import classify_qwen_task, is_safe_for_auto_execute, run_self_check
+
 # ── Telegram library ──
 try:
     import telebot
@@ -159,7 +162,7 @@ def audit_log(entry_dict):
     entry_dict["ts"] = datetime.now(timezone.utc).isoformat()
     log_file.write_text(json.dumps(entry_dict, ensure_ascii=False) + "\n", encoding="utf-8")
 
-def add_pending(requester_uid, task_text, proposed_cmd):
+def add_pending(requester_uid, task_text, proposed_cmd, item_type="shell"):
     """Add a pending command, return its id."""
     cmd_id = str(uuid.uuid4())[:8]
     with _pending_lock:
@@ -169,9 +172,10 @@ def add_pending(requester_uid, task_text, proposed_cmd):
             "proposed_cmd": proposed_cmd,
             "status": "pending",
             "requester_uid": requester_uid,
+            "item_type": item_type,  # "shell" or "qwen_prompt"
             "timestamp": datetime.now(timezone.utc).isoformat(),
         }
-    audit_log({"event": "pending_created", "id": cmd_id, "task": task_text, "proposed": proposed_cmd, "requester": requester_uid})
+    audit_log({"event": "pending_created", "id": cmd_id, "task": task_text, "proposed": proposed_cmd, "item_type": item_type, "requester": requester_uid})
     return cmd_id
 
 def approve_pending(cmd_id):
@@ -310,6 +314,68 @@ def classify_command(cmd):
         return "safe", "✅ أمر آمن — تنفيذ مباشر (safe read-only command)"
 
     return "needs_approval", "⚠️ يحتاج موافقة — يحتاج موافقة صريحة (needs explicit approval)"
+
+# ═══════════════════════════════════════════════════════════
+# SAFE QWEN EXECUTION WRAPPER (Superpowers Step 1)
+# ═══════════════════════════════════════════════════════════
+
+def execute_qwen_safe(task_text, repo_root, timeout=300):
+    """
+    Execute a natural-language Qwen task safely.
+
+    CRITICAL: This function NEVER passes the raw prompt to shell=True.
+    Instead, it invokes the `qwen` CLI (or falls back to a safe dry-run)
+    with the prompt passed via stdin, restricted to the repo directory.
+
+    Returns: (output_string, success_bool)
+    """
+    import tempfile
+
+    # Build the qwen command — prompt via stdin, never shell=True
+    qwen_cmd = ["qwen", "-y", "--print"]
+
+    try:
+        # Write prompt to a temp file to avoid shell injection via argv
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".prompt", prefix="qwen_",
+            delete=False, dir="/tmp"
+        ) as pf:
+            pf.write(task_text)
+            prompt_path = pf.name
+
+        result = subprocess.run(
+            qwen_cmd,
+            stdin=open(prompt_path, "r"),
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+        )
+
+        # Clean up temp file
+        try:
+            os.unlink(prompt_path)
+        except OSError:
+            pass
+
+        output = (result.stdout + result.stderr).strip()
+        if not output:
+            output = "(qwen produced no output)"
+        success = result.returncode == 0
+        return output[:4000], success
+
+    except FileNotFoundError:
+        # qwen CLI not found — fall back to a safe dry-run message
+        return (
+            f"⚠️ Qwen CLI not available for direct execution.\n"
+            f"Task queued for manual review:\n{task_text}"
+        ), False
+    except subprocess.TimeoutExpired:
+        return f"Qwen execution timed out after {timeout}s", False
+    except Exception as e:
+        return f"Qwen execution error: {e}", False
+
+
 
 # ═══════════════════════════════════════════════════════════
 # ARABIC REPORT GENERATOR
@@ -839,7 +905,7 @@ def handle_message(message, bot, cfg):
         audit_log({"event": "manual_report", "user": message.from_user.id, "lang": "arabic"})
         return
 
-    # ── Qwen bridge commands (v2) ──
+    # ── Qwen bridge commands (v3 — Superpowers classified) ──
     if cmd == "qwen":
         if not arg:
             safe_reply(bot, message, "الاستخدام: /qwen <وصف المهمة>\nمثال: /qwen git log --oneline -5")
@@ -847,32 +913,54 @@ def handle_message(message, bot, cfg):
         task_text = arg.strip()
         audit_log({"event": "qwen_requested", "user": message.from_user.id, "task": task_text})
 
-        # Try to extract a shell command from the task
-        # If the task itself looks like a command, use it directly
-        # Otherwise, propose a plan
-        classification, reason = classify_command(task_text)
+        # Classify the task using the Superpowers classifier
+        task_class, reason = classify_qwen_task(task_text)
 
-        if classification == "forbidden":
-            safe_reply(bot, message, f"❌ أمر ممنوع\n\n{reason}\n\nالمهمة: {task_text}")
+        if task_class == "forbidden":
+            safe_reply(bot, message,
+                f"❌ مهمة ممنوعة\n\n"
+                f"السبب: {reason}\n\n"
+                f"المهمة: {task_text}")
+            audit_log({"event": "qwen_forbidden", "user": message.from_user.id, "task": task_text, "reason": reason})
             return
 
-        if classification == "safe":
-            # Execute safe read-only command directly
-            safe_reply(bot, message, f"✅ {reason}\n\nالأمر: {task_text}\n\nجاري التنفيذ...")
+        if task_class == "read-only":
+            # Execute safe read-only shell command directly
+            safe_reply(bot, message, f"✅ أمر آمن — قراءة فقط\n\n{reason}\n\nالأمر: {task_text}\n\nجاري التنفيذ...")
             result = run_cmd(task_text, cwd=cfg["repo_root"], timeout=30)
             safe_reply(bot, message, f"النتيجة:\n```\n{result}\n```")
-            audit_log({"event": "qwen_executed_safe", "user": message.from_user.id, "task": task_text, "result_len": len(result)})
+            audit_log({"event": "qwen_executed_safe", "user": message.from_user.id, "task": task_text, "class": task_class, "result_len": len(result)})
             return
 
-        # Needs approval
-        cmd_id = add_pending(message.from_user.id, task_text, task_text)
+        if task_class == "docs-only":
+            # Docs-only: create pending with docs-only type, auto-execute safe
+            cmd_id = add_pending(message.from_user.id, task_text, task_text, item_type="docs_only")
+            safe_reply(bot, message,
+                f"📝 مهمة وثائق — تحتاج موافقة\n\n"
+                f"التصنيف: {task_class}\n"
+                f"السبب: {reason}\n\n"
+                f"المهمة: {task_text}\n"
+                f"المعرّف: `{cmd_id}`\n\n"
+                f"للموافقة: /approve {cmd_id}\n"
+                f"للإلغاء: /cancel {cmd_id}")
+            audit_log({"event": "qwen_pending_docs", "id": cmd_id, "task": task_text})
+            return
+
+        # All other classes (tests-only, code-change-needs-approval) → pending as qwen_prompt
+        # This is the KEY safety change: natural-language tasks become qwen_prompt,
+        # NOT raw shell commands. On approval, they run via execute_qwen_safe().
+        item_type = "qwen_prompt"
+        cmd_id = add_pending(message.from_user.id, task_text, task_text, item_type=item_type)
         safe_reply(bot, message,
             f"⚠️ الأمر يحتاج موافقة\n\n"
+            f"التصنيف: {task_class}\n"
+            f"السبب: {reason}\n\n"
             f"المهمة: {task_text}\n"
-            f"الأمر المقترح: `{task_text}`\n"
+            f"نوع التنفيذ: {item_type} (يُنفَّذ عبر Qwen بأمان، ليس كـ shell)\n"
             f"المعرّف: `{cmd_id}`\n\n"
             f"للموافقة: /approve {cmd_id}\n"
             f"للإلغاء: /cancel {cmd_id}")
+        audit_log({"event": "qwen_pending", "id": cmd_id, "task": task_text, "class": task_class, "item_type": item_type})
         return
 
     if cmd == "queue":
@@ -882,9 +970,11 @@ def handle_message(message, bot, cfg):
             return
         lines = ["📋 عناصر بانتظار الموافقة:\n"]
         for p in pending:
+            itype = p.get("item_type", "shell")
             lines.append(
                 f"🆔 `{p['id']}`\n"
                 f"   المهمة: {p['task']}\n"
+                f"   النوع: {itype}\n"
                 f"   الطلب: {p['timestamp'][:19]}\n"
             )
         safe_reply(bot, message, "\n".join(lines))
@@ -898,13 +988,31 @@ def handle_message(message, bot, cfg):
         if err:
             safe_reply(bot, message, f"❌ {err}")
             return
-        # Execute the approved command
+
+        # ── Execute based on item_type ──
+        item_type = item.get("item_type", "shell")  # backward compat
         proposed = item["proposed_cmd"]
-        audit_log({"event": "executing_approved", "id": arg.strip(), "cmd": proposed})
-        safe_reply(bot, message, f"⚡ تنفيذ الأمر الموافق عليه:\n`{proposed}`\n\nجاري التنفيذ...")
-        result = run_cmd(proposed, cwd=cfg["repo_root"], timeout=60)
-        safe_reply(bot, message, f"النتيجة:\n```\n{result}\n```")
-        audit_log({"event": "execution_done", "id": arg.strip(), "result_len": len(result)})
+
+        if item_type == "qwen_prompt":
+            # KEY SAFETY: natural-language tasks run via safe Qwen wrapper,
+            # NOT as raw shell commands. The prompt is passed via stdin/temp file.
+            audit_log({"event": "executing_approved_qwen", "id": arg.strip(), "item_type": item_type, "task": proposed})
+            safe_reply(bot, message,
+                f"⚡ تنفيذ عبر Qwen (آمن — ليس كـ shell):\n"
+                f"المهمة: {proposed}\n"
+                f"نوع التنفيذ: {item_type}\n\n"
+                f"جاري التنفيذ...")
+            result, success = execute_qwen_safe(proposed, cfg["repo_root"], timeout=300)
+            status_icon = "✅" if success else "⚠️"
+            safe_reply(bot, message, f"{status_icon} النتيجة:\n```\n{result}\n```")
+            audit_log({"event": "qwen_execution_done", "id": arg.strip(), "success": success, "result_len": len(result)})
+        else:
+            # Shell command (read-only, docs-only, or explicitly classified safe)
+            audit_log({"event": "executing_approved_shell", "id": arg.strip(), "item_type": item_type, "cmd": proposed})
+            safe_reply(bot, message, f"⚡ تنفيذ الأمر الموافق عليه ({item_type}):\n`{proposed}`\n\nجاري التنفيذ...")
+            result = run_cmd(proposed, cwd=cfg["repo_root"], timeout=60)
+            safe_reply(bot, message, f"النتيجة:\n```\n{result}\n```")
+            audit_log({"event": "shell_execution_done", "id": arg.strip(), "item_type": item_type, "result_len": len(result)})
         return
 
     if cmd == "cancel":

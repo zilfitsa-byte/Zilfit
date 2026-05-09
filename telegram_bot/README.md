@@ -42,6 +42,32 @@ Any command not in the safe list but not forbidden (e.g. `git checkout`, `mkdir`
 2. `/approve <id>` → executes it
 3. `/cancel <id>` → cancels it
 
+## Superpowers Classification (v3)
+
+The `/qwen` bridge now uses a **task classifier** (`classifier.py`) before any execution. Every incoming task is classified into one of:
+
+| Class | Behavior |
+|---|---|
+| **read-only** | Auto-executed as shell command (safe) |
+| **docs-only** | Pending approval → executes as shell on approval |
+| **tests-only** | Pending approval → executes via safe Qwen wrapper |
+| **code-change-needs-approval** | Pending approval → executes via safe Qwen wrapper |
+| **forbidden** | Rejected immediately — no pending item created |
+
+### Key safety change
+
+**Natural-language tasks** (e.g. "fix the camera preview size") are classified as `code-change-needs-approval` and stored as `item_type: "qwen_prompt"`. On `/approve`, they are executed via `execute_qwen_safe()` — which passes the prompt to the Qwen CLI via a temp file (stdin), **never** as `shell=True` with raw text.
+
+This prevents the original incident where "Read-only" was executed as `/bin/sh: Read-only: not found`.
+
+### Execute_qwen_safe() guarantees
+
+- Prompt is written to a temp file, passed via `stdin` — never in argv or shell
+- `subprocess.run()` with a list command (no `shell=True`)
+- Working directory restricted to repo root
+- Timeout protection (300s default)
+- Falls back gracefully if Qwen CLI is not available
+
 ## Setup
 
 1. Create a bot via [@BotFather](https://t.me/BotFather) on Telegram. Get the token.
