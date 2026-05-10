@@ -1308,6 +1308,109 @@ def cmd_demo_ar(cfg):
         f"الحالي (v4): `{v4 if v4 != '(empty)' else 'غير موجود'}`"
     )
 
+
+# ════════════════════════════════════════════════════════════
+# NEW READ-ONLY Arabic commands (C5)
+# ════════════════════════════════════════════════════════════
+
+def _safe_read_short(path, max_chars=900):
+    """Read file safely, truncate to max_chars and replace newlines with spaces."""
+    try:
+        data = Path(path).read_text(encoding="utf-8", errors="replace")
+        if len(data) > max_chars:
+            data = data[:max_chars] + "…"
+        # Replace newlines with spaces for short inline summary
+        return " ".join(data.split())
+    except Exception as e:
+        return f"خطأ في القراءة: {e}"
+
+
+def _template_summary(path, title):
+    """Return a short Arabic summary line for a template file."""
+    content = _safe_read_short(path, max_chars=200)
+    if content.startswith("خطأ"):
+        return content
+    return f"{title}: {content}"
+
+
+def cmd_memory(cfg):
+    """Short Arabic summary of memory / Hermes state."""
+    mem_dir = os.path.join(cfg["repo_root"], "governance")
+    try:
+        files = []
+        for f in os.listdir(mem_dir):
+            if f.startswith("HERMES") and f.endswith(".md"):
+                files.append(f)
+        if files:
+            sample = os.path.join(mem_dir, files[0])
+            return _template_summary(sample, "ذاكرة Hermes")
+        else:
+            return "ذاكرة Hermes: لا توجد ملفات"
+    except Exception:
+        return "ذاكرة Hermes: غير متوفر"
+
+
+def cmd_skills(cfg):
+    """List available skill file names."""
+    skill_dir = os.path.join(cfg["repo_root"], "skills")
+    try:
+        skill_files = [f for f in os.listdir(skill_dir) if f.endswith(".md")]
+        if not skill_files:
+            return "المهارات: لا توجد"
+        names = [f[:-3].replace("_", " ").title() for f in skill_files[:5]]
+        return "المهارات المتاحة: " + ", ".join(names)
+    except Exception:
+        return "المهارات: غير متوفر"
+
+
+def cmd_templates(cfg):
+    """List available template file names."""
+    tmpl_dir = os.path.join(cfg["repo_root"], "templates")
+    try:
+        tmpl_files = [f for f in os.listdir(tmpl_dir) if f.endswith(".md")]
+        if not tmpl_files:
+            return "القوالب: لا توجد"
+        names = [f[:-3].replace("_", " ").title() for f in tmpl_files[:5]]
+        return "القوالب المتاحة: " + ", ".join(names)
+    except Exception:
+        return "القوالب: غير متوفر"
+
+
+def cmd_template_agent_report(cfg):
+    """Return short Arabic summary of the agent daily report template."""
+    path = os.path.join(cfg["repo_root"], "templates", "agent_daily_report_template.md")
+    return _template_summary(path, "قالب تقرير الوكيل اليومي")
+
+
+def cmd_template_sultan_approval(cfg):
+    """Return short Arabic summary of the Sultan approval template."""
+    path = os.path.join(cfg["repo_root"], "templates", "sultan_approval_request_template.md")
+    return _template_summary(path, "قالب طلب موافقة سلطان")
+
+
+def cmd_template_qwen_task(cfg):
+    """Return short Arabic summary of the Qwen task template."""
+    path = os.path.join(cfg["repo_root"], "templates", "qwen_task_request_template.md")
+    return _template_summary(path, "قالب طلب مهمة Qwen")
+
+
+def cmd_template_claims_review(cfg):
+    """Return short Arabic summary of the claims review template."""
+    path = os.path.join(cfg["repo_root"], "templates", "claims_review_report_template.md")
+    return _template_summary(path, "قالب مراجعة الادعاءات")
+
+
+def cmd_template_research_intake(cfg):
+    """Return short Arabic summary of the research intake template."""
+    path = os.path.join(cfg["repo_root"], "templates", "research_intake_report_template.md")
+    return _template_summary(path, "قالب استلام طلب بحث")
+
+
+def cmd_template_demo_review(cfg):
+    """Return short Arabic summary of the demo review template."""
+    path = os.path.join(cfg["repo_root"], "templates", "demo_review_report_template.md")
+    return _template_summary(path, "قالب مراجعة العرض التوضيحي")
+
 def cmd_help(*_args):
     """List all commands."""
     return textwrap.dedent("""\
@@ -1336,6 +1439,19 @@ def cmd_help(*_args):
     ℹ️ Info
     /help     — This message
     /start    — Same as /help
+
+    📚 Memory & Skills
+    /memory   — Hermes memory summary
+    /skills   — Available skills list
+    /templates — Available templates list
+
+    📋 Template Summaries
+    /template_agent_report      — Agent daily report template
+    /template_sultan_approval   — Sultan approval request template
+    /template_qwen_task         — Qwen task request template
+    /template_claims_review     — Claims review template
+    /template_research_intake   — Research intake template
+    /template_demo_review       — Demo review template
 
     Read-only by default. Write commands need /approve.""")
 
@@ -1367,6 +1483,19 @@ def cmd_help_ar(*_args):
     ℹ️ معلومات
     /help     — هذه الرسالة
     /start    — نفس /help
+
+    📚 الذاكرة والمهارات
+    /memory   — ملخص ذاكرة Hermes
+    /skills   — قائمة المهارات المتاحة
+    /templates — قائمة القوالب المتاحة
+
+    📋 ملخصات القوالب
+    /template_agent_report      — قالب تقرير الوكيل اليومي
+    /template_sultan_approval   — قالب طلب موافقة سلطان
+    /template_qwen_task         — قالب طلب مهمة Qwen
+    /template_claims_review     — قالب مراجعة الادعاءات
+    /template_research_intake   — قالب استلام طلب بحث
+    /template_demo_review       — قالب مراجعة العرض التوضيحي
 
     القراءة فقط افتراضياً. أوامر الكتابة تحتاج /approve.""")
 
@@ -1408,6 +1537,15 @@ COMMANDS = {
     "help": cmd_help,
     "help_ar": cmd_help_ar,
     "start": cmd_help,
+    "memory": cmd_memory,
+    "skills": cmd_skills,
+    "templates": cmd_templates,
+    "template_agent_report": cmd_template_agent_report,
+    "template_sultan_approval": cmd_template_sultan_approval,
+    "template_qwen_task": cmd_template_qwen_task,
+    "template_claims_review": cmd_template_claims_review,
+    "template_research_intake": cmd_template_research_intake,
+    "template_demo_review": cmd_template_demo_review,
 }
 
 def handle_message(message, bot, cfg):
