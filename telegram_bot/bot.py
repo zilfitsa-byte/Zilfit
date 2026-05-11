@@ -1411,6 +1411,243 @@ def cmd_template_demo_review(cfg):
     path = os.path.join(cfg["repo_root"], "templates", "demo_review_report_template.md")
     return _template_summary(path, "قالب مراجعة العرض التوضيحي")
 
+
+# ────────────────────────────────────────────────────────────────
+# D3: Hermes Daily Operating Report Telegram Commands (read-only)
+# ────────────────────────────────────────────────────────────────
+
+def _get_latest_daily_report(cfg):
+    """Get the most recent daily report file path, or None."""
+    repo = cfg["repo_root"]
+    daily_dir = os.path.join(repo, "reports", "daily")
+    if not os.path.isdir(daily_dir):
+        return None
+    # Look for files matching pattern YYYY-MM-DD_hermes_daily_operating_report.md
+    files = []
+    for f in os.listdir(daily_dir):
+        if f.endswith("_hermes_daily_operating_report.md"):
+            files.append(os.path.join(daily_dir, f))
+    if not files:
+        # Fallback to any daily report
+        for f in os.listdir(daily_dir):
+            if f.endswith(".md"):
+                files.append(os.path.join(daily_dir, f))
+    if not files:
+        return None
+    return max(files, key=os.path.getmtime)
+
+
+def _read_agent_heartbeat_summary(cfg):
+    """Read all agent heartbeat JSON files and return summary text."""
+    repo = cfg["repo_root"]
+    health_dir = os.path.join(repo, "runtime", "agent_health")
+    if not os.path.isdir(health_dir):
+        return "لا توجد بيانات صحة الوكلاء"
+
+    lines = []
+    try:
+        for json_file in sorted(os.listdir(health_dir)):
+            if json_file.endswith(".json"):
+                filepath = os.path.join(health_dir, json_file)
+                try:
+                    data = json.loads(Path(filepath).read_text(encoding="utf-8"))
+                    agent = data.get("agent", json_file.replace(".json", ""))
+                    status = data.get("status", "unknown")
+                    task = data.get("current_task", "لا يوجد")
+                    confidence = data.get("confidence", "unknown")
+                    lines.append(f"- {agent}: {status} | {confidence} | {task[:50]}...")
+                except Exception:
+                    lines.append(f"- {json_file}: قراءة غير ممكنة")
+    except Exception:
+        return "خطأ في قراءة ملفات الصحة"
+
+    if not lines:
+        return "لا توجد بيانات صحة الوكلاء"
+    return "\n".join(lines)
+
+
+def _get_next_action_from_templates(cfg):
+    """Get next recommended actions from governance/templates."""
+    repo = cfg["repo_root"]
+
+    # Read daily_operating_report skill for recommended actions
+    skill_path = os.path.join(repo, "skills", "daily_operating_report.md")
+    next_actions = []
+
+    try:
+        content = Path(skill_path).read_text(encoding="utf-8", errors="replace").lower()
+        if "أولويات اليوم" in content or "daily priorities" in content:
+            next_actions.append("مراجعة أولويات اليوم في تقرير التشغيل اليومي")
+        if "تقرير الليل" in content or "night report" in content:
+            next_actions.append("مراجعة تقرير الليل لنتائج اليوم")
+        if "الفحص" in content or "inspection" in content:
+            next_actions.append("أداء فحص جودة/جاهزية بعد الظهر")
+    except Exception:
+        pass
+
+    # Read governance files for upcoming phase guidance
+    governance_dir = os.path.join(repo, "governance")
+    try:
+        for fname in os.listdir(governance_dir):
+            if fname.startswith("HERMES_") and fname.endswith(".md"):
+                if "D2" in fname or "D3" in fname:
+                    next_actions.append("مراجعة مستندات المرحلة D3 للاستعداد للمراحل التالية")
+                    break
+    except Exception:
+        pass
+
+    if not next_actions:
+        next_actions.append("مراجعة تقرير التشغيل اليومي وتحديد أولويات اليوم التالي")
+        next_actions.append("مراجعة ملفات القوالب لتوحيد التقارير المستقبلية")
+
+    return "\n".join(f"{i+1}. {a}" for i, a in enumerate(next_actions))
+
+
+def cmd_daily_report(cfg):
+    """Show Arabic summary of the latest daily operating report."""
+    repo = cfg["repo_root"]
+    latest = _get_latest_daily_report(cfg)
+
+    if not latest:
+        return "⬡ تقرير يومي: لا يوجد تقرير يومي بعد.\nيمكنك إنشاؤه بـ: python3 tools/hermes_daily_report.py"
+
+    try:
+        content = Path(latest).read_text(encoding="utf-8", errors="replace")
+        lines = content.split("\n")
+
+        # Extract key sections
+        title = "تقرير يومي"
+        date_line = ""
+        status_summary = ""
+        next_actions = ""
+
+        for line in lines[:50]:
+            if line.startswith("# "):
+                title = line[2:].strip()
+            elif "Generated:" in line or "Date:" in line:
+                date_line = line.strip()
+            elif "Agent Heartbeat Summary" in line:
+                idx = lines.index(line)
+                # Collect next 10 lines after this header
+                for j in range(idx + 1, min(idx + 10, len(lines))):
+                    if lines[j].strip() and not lines[j].strip().startswith("---"):
+                        status_summary += lines[j].strip() + "\n"
+            elif "Next Recommended Action" in line or "الخطوة التالية" in line:
+                idx = lines.index(line)
+                for j in range(idx + 1, min(idx + 5, len(lines))):
+                    next_actions += lines[j].strip() + "\n"
+
+        # Truncate long content
+        status_summary = status_summary[:400] if status_summary else "لا يوجد"
+        next_actions = next_actions[:400] if next_actions else "لا يوجد"
+
+        return f"""⬡ تقرير التشغيل اليومي
+
+التاريخ: {date_line or "غير متوفر"}
+المصدر: {os.path.basename(latest)}
+
+ملخص الحالة:
+{status_summary}
+
+الإجراء التالي:
+{next_actions}
+"""
+    except Exception as e:
+        return f"⬡ تقرير يومي: خطأ في القراءة — {e}"
+
+
+def cmd_daily_report_ar(cfg):
+    """Arabic version of daily report."""
+    return cmd_daily_report(cfg)
+
+
+def cmd_daily_status(cfg):
+    """Show current high-level Hermes/ZILFIT status from safe local files only."""
+    repo = cfg["repo_root"]
+    branch = run_cmd_safe(["git", "branch", "--show-current"], cwd=repo, timeout=10)
+    head = run_cmd_safe(["git", "log", "--oneline", "-1"], cwd=repo, timeout=10)
+    tree = run_cmd_safe(["git", "status", "--short"], cwd=repo, timeout=10)
+
+    branch = branch if branch else "غير متوفر"
+    head = head if head else "غير متوفر"
+    tree_state = "نظيف ✅" if not tree else "متغير ⚠️"
+
+    heartbeat = _read_agent_heartbeat_summary(cfg)
+
+    return f"""⬡ حالة ZILFIT الهامة
+
+الفرع: {branch}
+HEAD: {head}
+الشجرة: {tree_state}
+
+حالة الوكلاء:
+{heartbeat}
+"""
+
+
+def cmd_daily_status_ar(cfg):
+    """Arabic version of daily status."""
+    return cmd_daily_status(cfg)
+
+
+def cmd_daily_plan(cfg):
+    """Show next recommended safe actions from governance/templates, not execution."""
+    repo = cfg["repo_root"]
+
+    # Check if D2 report generator exists
+    report_script = os.path.join(repo, "tools", "hermes_daily_report.py")
+    script_exists = "✓" if Path(report_script).exists() else "✗"
+
+    next_actions = _get_next_action_from_templates(cfg)
+
+    return f"""⬡ خطة التشغيل اليومية
+
+مُولِّد التقارير (D2): {script_exists}
+
+الإجراءات المقترحة:
+{next_actions}
+
+⚠️ ملاحظة: هذه توصيات فقط. لا تنفيذ تلقائي.
+"""
+
+
+def cmd_daily_plan_ar(cfg):
+    """Arabic version of daily plan."""
+    return cmd_daily_plan(cfg)
+
+
+def cmd_approval_queue(cfg):
+    """Show pending approval-style guidance only; no execution."""
+    repo = cfg["repo_root"]
+
+    # Check pending commands (read-only from _pending_commands)
+    pending = get_pending_list()
+
+    if not pending:
+        pending_text = "لا توجد طلبات انتظار ✅"
+    else:
+        lines = []
+        for p in pending[:10]:  # Show max 10
+            item_type = p.get("item_type", "shell")
+            lines.append(f"- `{p['id']}`: {p['task'][:50]}... ({item_type})")
+        pending_text = "\n".join(lines)
+
+    return f"""⬡ قائمة الموافقات
+
+الطلبات المنتظرة: {len(pending)}
+
+{pending_text}
+
+💡 لموافقه: /approve <id>
+لإلغاء: /cancel <id>
+"""
+
+
+def cmd_approval_queue_ar(cfg):
+    """Arabic version of approval queue."""
+    return cmd_approval_queue(cfg)
+
+
 def cmd_help(*_args):
     """List all commands."""
     return textwrap.dedent("""\
@@ -1461,14 +1698,20 @@ def cmd_help_ar(*_args):
     ⬡ مركز تحكم ZILFIT v2
 
     📊 التقارير
-    /status   — فرع Git، HEAD، حالة الشجرة
-    /nightly  — آخر تقرير ليلي
-    /tests    — تشغيل كل الاختبارات
-    /agents   — حالة الوكلاء والمشاريع النشطة
-    /research — إحصائيات البحث التلقائي
-    /claims   — فحص المصطلحات الطبية المحظورة
-    /demo     — ملفات العرض التوضيحي
-    /report   — تقرير يومي شامل بالعربية (فوري)
+    /status         — فرع Git، HEAD، حالة الشجرة
+    /nightly        — آخر تقرير ليلي
+    /tests          — تشغيل كل الاختبارات
+    /agents         — حالة الوكلاء والمشاريع النشطة
+    /research       — إحصائيات البحث التلقائي
+    /claims         — فحص المصطلحات الطبية المحظورة
+    /demo           — ملفات العرض التوضيحي
+    /report         — تقرير يومي شامل بالعربية (فوري)
+
+    🔧 قيود Hermes D3 (قراءة فقط)
+    /daily_report   — ملخص آخر تقرير تشغيل يومي
+    /daily_status   — حالة ZILFIT الحالية
+    /daily_plan     — الإجراءات الموصى بها
+    /approval_queue — قائمة الموافقات المنتظرة
 
     🔧 جسر Qwen (تنفيذ آمن)
     /qwen <مهمة>  — اقتراح أمر للمراجعة
@@ -1546,6 +1789,15 @@ COMMANDS = {
     "template_claims_review": cmd_template_claims_review,
     "template_research_intake": cmd_template_research_intake,
     "template_demo_review": cmd_template_demo_review,
+    # ── D3: Hermes Daily Operating Report Commands ──
+    "daily_report": cmd_daily_report,
+    "daily_report_ar": cmd_daily_report_ar,
+    "daily_status": cmd_daily_status,
+    "daily_status_ar": cmd_daily_status_ar,
+    "daily_plan": cmd_daily_plan,
+    "daily_plan_ar": cmd_daily_plan_ar,
+    "approval_queue": cmd_approval_queue,
+    "approval_queue_ar": cmd_approval_queue_ar,
 }
 
 def handle_message(message, bot, cfg):
