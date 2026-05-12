@@ -1743,7 +1743,9 @@ _REASONING_PATTERNS = re.compile(
     r"Let me check|Let me look|Let me see|"
     r"I understand|I'll provide|I will provide|"
     r"Here's my|Here is my|My response|"
-    r"First,|Second,|Third,|Finally,|In summary,"
+    r"First,|Second,|Third,|Finally,|In summary,|"
+    r"Let me analyze|I will analyze|I'll analyze|"
+    r"Analysis:|Reasoning:|Step 1|Step 2|Scenario|Evaluation:|User sim:"
     r")",
 )
 
@@ -1764,8 +1766,12 @@ def fallback_hermes_reply(user_text, context):
 
     # ── فحص النية ──
     is_greeting = any(w in text_lower for w in ["السلام", "هلا", "مرحبا", "صباح", "مساء", "اهلا", "hi", "hello", "hey"])
-    is_execute = any(w in text_lower for w in ["نفذ", "شغل", "commit", "restart", "احذف", "redirect", "run", "execute", "qwen", "approve"])
     is_model = any(w in text_lower for w in ["موديل", "model", "اربط", "llm", "key", "api key", "مفتاح"])
+
+    # ── كشف أوامر التنفيذ مع استثناء النفي ──
+    _EXECUTE_WORDS = ["نفذ", "شغل", "commit", "restart", "احذف", "redirect", "run", "execute", "qwen"]
+    _NEGATION_WORDS = ["لا", "بدون", "دون", "غير", "فقط", "مراقبة"]
+    is_execute = any(w in text_lower for w in _EXECUTE_WORDS) and not any(w in text_lower for w in _NEGATION_WORDS)
 
     # ── البيانات من السياق ──
     branch = context.get("branch", "?")
