@@ -1530,40 +1530,83 @@ def build_hermes_context(cfg):
 
     # ── Git state ──
     ctx["branch"] = run_cmd("git branch --show-current", cwd=repo, timeout=10).strip() or "?"
-    ctx["head"] = run_cmd("git log --oneline -1", cwd=repo, timeout=10).strip() or "?"
-    ctx["status_short"] = run_cmd("git status --short", cwd=repo, timeout=10)
-    ctx["gitlog"] = run_cmd("git log --oneline -8", cwd=repo, timeout=10) or "(empty)"
-    ctx["tree_state"] = "نظيف" if not ctx["status_short"] or ctx["status_short"] == "(empty)" else "فيه تغييرات"
+    head_raw = run_cmd("git log --oneline -1", cwd=repo, timeout=10).strip() or "?"
+    ctx["head"] = head_raw
+    shortlog = run_cmd("git log --oneline -3", cwd=repo, timeout=10) or ""
+    ctx["recent_commits"] = shortlog
+    status_raw = run_cmd("git status --short", cwd=repo, timeout=10)
+    ctx["has_changes"] = bool(status_raw and status_raw != "(empty)")
+    ctx["tree_state"] = "نظيف" if not ctx["has_changes"] else "فيه تغييرات غير م committed"
 
     # ── Agent health ──
     health_lines = []
+    health_ready = 0
+    health_total = 0
     health_dir = Path(repo) / "runtime" / "agent_health"
     if health_dir.is_dir():
         for f in sorted(health_dir.glob("Z-*.json")):
             try:
                 d = json.loads(f.read_text())
-                health_lines.append(f"{d.get('agent', f.stem)}: {d.get('status', '?')} — {d.get('current_task', 'no task')[:60]}")
+                agent_name = d.get("agent", f.stem).replace("Z-", "")
+                status = d.get("status", "?")
+                task = d.get("current_task", "").strip()
+                confidence = d.get("confidence", "")
+                if status == "ready" or status == "idle":
+                    health_ready += 1
+                health_total += 1
+                health_lines.append({"name": agent_name, "status": status, "task": task[:80], "confidence": confidence})
             except Exception:
-                health_lines.append(f"{f.stem}: (unreadable)")
+                health_total += 1
+                health_lines.append({"name": f.stem.replace("Z-", ""), "status": "غير معروف", "task": "", "confidence": ""})
     ctx["agents"] = health_lines
+    ctx["agents_ready"] = health_ready
+    ctx["agents_total"] = health_total
 
     # ── Latest reports ──
     daily_dir = Path(repo) / "reports" / "daily"
     recent = sorted(daily_dir.glob("*.md"), reverse=True)[:5] if daily_dir.is_dir() else []
     ctx["recent_reports"] = [f.name for f in recent]
+    ctx["latest_report_name"] = recent[0].name if recent else None
 
-    # ── D20/D21 queue ──
+    # ── D20 queue (next execution plan) ──
     d20 = daily_dir / "2026-05-12_D20_hermes_next_execution_queue.md"
     ctx["d20_exists"] = d20.exists()
+    ctx["d20_p1"] = []
+    ctx["d20_p2"] = []
+    ctx["d20_msg"] = ""
     if ctx["d20_exists"]:
         try:
             lines = d20.read_text().splitlines()
-            p1_lines = [l.strip() for l in lines if "P1" in l or "P2" in l or "- [" in l]
-            ctx["d20_items"] = p1_lines[:8]
+            in_p1 = False
+            in_p2 = False
+            p1_items = []
+            p2_items = []
+            for line in lines:
+                s = line.strip()
+                if "P1 —" in s or "P1—" in s:
+                    in_p1 = True; in_p2 = False; continue
+                if "P2 —" in s or "P2—" in s:
+                    in_p1 = False; in_p2 = True; continue
+                if "P3 —" in s or "P3—" in s:
+                    in_p1 = False; in_p2 = False
+                if in_p1 and "|" in s:
+                    # Table row
+                    cols = [c.strip() for c in s.split("|") if c.strip()]
+                    if len(cols) >= 4 and cols[0].isdigit():
+                        p1_items.append(cols[-1])
+                if in_p2 and "|" in s:
+                    cols = [c.strip() for c in s.split("|") if c.strip()]
+                    if len(cols) >= 4 and cols[0].isdigit():
+                        p2_items.append(cols[-1])
+            ctx["d20_p1"] = p1_items
+            ctx["d20_p2"] = p2_items
+            # Build a natural summary
+            msgs = []
+            for item in p1_items[:3]:
+                msgs.append(f"• {item}")
+            ctx["d20_msg"] = "\n".join(msgs) if msgs else "أنظر في القائمة"
         except Exception:
-            ctx["d20_items"] = []
-    else:
-        ctx["d20_items"] = []
+            ctx["d20_msg"] = ""
 
     # ── LLM availability ──
     ctx["llm_configured"] = bool(cfg.get("llm_api_key") and cfg.get("llm_base_url") and cfg.get("llm_model"))
@@ -1572,37 +1615,47 @@ def build_hermes_context(cfg):
 
 
 def build_hermes_system_prompt(context):
-    """Build the safety-constrained system prompt for the LLM."""
-    tree = context.get("tree_state", "غير معروف")
+    """Build safety-constrained Arabic system prompt for the LLM."""
     branch = context.get("branch", "?")
+    tree = context.get("tree_state", "غير معروف")
     agents = context.get("agents", [])
-    agent_lines = "\n".join(f"  - {a}" for a in agents) if agents else "  (لا توجد بيانات)"
-    reports = context.get("recent_reports", [])
-    report_lines = "\n".join(f"  - {r}" for r in reports) if reports else "  (لا توجد تقارير)"
-    d20 = context.get("d20_items", [])
-    d20_lines = "\n".join(f"  - {i}" for i in d20) if d20 else "  (لا توجد)"
+    ready = context.get("agents_ready", 0)
+    total = context.get("agents_total", 0)
+    commits = context.get("recent_commits", "")
+    latest_report = context.get("latest_report_name", None)
+    d20_msg = context.get("d20_msg", "")
+    llm_on = context.get("llm_configured", False)
 
-    return f"""أنت Hermes — المساعد الذكي لمشروع ZILFIT. تتحدث العربية الفصحى البسيطة.
-تستطيع قراءة حالة المستودع والوكلاء والتقارير والتخطيط — ولا تنفذ أوامر دون موافقة.
+    agent_lines = ""
+    for a in agents:
+        status_icon = "✅" if a["status"] in ("ready", "idle") else "⚠️"
+        task_info = f" — {a['task']}" if a["task"] else ""
+        agent_lines += f"  {status_icon} {a['name']}: {a['status']}{task_info}\n"
 
-حالة المشروع الآن:
-- الفرع (branch): {branch}
+    return f"""أنت Hermes، المساعد الشخصي المشرف على مشروع ZILFIT. تتحدث العربية الفصحى البسيطة.
+
+شخصيتك:
+- ذكي وواضح، لا تبالغ في الحماس ولا تكن باردا.
+- ردودك مختصرة (3-7 جمل) وعملية. تركز على: ماذا يحدث الآن، ما الخطوة التالية، ماذا يحتاج من سلطان.
+- لا تذكر المصطلحات التقنية (D20, P1, queue) إلا إذا سأل عنها المستخدم صراحة. بدلا من ذلك قل "قائمة المهام" أو "الأولوية".
+- لا تعرض قائمة أوامر أو help إلا إذا سأل المستخدم صراحة.
+
+الوضع الحالي للمشروع:
+- الفرع: {branch}
 - شجرة العمل: {tree}
-- الوكلاء (agents):
+- آخر التغييرات: {commits[:200] if commits else "لا يوجد"}
+- الوكلاء: {ready} من {total} جاهزون
 {agent_lines}
-- آخر التقارير:
-{report_lines}
-- مهام D20/D21 القادمة:
-{d20_lines}
+{"- آخر تقرير يومي متاح" if latest_report else "- لا توجد تقارير يومية حديثة"}
+{"- يوجد خطة عمل جاهزة:\n" + d20_msg if d20_msg else ""}
 
-قواعد السلامة:
-1. عمليات القراءة فقط (git status, git log, تقارير) تقدر ترد عليها مباشرة.
-2. أي أمر تعديل/تنفيذ/restart/commit — تقترح الأمر بالضبط مع مستوى الخطورة وتطلب موافقة صريحة.
-3. لا تشتغل shell أو systemctl أو cron.
-4. إذا سأل المستخدم عن ربط موديل LLM — اشرح المتغيرات المطلوبة (HERMES_LLM_API_KEY, HERMES_LLM_BASE_URL, HERMES_LLM_MODEL) وقل له يضيفها في ~/.config/free-claude/env بأمان.
-5. لا تطلب API keys أو tokens في الشات.
-6. ردودك مختصرة وعملية (3-5 جمل). تفاصيل أكثر إذا طلبها.
-7. اللغة: العربية. إلا إذا طلب المستخدم الإنجليزية."""
+قواعد السلامة الصارمة:
+1. الأسئلة العادية عن حالة المشروع — أجب مباشرة.
+2. أي طلب تنفيذ (run, commit, restart, حذف, تعديل ملفات) — لا تنفذ أبدا. اشرح الأمر المطلوب واسأل: "هل توافق؟".
+3. لا تشغل shell أو systemctl أو cron.
+4. إذا سأل عن ربط موديل — اشرح المتغيرات (HERMES_LLM_API_KEY, BASE_URL, MODEL) وقل له يضيفها في ملف البيئة.
+5. لا تطلب API keys أو كلمات سر في الشات.
+6. اللغة: العربية دائما. إذا قال بالإنجليزية حول."""
 
 
 def call_hermes_llm(user_text, context, cfg):
@@ -1615,7 +1668,7 @@ def call_hermes_llm(user_text, context, cfg):
         return None
 
     system_prompt = build_hermes_system_prompt(context)
-    url = f"{base_url.rstrip('/')}/v1/chat/completions"
+    url = f"{base_url.rstrip('/')}/chat/completions"
 
     try:
         resp = requests.post(
@@ -1623,6 +1676,8 @@ def call_hermes_llm(user_text, context, cfg):
             headers={
                 "Authorization": f"Bearer {api_key}",
                 "Content-Type": "application/json",
+                "HTTP-Referer": "https://zilfit.local",
+                "X-Title": "ZILFIT Hermes",
             },
             json={
                 "model": model,
@@ -1635,144 +1690,184 @@ def call_hermes_llm(user_text, context, cfg):
             },
             timeout=30,
         )
+
         if resp.status_code == 200:
             data = resp.json()
-            content = data.get("choices", [{}])[0].get("message", {}).get("content", "")
-            if content:
-                return content.strip()
+            message = data.get("choices", [{}])[0].get("message", {}) or {}
+
+            candidates = [
+                message.get("content"),
+                message.get("reasoning"),
+            ]
+
+            for item in message.get("reasoning_details", []) or []:
+                if isinstance(item, dict):
+                    candidates.append(item.get("text"))
+
+            for content in candidates:
+                if isinstance(content, str) and content.strip():
+                    return content.strip()
+
+            return None
+
     except Exception:
-        pass
+        return None
 
     return None
 
-
 def fallback_hermes_reply(user_text, context):
-    """Deterministic Arabic fallback when no LLM is configured.
-    Understands key intents from plain Arabic and replies usefully.
-    """
+    """رد عربي ذكي بدون LLM — يفهم النية ويحاور بدلاً من عرض أوامر."""
     text_lower = user_text.lower().strip()
 
-    # ── Intent detection ──
-    is_greeting = any(w in text_lower for w in ["السلام", "هلا", "مرحبا", "صباح", "مساء", "hi", "hello", "hey"])
-    is_status = any(w in text_lower for w in ["الوضع", "وش في", "الحالة", "state", "status", "الملخص", "ملخص"])
-    is_plan = any(w in text_lower for w in ["تسوي", "اليوم", "الخطة", "خطة", "شغل", "plan", "today", "شنسوي"])
-    is_agents = any(w in text_lower for w in ["الوكلاء", "agents", "الصحة", "الوكيل", "agent"])
-    is_help = any(w in text_lower for w in ["help", "مساعدة", "الأوامر", "commands", "/help", "تعليمات"])
-    is_execute = any(w in text_lower for w in ["نفذ", "شغل", "execute", "run", "commit", "restart", "احذف", "redirect"])
-    is_model = any(w in text_lower for w in ["موديل", "model", "اربط", "api", "llm", "key", "مفتاح"])
-    is_read_only = any(w in text_lower for w in ["git status", "git log", "git branch", "ls ", "cat ", "find "])
+    # ── فحص النية ──
+    is_greeting = any(w in text_lower for w in ["السلام", "هلا", "مرحبا", "صباح", "مساء", "اهلا", "hi", "hello", "hey"])
+    is_status = any(w in text_lower for w in ["الوضع", "وش في", "الحالة", "state", "status", "الملخص", "ملخص", "صار", "اخبار", "وش الاخبار"])
+    is_plan = any(w in text_lower for w in ["تسوي", "اليوم", "الخطة", "خطة", "شغل", "شنسوي", "خطوات", "الخطوة", "قايم"])
+    is_agents = any(w in text_lower for w in ["الوكلاء", "الصحة", "الوكيل", "team", "agents", "agent"])
+    is_execute = any(w in text_lower for w in ["نفذ", "شغل", "commit", "restart", "احذف", "redirect", "run", "execute"])
+    is_model = any(w in text_lower for w in ["موديل", "model", "اربط", "llm", "key", "api key", "مفتاح"])
+    is_question_about = any(w in text_lower for w in ["ايش", "وش", "ماذا", "كيف", "ليش", "شرح", "what", "how", "explain"])
+    is_report = any(w in text_lower for w in ["تقرير", "report", "التقرير"])
+    is_help = any(w in text_lower for w in ["help", "مساعدة", "الأوامر", "commands", "/help", "تعليمات", "الاوامر"])
 
-    # ── Route by intent ──
+    # ── البيانات من السياق ──
     branch = context.get("branch", "?")
     tree = context.get("tree_state", "غير معروف")
-    head = context.get("head", "?")
+    head = context.get("head", "")
     agents = context.get("agents", [])
-    gitlog = context.get("gitlog", "")
+    ready = context.get("agents_ready", 0)
+    total = context.get("agents_total", 0)
+    commits = context.get("recent_commits", "")
     reports = context.get("recent_reports", [])
-    d20 = context.get("d20_items", [])
+    d20_msg = context.get("d20_msg", "")
     llm_configured = context.get("llm_configured", False)
 
-    if is_greeting and not (is_status or is_plan or is_agents):
-        return (
-            f"وعليكم السلام يا سلطان 👋\n"
-            f"أنا Hermes، المساعد المشرف.\n"
-            f"الفرع: {branch} | الشجرة: {tree}\n"
-            f"ارسل لي سؤالك عن المشروع — حالة، وكلاء، تقارير، أو خطة اليوم."
-        )
+    # ── استخراج ملخص آخر commit ──
+    last_commit_msg = ""
+    if head:
+        parts = head.split(" ", 1)
+        last_commit_msg = parts[-1] if len(parts) > 1 else head
+
+    # ── تحضير معلومات الوكلاء ──
+    agent_info = []
+    for a in agents:
+        s = a["status"]
+        ico = "✅" if s in ("ready", "idle") else "⚠️"
+        agent_info.append(f"{ico} {a['name']}")
+    agent_summary = " | ".join(agent_info)
+
+    # ── تحضير معلومات التغييرات ──
+    changes_note = ""
+    if context.get("has_changes"):
+        changes_note = "\n⚠️ في شغل غير م committed على الفرع."
+    else:
+        changes_note = "\nالمستودع نظيف، كل التغييرات م committed."
+    commits_summary = ""
+    if commits:
+        c_lines = [l.strip() for l in commits.split("\n") if l.strip()][:3]
+        commits_summary = "\n".join(f"• {l}" for l in c_lines)
+
+    # =============================================================
+    # الردود المباشرة حسب النية
+    # =============================================================
 
     if is_help:
         return (
-            "الأوامر المتاحة:\n"
-            "/status — حالة الفرع والشجرة\n"
-            "/agents — حالة الوكلاء\n"
-            "/report — تقرير عربي شامل\n"
-            "/daily_status — التقرير اليومي\n"
-            "/hermes — ملخص Hermes الكامل\n"
-            "/qwen <أمر> — تنفيذ أمر آمن\n\n"
-            "أو تحدث معي طبيعي بالعربية وأجاوبك."
+            "تقدر تتحدث معي طبيعي بالعربي وأنا أفهم:\n"
+            "• \"الوضع؟\" — ملخص كامل للمشروع\n"
+            "• \"وش تسوي اليوم؟\" — خطة العمل\n"
+            "• \"حالة الوكلاء؟\" — صحة الفريق\n"
+            "• \"اربط الموديل\" — توصيل ذكاء اصطناعي\n\n"
+            "أو استخدم / مع الأمر المباشر."
         )
 
-    if is_model:
-        if llm_configured:
-            return (
-                "الموديل متصل حالياً ✅\n"
-                "أستخدمه للإجابة على أسئلتك."
-            )
-        else:
-            return (
-                "لربط موديل ذكاء اصطناعي، أضف هذه المتغيرات في ملف البيئة "
-                "~/.config/free-claude/env:\n\n"
-                "  HERMES_LLM_API_KEY=<مفتاح API>\n"
-                "  HERMES_LLM_BASE_URL=<رابط الخادم>\n"
-                "  HERMES_LLM_MODEL=<اسم الموديل>\n\n"
-                "بعد الإضافة، أعد تشغيل البوت:\n"
-                "tmux kill-session -t zilfit-bot 2>/dev/null; sleep 1; tmux new -ds zilfit-bot 'bash telegram_bot/run.sh'\n\n"
-                "⚠️ لا ترسل المفتاح في الشات."
-            )
-
-    if is_execute:
+    if is_greeting and not (is_status or is_plan or is_agents or is_question_about):
         return (
-            "⚠️ هذا الإجراء يحتاج موافقة.\n"
-            "اقترح لي الأمر بالضبط باستخدام:\n"
-            "/qwen <الأمر>\n\n"
-            "أقوم بتصنيف الخطورة، وإذا كان آمنًا، تحتاج /approve <المعرف> للتنفيذ."
-        )
-
-    # ── Actual context-based replies ──
-    if is_status:
-        report_line = f"آخر تقرير: {reports[0]}" if reports else "لا توجد تقارير حديثة"
-        return (
-            f"حالة المشروع:\n"
-            f"• الفرع: {branch}\n"
-            f"• آخر commit: {head}\n"
-            f"• شجرة العمل: {tree}\n"
-            f"• {report_line}\n\n"
-            f"آخر 8 commits:\n"
-            f"```\n{gitlog}\n```"
+            f"وعليكم السلام يا سلطان 👋\n"
+            f"الحمدلله، الوضع مستقر. الفرع {branch} — {tree}.\n"
+            f"الوكلاء: {ready} من {total} جاهزين.\n"
+            f"وش تحب تعرف بالضبط؟"
         )
 
     if is_agents:
         if not agents:
-            return "لا توجد بيانات وكلاء."
-        agent_status = "\n".join(f"  • {a}" for a in agents)
+            return "ما عندي بيانات عن الوكلاء حالياً."
         return (
-            f"حالة الوكلاء ({len(agents)}):\n{agent_status}"
+            f"فيه {ready} وكلاء جاهزين من أصل {total}:\n{agent_summary}"
         )
 
-    if is_plan:
-        if d20:
-            items = "\n".join(f"  • {i}" for i in d20)
+    if is_model:
+        if llm_configured:
+            return "الموديل متصل الحمدلله ✅ أستخدمه للرد على أسئلتك."
+        else:
             return (
-                f"مهام اليوم حسب قائمة D20:\n{items}\n\n"
-                f"تقدر تطلب تفاصيل أكثر: \"وش تسوي اليوم؟\""
+                "لربط موديل ذكاء اصطناعي، أضف هذه المتغيرات في ملف البيئة "
+                "(~/.config/free-claude/env):\n"
+                "  HERMES_LLM_API_KEY\n"
+                "  HERMES_LLM_BASE_URL\n"
+                "  HERMES_LLM_MODEL\n\n"
+                "بعدها أعد تشغيل البوت:\n"
+                "tmux kill-session -t zilfit-bot && sleep 1 && tmux new -ds zilfit-bot 'bash telegram_bot/run.sh'\n\n"
+                "⚠️ لا ترسل المفاتيح هنا."
+            )
+
+    if is_execute:
+        return (
+            "⚠️ هذا يحتاج موافقتك أولاً.\n"
+            "اقترح لي الأمر بالضبط، وبعد دراستي للخطورة أطلب موافقتك.\n"
+            "مثلاً: \"نفذ git status\" أو استخدم /qwen <الأمر>."
+        )
+
+    # ── السؤال عن خطة اليوم ──
+    if is_plan:
+        if d20_msg:
+            return (
+                f"الخطة الجاهزة:\n{d20_msg}\n\n"
+                f"تقدر تطلب تفاصيل أكثر أو تقول 'نفذ' عشان أشرح الخطوات."
             )
         else:
             return (
-                f"اليوم على الفرع {branch} — الشجرة {tree}.\n"
-                "لا توجد قائمة مهام D20 نشطة.\n"
-                "/report يعطيك التقرير الكامل."
+                f"اليوم على الفرع {branch}.{changes_note}\n"
+                "ما في خطة محددة مسجلة. تقدر تقترح وش تسوي.\n"
+                "إذا تبغى تقرير كامل أرسل /report"
             )
 
-    # ── Read-only command detected in plain text ──
-    if is_read_only:
-        return (
-            f"أقدر أشغل أمر القراءة هذا:\n"
-            f"`{user_text}`\n"
-            f"استخدم /qwen {user_text}"
-        )
+    # ── طلب تقرير ──
+    if is_report:
+        if reports:
+            latest = reports[0]
+            return (
+                f"آخر تقرير يومي: {latest}\n"
+                "استخدم /report لتقرير عربي كامل\n"
+                "أو /daily_status لملخص سريع."
+            )
+        else:
+            return "ما في تقارير يومية بعد."
 
-    # ── Generic fallback ──
+    # ── السؤال عن الحالة أو أي سؤال عام ──
+    if is_status or is_question_about:
+        msg = (
+            f"الوضع الحالي:\n"
+            f"• الفرع: {branch}\n"
+            f"• آخر commit: {last_commit_msg}\n"
+            f"• الشجرة: {tree}{changes_note}\n"
+        )
+        if commits_summary:
+            msg += f"\nآخر التغييرات:\n{commits_summary}\n"
+        msg += f"\nالوكلاء ({ready}/{total} جاهز):\n{agent_summary}"
+        if d20_msg:
+            msg += f"\n\nالخطوة التالية:\n{d20_msg}"
+        return msg
+
+    # ── الرد العام لأي كلام آخر ──
     return (
-        f"أنا Hermes 👋\n"
-        f"حالة المستودع: الفرع {branch} — {tree}\n"
-        f"الوكلاء: {len(agents)} نشط\n"
-        f"آخر التقارير: {len(reports)} تقرير\n\n"
+        f"أنا Hermes، المشرف على ZILFIT.\n"
+        f"الحين على الفرع {branch} — {tree}.{changes_note}\n"
+        f"الوكلاء: {ready}/{total} جاهزين.\n\n"
         f"تقدر تسألني:\n"
-        f"• \"الوضع؟\" — ملخص كامل\n"
-        f"• \"وش تسوي اليوم؟\" — خطة اليوم\n"
-        f"• \"حالة الوكلاء؟\" — صحة الفريق\n"
-        f"• \"اربط الموديل\" — توصيل LLM\n"
-        f"• أو أرسل /help للأوامر"
+        f"• \"الوضع؟\" — أشرح لك كل شيء\n"
+        f"• \"وش تسوي اليوم؟\" — خطة العمل\n"
+        f"• \"اربط الموديل\" — توصيل الذكاء الاصطناعي"
     )
 
 
