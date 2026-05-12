@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<title>ZILFIT LiveFit v5 · R&D Internal</title>
+<style>
+/* ══════════════════════════════════════════════
+   ZILFIT DESIGN TOKENS
+══════════════════════════════════════════════ */
+:root{
+  --zb:#050507;--zdp:#0a0a0f;--zs:#111118;--zp:#18181f;
+  --zbr:#2a2a38;--zbrh:#3d3d55;
+  --zg:#c8a96e;--zgl:#8a6e3e;--zgh:#e8cfa0;
+  --zi:#a8c4d8;--zr:#e05050;--zgr:#50c87a;--za:#e8a840;
+  --zt:#dddde8;--ztd:#7a7a96;--ztx:#3a3a52;
+  --rad:12px;--rads:7px;
+  --mono:'Courier New',monospace;
+  --sans:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  --sb:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{height:100%;-webkit-tap-highlight-color:transparent;}
+body{
+  background:var(--zb);color:var(--zt);font-family:var(--sans);
+  min-height:100%;overflow-x:hidden;-webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:.025;
+}
+#app{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:0 0 calc(32px + var(--sb));}
+
+/* ── HEADER ── */
+header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 18px 15px;border-bottom:1px solid var(--zbr);
+  position:sticky;top:0;z-index:200;
+  background:rgba(5,5,7,.93);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo-mark{
+  width:30px;height:30px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--zg),var(--zgl));
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+}
+.logo-name{font-size:14px;letter-spacing:.18em;font-weight:700;color:var(--zg);text-transform:uppercase;}
+.logo-sub{font-size:8px;letter-spacing:.2em;color:var(--ztd);text-transform:uppercase;margin-top:1px;}
+.rnd-badge{
+  font-family:var(--mono);font-size:9px;letter-spacing:.12em;
+  color:var(--za);background:rgba(232,168,64,.08);
+  border:1px solid rgba(232,168,64,.22);border-radius:3px;padding:3px 8px;text-transform:uppercase;
+}
+
+/* ── DISCLAIMER ── */
+.disclaimer{
+  margin:14px 14px 0;padding:11px 14px;
+  border-left:3px solid var(--za);border:1px solid rgba(232,168,64,.2);
+  border-radius:var(--rads);background:rgba(232,168,64,.04);
+  font-family:var(--mono);font-size:10.5px;line-height:1.65;color:var(--za);
+}
+.disclaimer strong{display:block;font-size:9.5px;letter-spacing:.13em;margin-bottom:3px;}
+
+/* ── STEP BAR ── */
+.steps-bar{display:flex;align-items:center;padding:14px 18px 6px;gap:0;}
+.step-dot{
+  width:8px;height:8px;border-radius:50%;flex-shrink:0;
+  background:var(--zbr);border:1px solid var(--zbrh);transition:all .3s;
+}
+.step-dot.active{background:var(--zg);border-color:var(--zgh);box-shadow:0 0 8px rgba(200,169,110,.5);}
+.step-dot.done{background:var(--zgl);border-color:var(--zg);}
+.step-line{flex:1;height:1px;background:var(--zbr);margin:0 4px;transition:background .3s;}
+.step-line.done{background:var(--zgl);}
+.step-label{padding:0 18px 10px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--ztd);text-transform:uppercase;}
+.step-label span{color:var(--zgh);}
+
+/* ── CAMERA PANEL ── */
+.cam-wrap{
+  position:relative;margin:0 14px;border-radius:var(--rad);overflow:hidden;
+  border:1px solid var(--zbr);background:var(--zdp);aspect-ratio:4/3;
+  user-select:none;-webkit-user-select:none;
+}
+#video{width:100%;height:100%;object-fit:cover;display:block;}
+#overlay-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+#drag-canvas{
+  position:absolute;inset:0;width:100%;height:100%;
+  touch-action:none;cursor:default;display:none;
+}
+.cam-placeholder{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:10px;color:var(--ztd);
+}
+.cam-icon{font-size:42px;opacity:.28;}
+.cam-placeholder p{font-size:12px;letter-spacing:.05em;}
+.cam-badge{
+  position:absolute;top:9px;left:9px;
+  font-family:var(--mono);font-size:9px;letter-spacing:.1em;
+  background:rgba(5,5,7,.82);color:var(--ztd);
+  border:1px solid var(--zbr);border-radius:3px;padding:3px 7px;text-transform:uppercase;
+}
+.cam-badge.live{color:var(--zgr);}
+.quality-strip{
+  position:absolute;bottom:0;left:0;right:0;
+  background:rgba(5,5,7,.72);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+  padding:5px 11px;display:none;align-items:center;gap:10px;
+  font-family:var(--mono);font-size:9px;letter-spacing:.09em;
+}
+.q-item{display:flex;align-items:center;gap:5px;}
+.q-dot{width:6px;height:6px;border-radius:50%;background:var(--ztx);}
+
+/* ── PX/MM INDICATOR ── */
+.pxmm-strip{
+  margin:8px 14px 0;padding:9px 13px;
+  border-radius:var(--rads);background:var(--zdp);
+  border:1px solid var(--zbr);display:none;
+  font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--ztd);
+  align-items:center;gap:10px;
+}
+.pxmm-val{color:var(--zg);font-size:14px;font-weight:700;margin-left:4px;}
+.pxmm-status{margin-left:auto;font-size:9px;}
+
+/* ── WARNINGS ── */
+.warn-list{margin:8px 14px 0;display:flex;flex-direction:column;gap:5px;}
+.warn-item{
+  display:flex;align-items:flex-start;gap:8px;padding:7px 11px;
+  border-radius:var(--rads);font-size:10.5px;line-height:1.5;
+  font-family:var(--mono);letter-spacing:.04em;
+}
+.warn-item.error{background:rgba(224,80,80,.07);border:1px solid rgba(224,80,80,.22);color:var(--zr);}
+.warn-item.caution{background:rgba(232,168,64,.05);border:1px solid rgba(232,168,64,.18);color:var(--za);}
+.warn-item.ok{background:rgba(80,200,122,.05);border:1px solid rgba(80,200,122,.18);color:var(--zgr);}
+.warn-icon{flex-shrink:0;margin-top:1px;}
+
+/* ── CONTROLS ── */
+.controls{display:flex;flex-direction:column;gap:9px;margin:12px 14px 0;}
+.btn-row{display:flex;gap:9px;}
+.btn{
+  flex:1;padding:13px 14px;border-radius:var(--rads);
+  border:1px solid var(--zbrh);background:var(--zp);color:var(--zt);cursor:pointer;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;
+  transition:all .18s;position:relative;overflow:hidden;-webkit-appearance:none;
+  text-align:center;
+}
+.btn::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.025),transparent);}
+.btn:active{transform:scale(.97);}
+.btn:disabled{opacity:.3;cursor:not-allowed;}
+.btn.primary{background:linear-gradient(135deg,rgba(138,110,62,.7),rgba(200,169,110,.12));border-color:var(--zg);color:var(--zgh);}
+.btn.primary:not(:disabled):hover{box-shadow:0 0 14px rgba(200,169,110,.18);}
+.btn.confirm{background:rgba(80,200,122,.1);border-color:rgba(80,200,122,.4);color:var(--zgr);}
+.btn.confirm:not(:disabled):hover{background:rgba(80,200,122,.16);}
+.btn.danger{border-color:rgba(224,80,80,.35);color:var(--zr);}
+.btn.ghost{border-color:var(--zbr);color:var(--ztd);}
+.btn-sub{display:block;font-size:8.5px;letter-spacing:.13em;color:var(--ztd);margin-bottom:2px;}
+
+/* ── GUIDANCE CARD ── */
+.guidance-card{
+  margin:12px 14px 0;border:1px solid var(--zbr);border-radius:var(--rad);
+  background:var(--zs);overflow:hidden;
+}
+.guidance-header{
+  padding:11px 15px;background:rgba(168,196,216,.04);border-bottom:1px solid var(--zbr);
+  display:flex;align-items:center;justify-content:space-between;cursor:pointer;
+}
+.guidance-title{font-family:var(--mono);font-size:9.5px;letter-spacing:.15em;color:var(--zi);text-transform:uppercase;}
+.guidance-toggle{font-family:var(--mono);font-size:10px;color:var(--ztd);}
+.guidance-body{padding:13px 15px;display:none;}
+.g-step{
+  display:flex;align-items:flex-start;gap:9px;padding:5px 0;
+  border-bottom:1px solid var(--zbr);font-size:11.5px;line-height:1.5;color:var(--zt);
+}
+.g-step:last-child{border-bottom:none;}
+.g-num{font-family:var(--mono);font-size:9px;color:var(--zg);flex-shrink:0;width:18px;padding-top:2px;}
+.g-step b{color:var(--zgh);}
+
+/* ── LIMITS CARD ── */
+.limits-card{
+  margin:10px 14px 0;border:1px solid var(--zbr);border-radius:var(--rad);
+  background:var(--zs);overflow:hidden;
+}
+.limits-header{
+  padding:11px 15px;background:rgba(224,80,80,.03);border-bottom:1px solid var(--zbr);
+  display:flex;align-items:center;justify-content:space-between;cursor:pointer;
+}
+.limits-title{font-family:var(--mono);font-size:9.5px;letter-spacing:.15em;color:var(--zr);text-transform:uppercase;}
+.limits-body{padding:13px 15px;display:none;}
+.limit-row{
+  display:flex;align-items:flex-start;gap:8px;padding:5px 0;
+  border-bottom:1px solid var(--zbr);font-size:11px;line-height:1.5;color:var(--ztd);
+  font-family:var(--mono);
+}
+.limit-row:last-child{border-bottom:none;}
+.limit-icon{color:var(--zr);flex-shrink:0;}
+.limit-row b{color:var(--zt);}
+
+/* ── RESULT CARD ── */
+#result-card{
+  margin:14px 14px 0;border:1px solid var(--zbrh);border-radius:var(--rad);
+  background:var(--zs);overflow:hidden;display:none;
+}
+.card-header{
+  padding:13px 17px;background:linear-gradient(135deg,rgba(200,169,110,.07),rgba(200,169,110,.02));
+  border-bottom:1px solid var(--zbr);display:flex;align-items:center;justify-content:space-between;
+}
+.card-title{font-family:var(--mono);font-size:10px;letter-spacing:.15em;color:var(--zg);text-transform:uppercase;}
+.conf-chip{font-family:var(--mono);font-size:9.5px;padding:3px 10px;border-radius:20px;letter-spacing:.08em;}
+.conf-chip.high{background:rgba(80,200,122,.1);color:var(--zgr);border:1px solid rgba(80,200,122,.28);}
+.conf-chip.med{background:rgba(232,168,64,.1);color:var(--za);border:1px solid rgba(232,168,64,.28);}
+.conf-chip.low{background:rgba(224,80,80,.08);color:var(--zr);border:1px solid rgba(224,80,80,.22);}
+.meas-grid{display:grid;grid-template-columns:1fr 1fr;padding:16px;gap:10px;}
+.meas-cell{background:var(--zp);border-radius:var(--rads);border:1px solid var(--zbr);padding:13px;}
+.meas-lbl{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;color:var(--ztd);text-transform:uppercase;margin-bottom:5px;}
+.meas-val{font-size:27px;font-weight:700;color:var(--zgh);letter-spacing:-.02em;line-height:1;}
+.meas-unit{font-size:12px;color:var(--zgl);margin-left:2px;font-weight:400;}
+.meas-sub{font-family:var(--mono);font-size:8.5px;color:var(--ztd);margin-top:4px;}
+.sizes-row{padding:0 16px 16px;display:flex;gap:7px;flex-wrap:wrap;}
+.sz-chip{
+  padding:5px 11px;border-radius:var(--rads);
+  border:1px solid var(--zbr);background:var(--zp);
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.09em;color:var(--zt);
+}
+.sz-chip span{color:var(--zg);}
+.card-footer{
+  padding:9px 17px 13px;border-top:1px solid var(--zbr);
+  font-family:var(--mono);font-size:9px;color:var(--ztx);line-height:1.65;letter-spacing:.04em;
+}
+
+/* ── SPECIALIST BANNER ── */
+.spec-banner{
+  margin:0 14px;padding:10px 14px;border-radius:var(--rads);
+  border:1px solid rgba(168,196,216,.18);background:rgba(168,196,216,.03);
+  font-family:var(--mono);font-size:9.5px;color:var(--zi);line-height:1.6;
+  letter-spacing:.05em;display:none;
+}
+
+/* ── JSON PANEL ── */
+#json-panel{margin:10px 14px 0;border:1px solid var(--zbr);border-radius:var(--rad);background:var(--zdp);overflow:hidden;display:none;}
+.json-hdr{display:flex;align-items:center;justify-content:space-between;padding:9px 13px;border-bottom:1px solid var(--zbr);}
+.json-title{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--ztd);text-transform:uppercase;}
+.json-copy{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--zbrh);background:var(--zp);color:var(--zg);border-radius:4px;padding:4px 10px;cursor:pointer;-webkit-appearance:none;}
+#json-out{padding:13px;font-family:var(--mono);font-size:9.5px;line-height:1.75;color:var(--ztd);white-space:pre;overflow-x:auto;max-height:300px;overflow-y:auto;}
+.jk{color:#9090b8;}.jvs{color:#7ac07a;}.jvn{color:#c8a96e;}.jvb{color:#88bbd0;}
+
+/* ── UTILITY ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(7px);}to{opacity:1;transform:translateY(0);}}
+.fadein{animation:fadeUp .3s ease forwards;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.spin{display:inline-block;width:12px;height:12px;border:2px solid var(--zbr);border-top-color:var(--zg);border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:5px;}
+.divider{height:1px;background:var(--zbr);margin:12px 14px;}
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:var(--zdp);}
+::-webkit-scrollbar-thumb{background:var(--zbrh);border-radius:2px;}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-mark"></div>
+    <div>
+      <div class="logo-name">ZILFIT</div>
+      <div class="logo-sub">Engineered in KSA</div>
+    </div>
+  </div>
+  <div class="rnd-badge">⬡ R&amp;D INTERNAL v5</div>
+</header>
+
+<!-- DISCLAIMER -->
+<div class="disclaimer">
+  <strong>⚠ INTERNAL R&amp;D PROTOTYPE — NOT FOR PUBLIC USE</strong>
+  Engineering estimates only. No diagnosis, treatment, or medical claims.
+  All outputs require specialist review. Public release: PENDING APPROVAL.
+</div>
+
+<!-- STEP BAR -->
+<div class="steps-bar" id="steps-bar">
+  <div class="step-dot active" id="sd0"></div><div class="step-line" id="sl0"></div>
+  <div class="step-dot" id="sd1"></div><div class="step-line" id="sl1"></div>
+  <div class="step-dot" id="sd2"></div><div class="step-line" id="sl2"></div>
+  <div class="step-dot" id="sd3"></div><div class="step-line" id="sl3"></div>
+  <div class="step-dot" id="sd4"></div>
+</div>
+<div class="step-label" id="step-label">Step 1 of 5 — <span>Start Camera</span></div>
+<div class="step-label" id="step-hint" style="padding:0 18px 10px;font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--za);text-transform:none;display:none;">—</div>
+
+<!-- CAMERA -->
+<div class="cam-wrap" id="cam-wrap">
+  <video id="video" autoplay playsinline muted></video>
+  <canvas id="overlay-canvas"></canvas>
+  <canvas id="drag-canvas"></canvas>
+  <div class="cam-placeholder" id="cam-placeholder">
+    <div class="cam-icon">⬡</div>
+    <p>Camera not started</p>
+  </div>
+  <div class="cam-badge" id="cam-badge">IDLE</div>
+  <div class="quality-strip" id="quality-strip">
+    <div class="q-item"><div class="q-dot" id="ql-dot"></div><span id="ql-lbl" style="font-family:var(--mono);font-size:9px;color:var(--ztd)">LIGHT —</span></div>
+    <div class="q-item"><div class="q-dot" id="qa-dot"></div><span id="qa-lbl" style="font-family:var(--mono);font-size:9px;color:var(--ztd)">ANGLE —</span></div>
+    <div class="q-item" style="margin-left:auto"><span id="q-fps" style="font-family:var(--mono);font-size:9px;color:var(--ztx)">-- fps</span></div>
+  </div>
+</div>
+
+<!-- PX/MM STRIP -->
+<div class="pxmm-strip" id="pxmm-strip">
+  <span style="color:var(--ztd)">px/mm ratio:</span>
+  <span class="pxmm-val" id="pxmm-val">—</span>
+  <span class="pxmm-status" id="pxmm-status"></span>
+</div>
+
+<!-- WARNINGS -->
+<div class="warn-list" id="warn-list"></div>
+
+<!-- CONTROLS -->
+<div class="controls">
+
+  <!-- Step 1: Camera -->
+  <div class="btn-row">
+    <button class="btn primary" id="btn-cam" onclick="startCamera()">
+      <span class="btn-sub">Step 1 of 5</span>▶ Start Camera
+    </button>
+  </div>
+
+  <!-- Step 2: Reference -->
+  <div class="btn-row" id="ref-row" style="display:none">
+    <button class="btn" id="btn-autoref" onclick="autoDetectRef()" disabled>
+      <span class="btn-sub">Auto-find card</span>⬡ Find Card
+    </button>
+    <button class="btn" id="btn-manref" onclick="startManualRef()" disabled>
+      <span class="btn-sub">Draw card box</span>✥ Draw Card
+    </button>
+  </div>
+  <div class="btn-row" id="ref-confirm-row" style="display:none">
+    <button class="btn confirm" id="btn-confirmref" onclick="confirmRef()">
+      <span class="btn-sub">Confirm card box position</span>✓ Confirm Card
+    </button>
+    <button class="btn ghost" onclick="resetRef()">
+      <span class="btn-sub">Redraw card box</span>↺ Redraw Card
+    </button>
+  </div>
+
+  <!-- Step 3: Foot -->
+  <div class="btn-row" id="foot-row" style="display:none">
+    <button class="btn" id="btn-autofoot" onclick="autoDetectFoot()" disabled>
+      <span class="btn-sub">Auto-find foot</span>⬡ Find Foot
+    </button>
+    <button class="btn" id="btn-manfoot" onclick="startManualFoot()" disabled>
+      <span class="btn-sub">Draw foot box</span>✥ Draw Foot
+    </button>
+  </div>
+  <div class="btn-row" id="foot-confirm-row" style="display:none">
+    <button class="btn confirm" id="btn-confirmfoot" onclick="confirmFoot()">
+      <span class="btn-sub">Confirm foot area — heel to longest toe</span>✓ Confirm Foot
+    </button>
+    <button class="btn ghost" onclick="resetFoot()">
+      <span class="btn-sub">Redraw foot box</span>↺ Redraw Foot
+    </button>
+  </div>
+
+  <!-- Step 4: Capture -->
+  <div class="btn-row" id="capture-row" style="display:none">
+    <button class="btn primary" id="btn-capture" onclick="captureMeasurement()" disabled>
+      <span class="btn-sub">Both boxes confirmed — ready to measure</span>⬡ Take Measurement
+    </button>
+  </div>
+
+  <!-- Step 5: Post -->
+  <div class="btn-row" id="post-row" style="display:none">
+    <button class="btn ghost" onclick="toggleJSON()">
+      <span class="btn-sub">Engineering output</span>{ } View JSON
+    </button>
+    <button class="btn" onclick="retakeMeasurement()">
+      <span class="btn-sub">Retake this photo</span>↺ Retake
+    </button>
+    <button class="btn danger" onclick="resetAll()">
+      <span class="btn-sub">Start over from scratch</span>↺ Full Reset
+    </button>
+  </div>
+
+</div>
+
+<!-- iPAD SAFARI GUIDANCE -->
+<div class="guidance-card" id="guidance-card">
+  <div class="guidance-header" onclick="toggleGuidance()">
+    <div class="guidance-title">📱 iPad Safari Capture Guidance</div>
+    <div class="guidance-toggle" id="guid-tog">▾ Show</div>
+  </div>
+  <div class="guidance-body" id="guid-body">
+    <div class="g-step"><span class="g-num">01</span><span><b>Use HTTPS</b> — getUserMedia requires a secure origin. Serve via ngrok, Tailscale, or local HTTPS tunnel.</span></div>
+    <div class="g-step"><span class="g-num">02</span><span><b>Hold camera perpendicular to floor</b> — arm straight down, ~40–60 cm above foot. Tilt adds nonlinear scale error.</span></div>
+    <div class="g-step"><span class="g-num">03</span><span><b>Card and foot on same flat plane</b> — both on the floor or table surface. If card is elevated, the scale ratio will be wrong.</span></div>
+    <div class="g-step"><span class="g-num">04</span><span><b>Show full card boundary</b> — all 4 corners of the ID/bank card must be visible. The auto-detector looks for the outer rectangle.</span></div>
+    <div class="g-step"><span class="g-num">05</span><span><b>Show heel and longest toe</b> — foot must be fully in frame. Do not cut off the heel or toes.</span></div>
+    <div class="g-step"><span class="g-num">06</span><span><b>Limit lower leg in frame</b> — keep the ankle and below only. Too much leg confuses foot boundary detection.</span></div>
+    <div class="g-step"><span class="g-num">07</span><span><b>Even lighting</b> — no harsh shadows across foot or card. Shoot near a window with diffuse light or use a ring light.</span></div>
+    <div class="g-step"><span class="g-num">08</span><span><b>Light background</b> — place foot on white paper or light floor for better contrast. Dark foot on dark mat = detection failure.</span></div>
+  </div>
+</div>
+
+<!-- KNOWN LIMITATIONS -->
+<div class="limits-card" id="limits-card">
+  <div class="limits-header" onclick="toggleLimits()">
+    <div class="limits-title">⚠ Known Limitations — R&amp;D Reference</div>
+    <div class="guidance-toggle" id="lim-tog">▾ Show</div>
+  </div>
+  <div class="limits-body" id="lim-body">
+    <div class="limit-row"><span class="limit-icon">✕</span><span><b>Perspective distortion</b> — camera not perfectly perpendicular introduces nonlinear scaling. No depth correction in 2D-only mode.</span></div>
+    <div class="limit-row"><span class="limit-icon">✕</span><span><b>Card misalignment</b> — if the reference card is not co-planar with the foot, the px/mm ratio is incorrect and all measurements are invalid.</span></div>
+    <div class="limit-row"><span class="limit-icon">✕</span><span><b>Shadows across card or foot</b> — shadow edges are mistaken for object boundaries, shifting bounding box edges.</span></div>
+    <div class="limit-row"><span class="limit-icon">✕</span><span><b>Foot not flat</b> — raised toes or lifted heel underestimate actual foot length. Measure under full bodyweight standing conditions ideally.</span></div>
+    <div class="limit-row"><span class="limit-icon">✕</span><span><b>Heuristic detection only</b> — no ML model. Edge/contrast heuristics fail on complex or dark backgrounds. Manual box is always more reliable.</span></div>
+    <div class="limit-row"><span class="limit-icon">✕</span><span><b>Single-camera 2D</b> — arch height, 3D width, and instep girth cannot be measured from a single overhead image.</span></div>
+    <div class="limit-row"><span class="limit-icon">✕</span><span><b>Must validate against manual tape measurement</b> — all outputs from this prototype require ground-truth comparison before use in any sizing or manufacturing workflow.</span></div>
+  </div>
+</div>
+
+<!-- RESULT CARD -->
+<div id="result-card" class="fadein">
+  <div class="card-header">
+    <div class="card-title">⬡ Measurement Estimate</div>
+    <div class="conf-chip" id="conf-chip">—</div>
+  </div>
+  <div class="meas-grid">
+    <div class="meas-cell">
+      <div class="meas-lbl">Foot Length</div>
+      <div class="meas-val" id="r-len">—<span class="meas-unit">mm</span></div>
+      <div class="meas-sub" id="r-len-sub">heel → longest toe</div>
+    </div>
+    <div class="meas-cell">
+      <div class="meas-lbl">Foot Width</div>
+      <div class="meas-val" id="r-wid">—<span class="meas-unit">mm</span></div>
+      <div class="meas-sub">metatarsal estimate</div>
+    </div>
+    <div class="meas-cell">
+      <div class="meas-lbl">px / mm</div>
+      <div class="meas-val" id="r-pxmm" style="font-size:19px">—</div>
+      <div class="meas-sub">scale ratio</div>
+    </div>
+    <div class="meas-cell">
+      <div class="meas-lbl">Confidence</div>
+      <div class="meas-val" id="r-conf" style="font-size:19px">—<span class="meas-unit">%</span></div>
+      <div class="meas-sub" id="r-det">—</div>
+    </div>
+  </div>
+  <div class="sizes-row" id="sizes-row"></div>
+  <div class="card-footer">
+    ⚠ Engineering estimate only. Not clinically validated. Error ±3–8 mm typical.
+    Reference: ISO/IEC 7810 ID-1 card (85.6 × 54 mm). Requires specialist review.
+    Validate against manual tape measurement before any production use.
+  </div>
+</div>
+
+<div class="spec-banner fadein" id="spec-banner">
+  ⬡ SPECIALIST REVIEW REQUIRED — All estimates require review by a qualified footwear engineer or certified foot specialist before use in product customisation, manufacturing, or any applied context.
+</div>
+
+<!-- JSON -->
+<div id="json-panel">
+  <div class="json-hdr">
+    <div class="json-title">⬡ Engineering JSON Output</div>
+    <button class="json-copy" onclick="copyJSON()">Copy</button>
+  </div>
+  <div id="json-out"></div>
+</div>
+
+<div style="height:24px"></div>
+</div><!-- /app -->
+
+<!-- ════════════════════════════════════════════
+     ZILFIT LiveFit v3 — JavaScript Core
+     Vanilla JS + Canvas only. No external deps.
+     Engineering-only. Non-medical.
+════════════════════════════════════════════ -->
+<script>
+'use strict';
+
+/* ── CONSTANTS ── */
+const CARD_W = 85.6; // ISO/IEC 7810 ID-1 card width mm
+const CARD_H = 54.0; // ISO/IEC 7810 ID-1 card height mm
+const CARD_ASPECT = CARD_W / CARD_H; // 1.5852...
+
+/* ── SAFETY GATES (v4 additions) ── */
+const BORDER_MARGIN = 6;          // px — reject boxes touching canvas edge
+const FOOT_ASPECT_MIN = 0.22;     // min foot w/h ratio in pixel space
+const FOOT_ASPECT_MAX = 0.55;     // max foot w/h ratio in pixel space
+const WARN_LEN_MIN = 180, WARN_LEN_MAX = 340;  // tighter advisory bounds (mm)
+const WARN_WID_MIN = 60,  WARN_WID_MAX = 130;  // tighter advisory bounds (mm)
+const NON_MEDICAL_BOUNDARY =
+  'Engineering-only estimate. Not medical, diagnostic, therapeutic, clinical, pain, disease, or treatment use.';
+
+/* ── STATE ── */
+const S = {
+  step: 0,
+  stream: null,
+  vidW: 0, vidH: 0,   // native video resolution
+  disW: 0, disH: 0,   // canvas display size
+  // boxes in DISPLAY px
+  refBox: null,   refConfirmed: false,
+  footBox: null,  footConfirmed: false,
+  refMethod: 'none', footMethod: 'none',
+  pixPerMM: null,
+  result: null,
+  drag: null,     // active drag/resize state
+  drawMode: null, // 'ref' | 'foot' | null
+  drawStart: null,
+  boxWarnings: [],  // v4: validation results from validateBoxes()
+  qualScore: 0,
+  brightScore: 0,
+  fps: 0, fpsF: 0, fpsT: Date.now(),
+};
+
+/* ── ELEMENTS ── */
+const video   = document.getElementById('video');
+const oCvs    = document.getElementById('overlay-canvas');
+const dCvs    = document.getElementById('drag-canvas');
+const oCtx    = oCvs.getContext('2d');
+const dCtx    = dCvs.getContext('2d');
+
+/* ══════════════════════
+   CAMERA
+══════════════════════ */
+async function startCamera(){
+  clearW();
+  setBtnState('btn-cam', true, '<span class="spin"></span>Starting…');
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video:{ facingMode:{ideal:'environment'}, width:{ideal:1920}, height:{ideal:1080} }
+    });
+    S.stream = stream;
+    video.srcObject = stream;
+    await new Promise(r => { video.onloadedmetadata = r; });
+    await video.play();
+
+    document.getElementById('cam-placeholder').style.display = 'none';
+    badgeLive('LIVE ●', true);
+    document.getElementById('quality-strip').style.display = 'flex';
+    resizeCvs();
+    window.addEventListener('resize', resizeCvs);
+
+    // start live quality analysis
+    startQualLoop();
+
+    S.step = 1;
+    stepUI(1);
+    document.getElementById('btn-cam').style.display = 'none';
+    show('ref-row');
+    document.getElementById('btn-autoref').disabled = false;
+    document.getElementById('btn-manref').disabled  = false;
+    addW('ok', 'Camera active. Place ID/bank card beside your foot, then detect reference.');
+  } catch(e) {
+    setBtnState('btn-cam', false, '▶ Start Camera');
+    addW('error', e.name === 'NotAllowedError'
+      ? 'Camera permission denied. Allow camera access and reload.'
+      : 'Camera error: ' + e.message);
+  }
+}
+
+function resizeCvs(){
+  const wrap = document.getElementById('cam-wrap');
+  const w = wrap.clientWidth, h = wrap.clientHeight;
+  oCvs.width = w; oCvs.height = h;
+  dCvs.width = w; dCvs.height = h;
+  S.disW = w; S.disH = h;
+  redrawAll();
+}
+
+/* ── LIVE QUALITY LOOP ── */
+function startQualLoop(){
+  const tmp = document.createElement('canvas');
+  const tCtx = tmp.getContext('2d');
+  function loop(){
+    if(!S.stream) return;
+    if(video.readyState >= 2){
+      const vw = video.videoWidth||640, vh = video.videoHeight||480;
+      S.vidW = vw; S.vidH = vh;
+      tmp.width = vw>>2; tmp.height = vh>>2;
+      tCtx.drawImage(video, 0, 0, tmp.width, tmp.height);
+      analyseQuality(tCtx.getImageData(0,0,tmp.width,tmp.height));
+    }
+    // FPS
+    S.fpsF++;
+    const now = Date.now();
+    if(now - S.fpsT > 1000){
+      S.fps = S.fpsF; S.fpsF = 0; S.fpsT = now;
+      el('q-fps').textContent = S.fps + ' fps';
+    }
+    requestAnimationFrame(loop);
+  }
+  loop();
+}
+
+function analyseQuality(id){
+  const d = id.data, n = id.width * id.height;
+  let lum=0, dark=0, brt=0;
+  for(let i=0;i<d.length;i+=4){
+    const l = 0.299*d[i]+0.587*d[i+1]+0.114*d[i+2];
+    lum+=l;
+    if(l<45) dark++;
+    if(l>225) brt++;
+  }
+  const avg = lum/n;
+  S.brightScore = Math.round((avg/255)*100);
+  S.qualScore   = Math.round(Math.max(0, 100 - Math.abs(avg-155)*0.75));
+  const lightOk = avg>75 && avg<215 && dark/n<0.2 && brt/n<0.15;
+  setQDot('ql', lightOk ? 'var(--zgr)' : avg<75 ? 'var(--zr)' : 'var(--za)',
+          lightOk ? 'LIGHT OK' : avg<75 ? 'TOO DARK' : 'TOO BRIGHT');
+  setQDot('qa', 'var(--za)', 'HOLD PERP');
+}
+function setQDot(id, col, lbl){
+  const d=el(id+'-dot'), l=el(id+'-lbl');
+  if(d) d.style.background=col;
+  if(l){l.textContent=lbl;l.style.color=col;}
+}
+
+/* ══════════════════════
+   AUTO DETECT REFERENCE
+   Goal: find the LARGEST rectangle with aspect ratio ≈ CARD_ASPECT
+   Prefer outer boundary, reject small candidates
+══════════════════════ */
+function autoDetectRef(){
+  if(!S.stream){ addW('error','Start camera first.'); return; }
+  clearW();
+  addW('ok','<span class="spin"></span>Scanning frame for card boundary…');
+  const frame = grabFrame();
+  setTimeout(()=>{
+    clearW();
+    const box = detectCard(frame);
+    if(box && box.confidence > 0.42){
+      S.refBox = scaleToDisplay(box, frame.w, frame.h);
+      S.refMethod = 'auto_heuristic';
+      redrawAll();
+      show('ref-confirm-row');
+      addW('ok','Card candidate found (conf: '+Math.round(box.confidence*100)+'%). Check amber box covers full card. Confirm or reset.');
+    } else {
+      S.refBox = defaultRefBox();
+      S.refMethod = 'auto_fallback_manual';
+      redrawAll();
+      enableDragResize();
+      show('ref-confirm-row');
+      addW('caution','Auto-detection uncertain. Card box placed at default position. Drag corners to fit full card boundary, then confirm.');
+    }
+    updateCaptureGate();
+  }, 700);
+}
+
+function detectCard(frame){
+  const {data, w, h} = frame;
+  const sc = 3;
+  const sw = Math.floor(w/sc), sh = Math.floor(h/sc);
+
+  // Grayscale downsampled
+  const gray = new Float32Array(sw*sh);
+  for(let sy=0;sy<sh;sy++) for(let sx=0;sx<sw;sx++){
+    const i=((sy*sc)*w+(sx*sc))*4;
+    gray[sy*sw+sx]=(0.299*data[i]+0.587*data[i+1]+0.114*data[i+2])/255;
+  }
+
+  // Sobel edges
+  const edge = new Float32Array(sw*sh);
+  let maxE=0;
+  for(let sy=1;sy<sh-1;sy++) for(let sx=1;sx<sw-1;sx++){
+    const gx=-gray[(sy-1)*sw+(sx-1)]+gray[(sy-1)*sw+(sx+1)]-2*gray[sy*sw+(sx-1)]+2*gray[sy*sw+(sx+1)]-gray[(sy+1)*sw+(sx-1)]+gray[(sy+1)*sw+(sx+1)];
+    const gy=-gray[(sy-1)*sw+(sx-1)]-2*gray[(sy-1)*sw+sx]-gray[(sy-1)*sw+(sx+1)]+gray[(sy+1)*sw+(sx-1)]+2*gray[(sy+1)*sw+sx]+gray[(sy+1)*sw+(sx+1)];
+    const e=Math.sqrt(gx*gx+gy*gy);
+    edge[sy*sw+sx]=e; if(e>maxE) maxE=e;
+  }
+  if(maxE===0) return null;
+  const thr = maxE*0.22;
+
+  // Scan rectangles — prefer LARGE boxes with card aspect ratio
+  // We stride coarsely to stay fast
+  const targetAR = CARD_ASPECT;
+  const arTol = 0.22;
+  let best=null, bestScore=-1;
+
+  // Minimum card size heuristic: card should be at least 10% of frame width
+  const minBW = Math.floor(sw*0.10);
+  const stride = 4;
+
+  for(let y0=1;y0<sh-8;y0+=stride){
+    for(let x0=1;x0<sw-8;x0+=stride){
+      for(let bw=minBW;bw<sw-x0-1;bw+=stride){
+        const bh = Math.round(bw/targetAR);
+        if(bh<4||y0+bh>=sh) continue;
+
+        const ar = bw/bh;
+        const arScore = Math.max(0, 1-Math.abs(ar-targetAR)/arTol);
+        if(arScore < 0.3) continue; // reject bad aspect early
+
+        // Border edge density (want high = clear rectangle outline)
+        let bEdge=0, bTot=0;
+        // Top & bottom rows (sample every 2)
+        for(let x=x0;x<x0+bw;x+=2){
+          if(edge[y0*sw+x]>thr) bEdge++; bTot++;
+          if(edge[(y0+bh)*sw+x]>thr) bEdge++; bTot++;
+        }
+        // Left & right cols
+        for(let y=y0;y<y0+bh;y+=2){
+          if(edge[y*sw+x0]>thr) bEdge++; bTot++;
+          if(edge[y*sw+(x0+bw)]>thr) bEdge++; bTot++;
+        }
+        const borderDensity = bTot>0 ? bEdge/bTot : 0;
+
+        // Interior edge density (want LOW = uniform card face)
+        let iEdge=0, iTot=0;
+        for(let y=y0+2;y<y0+bh-2;y+=3){
+          for(let x=x0+2;x<x0+bw-2;x+=3){
+            if(edge[y*sw+x]>thr) iEdge++; iTot++;
+          }
+        }
+        const intDensity = iTot>0 ? iEdge/iTot : 1;
+
+        // Interior brightness uniformity (card face tends uniform)
+        let lumS=0, lumSq=0, lumN=0;
+        for(let y=y0+2;y<y0+bh-2;y+=3){
+          for(let x=x0+2;x<x0+bw-2;x+=3){
+            const l=gray[y*sw+x]; lumS+=l; lumSq+=l*l; lumN++;
+          }
+        }
+        const lumVar = lumN>0 ? lumSq/lumN-(lumS/lumN)**2 : 1;
+        const uniformScore = Math.max(0, 1-lumVar*12);
+
+        // Size reward: prefer larger boxes (larger = more likely full card)
+        const relArea = (bw*bh)/(sw*sh);
+        const sizeScore = Math.min(1, relArea/0.08); // saturates at 8% of frame
+
+        // Combined score — weight border and aspect heavily
+        const score = arScore*0.30 + borderDensity*0.35 + (1-intDensity)*0.15 + uniformScore*0.10 + sizeScore*0.10;
+
+        if(score > bestScore){
+          bestScore = score;
+          best = {x:x0*sc, y:y0*sc, w:bw*sc, h:bh*sc, confidence:score};
+        }
+      }
+    }
+  }
+
+  // Post-filter: reject if box is too small relative to frame
+  if(best && best.w < w*0.08) return null;
+  return best;
+}
+
+/* ══════════════════════
+   AUTO DETECT FOOT
+══════════════════════ */
+function autoDetectFoot(){
+  if(!S.refBox || !S.refConfirmed){ addW('error','Confirm reference box first.'); return; }
+  clearW();
+  addW('ok','<span class="spin"></span>Detecting foot region…');
+  const frame = grabFrame();
+  setTimeout(()=>{
+    clearW();
+    const box = detectFoot(frame);
+    if(box && box.confidence > 0.32){
+      S.footBox = box.dispBox;
+      S.footMethod = 'auto_bg_contrast';
+      redrawAll();
+      show('foot-confirm-row');
+      addW('ok','Foot region found (conf: '+Math.round(box.confidence*100)+'%). Check cyan box covers heel to longest toe. Confirm or reset.');
+    } else {
+      S.footBox = defaultFootBox();
+      S.footMethod = 'auto_fallback_manual';
+      redrawAll();
+      enableDragResize();
+      show('foot-confirm-row');
+      addW('caution','Auto foot detection uncertain. Drag the cyan box to cover heel → longest toe, then confirm.');
+    }
+    updateCaptureGate();
+  }, 800);
+}
+
+function detectFoot(frame){
+  const {data, w, h} = frame;
+  const sc = 4;
+  const sw = Math.floor(w/sc), sh = Math.floor(h/sc);
+
+  // Exclude reference box region (in video coords)
+  const rx = S.refBox ? Math.round(S.refBox.x * w/S.disW) : 0;
+  const ry = S.refBox ? Math.round(S.refBox.y * h/S.disH) : 0;
+  const rw = S.refBox ? Math.round(S.refBox.w * w/S.disW) : 0;
+  const rh = S.refBox ? Math.round(S.refBox.h * h/S.disH) : 0;
+
+  // Sample corners for background colour
+  let bgR=0,bgG=0,bgB=0,bgN=0;
+  const cornerSz = Math.min(sw,sh)/8|0;
+  [[0,0],[sw-cornerSz,0],[0,sh-cornerSz],[sw-cornerSz,sh-cornerSz]].forEach(([cx,cy])=>{
+    for(let dy=0;dy<cornerSz;dy++) for(let dx=0;dx<cornerSz;dx++){
+      const sy2=cy+dy,sx2=cx+dx;
+      const px=(sy2*sc)*w+(sx2*sc);
+      const i=px*4;
+      bgR+=data[i];bgG+=data[i+1];bgB+=data[i+2];bgN++;
+    }
+  });
+  if(bgN>0){bgR/=bgN;bgG/=bgN;bgB/=bgN;}
+
+  // Build foreground map
+  const fg = new Uint8Array(sw*sh);
+  for(let sy=0;sy<sh;sy++) for(let sx=0;sx<sw;sx++){
+    const px=(sy*sc)*w+(sx*sc);
+    const i=px*4;
+    const dr=data[i]-bgR,dg=data[i+1]-bgG,db=data[i+2]-bgB;
+    const diff=Math.sqrt(dr*dr+dg*dg+db*db);
+    // Exclude ref card area
+    const inRef=(sx*sc>=rx&&sx*sc<rx+rw&&sy*sc>=ry&&sy*sc<ry+rh);
+    fg[sy*sw+sx]=(diff>28&&!inRef)?1:0;
+  }
+
+  // Morphological open: erode then dilate to remove noise
+  const fg2 = morphOpen(fg, sw, sh, 2);
+
+  // Find bounding box of largest connected component
+  let minX=sw,maxX=0,minY=sh,maxY=0,cnt=0;
+  for(let sy=0;sy<sh;sy++) for(let sx=0;sx<sw;sx++){
+    if(fg2[sy*sw+sx]){ cnt++; if(sx<minX)minX=sx; if(sx>maxX)maxX=sx; if(sy<minY)minY=sy; if(sy>maxY)maxY=sy; }
+  }
+  if(cnt<30) return null;
+
+  const bwV=(maxX-minX)*sc, bhV=(maxY-minY)*sc;
+  const aspect = bwV>0&&bhV>0 ? Math.max(bwV,bhV)/Math.min(bwV,bhV) : 0;
+  const areaFrac=(bwV*bhV)/(w*h);
+  const aspectOk = aspect>1.3 && aspect<4.2;
+  const sizeOk   = areaFrac>0.035 && areaFrac<0.70;
+
+  const conf = (aspectOk?0.45:0.1)+(sizeOk?0.35:0.08)+(cnt/(sw*sh)>0.04?0.2:0.05);
+
+  const dispBox = {
+    x: Math.round(minX*sc * S.disW/w),
+    y: Math.round(minY*sc * S.disH/h),
+    w: Math.round(bwV    * S.disW/w),
+    h: Math.round(bhV    * S.disH/h),
+  };
+  return {dispBox, confidence: Math.min(1,conf)};
+}
+
+function morphOpen(map, w, h, r){
+  // Simple erosion then dilation
+  const tmp = new Uint8Array(w*h);
+  const out = new Uint8Array(w*h);
+  // Erode
+  for(let y=r;y<h-r;y++) for(let x=r;x<w-r;x++){
+    let all=1;
+    outer: for(let dy=-r;dy<=r;dy++) for(let dx=-r;dx<=r;dx++) if(!map[(y+dy)*w+(x+dx)]){all=0;break outer;}
+    tmp[y*w+x]=all;
+  }
+  // Dilate
+  for(let y=r;y<h-r;y++) for(let x=r;x<w-r;x++){
+    let any=0;
+    outer2: for(let dy=-r;dy<=r;dy++) for(let dx=-r;dx<=r;dx++) if(tmp[(y+dy)*w+(x+dx)]){any=1;break outer2;}
+    out[y*w+x]=any;
+  }
+  return out;
+}
+
+/* ══════════════════════
+   MANUAL DRAW MODE
+   User draws a new box on the canvas
+══════════════════════ */
+function startManualRef(){
+  S.drawMode = 'ref';
+  activateDragCanvas('Draw card box: drag from one corner to opposite corner', '#e8a840');
+}
+function startManualFoot(){
+  if(!S.refConfirmed){ addW('error','Confirm reference box first.'); return; }
+  S.drawMode = 'foot';
+  activateDragCanvas('Draw foot box: drag from heel corner to toe corner', '#a8c4d8');
+}
+function activateDragCanvas(hint, color){
+  dCvs.style.display = 'block';
+  dCvs.style.cursor  = 'crosshair';
+  clearW();
+  addW('caution', hint + ' — lift finger/mouse to finish.');
+  // Clear overlay hint
+  oCtx.clearRect(0,0,oCvs.width,oCvs.height);
+  redrawAll();
+}
+
+/* ══════════════════════
+   DRAG / RESIZE
+   After a box exists, user can drag body or pull handles
+══════════════════════ */
+const HANDLE_R = 24; // iPad touch-friendly handle radius px (v5: increased from 18)
+
+function enableDragResize(){
+  dCvs.style.display = 'block';
+  dCvs.style.cursor  = 'default';
+}
+
+function getActiveBox(){ return S.drawMode==='foot'||(S.footBox&&!S.footConfirmed&&S.refConfirmed) ? 'foot' : 'ref'; }
+function getBox(type){ return type==='foot' ? S.footBox : S.refBox; }
+function setBox(type, box){ if(type==='foot') S.footBox=box; else S.refBox=box; }
+
+// Determine if point is on a handle (corner or edge midpoint)
+function hitHandle(box, px, py){
+  if(!box) return null;
+  const {x,y,w,h}=box;
+  const handles=[
+    {id:'tl',hx:x,     hy:y     },
+    {id:'tr',hx:x+w,   hy:y     },
+    {id:'bl',hx:x,     hy:y+h   },
+    {id:'br',hx:x+w,   hy:y+h   },
+    {id:'tc',hx:x+w/2, hy:y     },
+    {id:'bc',hx:x+w/2, hy:y+h   },
+    {id:'ml',hx:x,     hy:y+h/2 },
+    {id:'mr',hx:x+w,   hy:y+h/2 },
+  ];
+  for(const h of handles){
+    const dx=px-h.hx,dy=py-h.hy;
+    if(dx*dx+dy*dy<HANDLE_R*HANDLE_R) return h.id;
+  }
+  return null;
+}
+function hitBody(box, px, py){
+  if(!box) return false;
+  return px>=box.x&&px<=box.x+box.w&&py>=box.y&&py<=box.y+box.h;
+}
+
+function resizeBox(box, handleId, dx, dy){
+  let {x,y,w,h}=box;
+  if(handleId.includes('l')){ x+=dx; w-=dx; }
+  if(handleId.includes('r')){ w+=dx; }
+  if(handleId.includes('t')){ y+=dy; h-=dy; }
+  if(handleId.includes('b')){ h+=dy; }
+  if(handleId==='ml'){ x+=dx; w-=dx; }
+  if(handleId==='mr'){ w+=dx; }
+  if(handleId==='tc'){ y+=dy; h-=dy; }
+  if(handleId==='bc'){ h+=dy; }
+  // Minimum size
+  if(w<20) w=20; if(h<20) h=20;
+  // Clamp to canvas
+  x=Math.max(0,x); y=Math.max(0,y);
+  if(x+w>S.disW) w=S.disW-x;
+  if(y+h>S.disH) h=S.disH-y;
+  return {x,y,w,h};
+}
+
+// Unified pointer handler
+function getCanvasPt(e){
+  const rect = dCvs.getBoundingClientRect();
+  const touch = e.touches ? e.touches[0] : e;
+  return {
+    x: (touch.clientX - rect.left) * (dCvs.width/rect.width),
+    y: (touch.clientY - rect.top)  * (dCvs.height/rect.height),
+  };
+}
+
+dCvs.addEventListener('pointerdown', onPD, {passive:false});
+dCvs.addEventListener('pointermove', onPM, {passive:false});
+dCvs.addEventListener('pointerup',   onPU, {passive:false});
+dCvs.addEventListener('pointercancel', onPU);
+
+function onPD(e){
+  e.preventDefault();
+  const pt = getCanvasPt(e);
+
+  if(S.drawMode){
+    // Draw new box
+    S.drawStart = pt;
+    S.drag = {type:'draw'};
+    return;
+  }
+
+  // Hit-test: foot box takes priority if not confirmed, else ref
+  const testOrder = S.footBox && !S.footConfirmed && S.refConfirmed
+    ? [['foot',S.footBox],['ref',S.refBox]]
+    : [['ref',S.refBox],['foot',S.footBox]];
+
+  for(const [type, box] of testOrder){
+    if(!box) continue;
+    const h = hitHandle(box, pt.x, pt.y);
+    if(h){ S.drag={type:'resize', boxType:type, handleId:h, lastX:pt.x, lastY:pt.y}; return; }
+    if(hitBody(box, pt.x, pt.y)){ S.drag={type:'move', boxType:type, lastX:pt.x, lastY:pt.y}; return; }
+  }
+}
+
+function onPM(e){
+  e.preventDefault();
+  if(!S.drag) return;
+  const pt = getCanvasPt(e);
+
+  if(S.drag.type==='draw' && S.drawStart){
+    const x=Math.min(pt.x,S.drawStart.x), y=Math.min(pt.y,S.drawStart.y);
+    const w=Math.abs(pt.x-S.drawStart.x), h=Math.abs(pt.y-S.drawStart.y);
+    const box={x:Math.max(0,x),y:Math.max(0,y),w:Math.min(w,S.disW-x),h:Math.min(h,S.disH-y)};
+    if(S.drawMode==='ref') S.refBox=box; else S.footBox=box;
+    redrawAll(); return;
+  }
+
+  if(S.drag.type==='move'){
+    const dx=pt.x-S.drag.lastX, dy=pt.y-S.drag.lastY;
+    const box=getBox(S.drag.boxType);
+    if(box){
+      const nb={x:box.x+dx,y:box.y+dy,w:box.w,h:box.h};
+      nb.x=Math.max(0,Math.min(nb.x,S.disW-nb.w));
+      nb.y=Math.max(0,Math.min(nb.y,S.disH-nb.h));
+      setBox(S.drag.boxType,nb);
+    }
+    S.drag.lastX=pt.x; S.drag.lastY=pt.y;
+    redrawAll(); return;
+  }
+
+  if(S.drag.type==='resize'){
+    const dx=pt.x-S.drag.lastX, dy=pt.y-S.drag.lastY;
+    const box=getBox(S.drag.boxType);
+    if(box) setBox(S.drag.boxType, resizeBox(box,S.drag.handleId,dx,dy));
+    S.drag.lastX=pt.x; S.drag.lastY=pt.y;
+    redrawAll(); return;
+  }
+}
+
+function onPU(e){
+  if(!S.drag) return;
+  if(S.drag.type==='draw' && S.drawMode){
+    // Finish draw
+    const type = S.drawMode;
+    S.drawMode = null;
+    S.drag = null;
+    dCvs.style.cursor = 'default';
+    if(type==='ref'){
+      S.refMethod = 'manual_draw';
+      show('ref-confirm-row');
+      addW('caution','Card box drawn manually. Adjust handles if needed, then confirm.');
+    } else {
+      S.footMethod = 'manual_draw';
+      show('foot-confirm-row');
+      addW('caution','Foot box drawn manually. Adjust handles if needed, then confirm.');
+    }
+    redrawAll();
+    updateCaptureGate();
+    return;
+  }
+  S.drag = null;
+}
+
+// Cursor update on hover
+dCvs.addEventListener('mousemove', function(e){
+  if(S.drag||S.drawMode) return;
+  const pt = getCanvasPt(e);
+  const pairs=[['foot',S.footBox],['ref',S.refBox]];
+  for(const [,box] of pairs){
+    if(!box) continue;
+    const h=hitHandle(box,pt.x,pt.y);
+    if(h){ dCvs.style.cursor=cursorForHandle(h); return; }
+    if(hitBody(box,pt.x,pt.y)){ dCvs.style.cursor='move'; return; }
+  }
+  dCvs.style.cursor='default';
+});
+
+function cursorForHandle(h){
+  if(h==='tl'||h==='br') return 'nwse-resize';
+  if(h==='tr'||h==='bl') return 'nesw-resize';
+  if(h==='tc'||h==='bc') return 'ns-resize';
+  if(h==='ml'||h==='mr') return 'ew-resize';
+  return 'pointer';
+}
+
+/* ══════════════════════
+   CONFIRM BOXES
+══════════════════════ */
+function confirmRef(){
+  if(!S.refBox||S.refBox.w<20||S.refBox.h<20){ addW('error','Reference box too small. Redraw.'); return; }
+  S.refConfirmed = true;
+
+  // Compute px/mm from the confirmed box
+  const pxW = S.refBox.w / CARD_W;
+  const pxH = S.refBox.h / CARD_H;
+  S.pixPerMM = (pxW + pxH) / 2;
+
+  // Show px/mm strip
+  const strip = el('pxmm-strip');
+  strip.style.display = 'flex';
+  el('pxmm-val').textContent = S.pixPerMM.toFixed(3);
+  const quality = S.pixPerMM > 1.5 ? 'GOOD SCALE' : S.pixPerMM > 0.5 ? 'USABLE' : 'TOO SMALL — move closer';
+  el('pxmm-status').textContent = quality;
+  el('pxmm-status').style.color = S.pixPerMM > 0.8 ? 'var(--zgr)' : 'var(--zr)';
+
+  hide('ref-confirm-row');
+  S.step = 2; stepUI(2);
+  show('foot-row');
+  document.getElementById('btn-autofoot').disabled = false;
+  document.getElementById('btn-manfoot').disabled  = false;
+  clearW();
+  addW('ok','Reference confirmed. px/mm = '+S.pixPerMM.toFixed(3)+'. Now detect foot region.');
+  redrawAll();
+  updateCaptureGate();
+}
+
+function resetRef(){
+  S.refBox=null; S.refConfirmed=false; S.pixPerMM=null;
+  S.footBox=null; S.footConfirmed=false;
+  hide('ref-confirm-row'); hide('foot-row'); hide('foot-confirm-row'); hide('capture-row');
+  el('pxmm-strip').style.display='none';
+  clearW();
+  addW('caution','Reference reset. Auto-detect or draw the card box again.');
+  redrawAll(); updateCaptureGate();
+}
+
+function confirmFoot(){
+  if(!S.footBox||S.footBox.w<20||S.footBox.h<20){ addW('error','Foot box too small. Redraw.'); return; }
+  // ── v4: run validation before confirming ──
+  const preWarns = validateBoxes();
+  S.boxWarnings = preWarns;
+  const hasErrors = preWarns.some(w => w.type === 'error');
+  if(hasErrors){
+    clearW();
+    preWarns.forEach(w => addW(w.type, w.msg));
+    addW('error','Foot box cannot be confirmed due to validation errors above. Fix and try again.');
+    redrawAll();
+    updateCaptureGate();
+    return;
+  }
+  S.footConfirmed = true;
+  hide('foot-confirm-row');
+  S.step = 3; stepUI(3);
+  show('capture-row');
+  clearW();
+  preWarns.forEach(w => addW(w.type, w.msg));
+  addW('ok','Foot confirmed. Review warnings above, then capture measurement.');
+  redrawAll();
+  updateCaptureGate();
+}
+
+function resetFoot(){
+  S.footBox=null; S.footConfirmed=false;
+  hide('foot-confirm-row'); hide('capture-row');
+  clearW();
+  addW('caution','Foot box reset. Auto-detect or draw the foot box again.');
+  redrawAll(); updateCaptureGate();
+}
+
+function validateBoxes(){
+  const warns = [];
+
+  // ── BORDER-TOUCH REJECTION (v4 patch port) ──
+  if(S.refBox){
+    const b = S.refBox;
+    if(b.x<=BORDER_MARGIN||b.y<=BORDER_MARGIN||
+       (b.x+b.w)>=S.disW-BORDER_MARGIN||(b.y+b.h)>=S.disH-BORDER_MARGIN){
+      warns.push({type:'error', msg:'Reference card touches frame edge — move camera or reposition card so all boundaries are visible.'});
+    }
+  }
+  if(S.footBox){
+    const b = S.footBox;
+    if(b.x<=BORDER_MARGIN||b.y<=BORDER_MARGIN||
+       (b.x+b.w)>=S.disW-BORDER_MARGIN||(b.y+b.h)>=S.disH-BORDER_MARGIN){
+      warns.push({type:'error', msg:'Foot touches frame edge — heel or toes may be clipped. Re-frame to show full foot.'});
+    }
+  }
+
+  // ── FOOT ASPECT RATIO GATE (v4 patch port) ──
+  if(S.footBox){
+    const ar = S.footBox.w / Math.max(S.footBox.h, 1);
+    if(ar < FOOT_ASPECT_MIN || ar > FOOT_ASPECT_MAX){
+      warns.push({type:'error', msg:'Foot box shape does not match expected foot proportions (w/h 0.22–0.55). Redraw or reposition box.'});
+    }
+  }
+
+  // ── REFERENCE NOT CONFIRMED GUARD (v4 patch port) ──
+  if(!S.refConfirmed){
+    warns.push({type:'error', msg:'No reference card confirmed — scale cannot be computed.'});
+  }
+
+  if(!S.pixPerMM) return warns;
+
+  // ── Existing hard range checks ──
+  const fl = S.footBox ? S.footBox.h / S.pixPerMM : 0;
+  const fw = S.footBox ? S.footBox.w / S.pixPerMM : 0;
+  if(fl<150||fl>360) warns.push({type:'error',  msg:'Estimated length '+Math.round(fl)+'mm is outside typical adult range (150–360mm). Recheck foot box or card placement.'});
+  if(fw<55||fw>160)  warns.push({type:'error',  msg:'Estimated width '+Math.round(fw)+'mm is outside typical adult range (55–160mm). Recheck foot box.'});
+  if(fl>0&&fw>0&&fw>fl*0.75) warns.push({type:'caution',msg:'Width ≥ 75% of length — foot box may not be oriented correctly. Length axis should be the longer dimension.'});
+  if(S.pixPerMM < 0.8) warns.push({type:'caution',msg:'px/mm ratio '+S.pixPerMM.toFixed(3)+' is low — camera may be too far away. Measurements will be less accurate.'});
+  if(S.qualScore < 55) warns.push({type:'caution',msg:'Image quality score '+S.qualScore+'% — improve lighting for better accuracy.'});
+
+  // ── TIGHTER RANGE WARNINGS (v4 patch port — advisory only) ──
+  if(fl>0 && (fl < WARN_LEN_MIN || fl > WARN_LEN_MAX)){
+    warns.push({type:'caution', msg:'Length '+Math.round(fl)+'mm falls outside the typical 180–340mm range. Check box placement.'});
+  }
+  if(fw>0 && (fw < WARN_WID_MIN || fw > WARN_WID_MAX)){
+    warns.push({type:'caution', msg:'Width '+Math.round(fw)+'mm falls outside the typical 60–130mm range. Check box placement.'});
+  }
+  warns.push({type:'caution',msg:'Perspective distortion possible if camera not held perpendicular to floor.'});
+  warns.push({type:'caution',msg:'Validate against manual tape measurement before any production use.'});
+  return warns;
+}
+
+/* ══════════════════════
+   CAPTURE GATE
+   Capture only enabled when camera + ref confirmed + foot confirmed
+══════════════════════ */
+function updateCaptureGate(){
+  const gate = S.stream && S.refConfirmed && S.footConfirmed;
+  const btn = el('btn-capture');
+  if(btn){ btn.disabled = !gate; }
+}
+
+/* ══════════════════════
+   CAPTURE MEASUREMENT
+══════════════════════ */
+function captureMeasurement(){
+  if(!S.stream||!S.refConfirmed||!S.footConfirmed){
+    addW('error','Camera, reference, and foot box must all be confirmed before capturing.');
+    return;
+  }
+
+  const fl = S.footBox.h / S.pixPerMM;
+  const fw = S.footBox.w / S.pixPerMM;
+
+  // Sanity
+  const saneLen = fl>=150&&fl<=360;
+  const saneWid = fw>=55&&fw<=160;
+  const aspectOk = fw < fl*0.8;
+
+  // Confidence
+  const lightF  = Math.min(1, S.qualScore/100);
+  const refSzF  = Math.min(1, (S.refBox.w*S.refBox.h)/(S.disW*S.disH*0.04));
+  const saneF   = (saneLen&&saneWid)?1.0:0.4;
+  const aspF    = aspectOk?1.0:0.55;
+  const methF   = (S.refMethod.includes('manual')||S.footMethod.includes('manual'))?0.75:1.0;
+  const conf    = Math.round((lightF*0.2+refSzF*0.25+saneF*0.25+aspF*0.15+methF*0.15)*100);
+
+  const warns = [
+    ...(saneLen?[]:[`Length ${Math.round(fl)}mm outside typical adult range`]),
+    ...(saneWid?[]:[`Width ${Math.round(fw)}mm outside typical adult range`]),
+    ...(!aspectOk?['Unexpected width/length ratio — verify box orientation']:[]),
+    ...(S.pixPerMM<0.8?['Low px/mm ratio — camera may be too far from subject']:[]),
+    ...(S.qualScore<55?['Low image quality — check lighting']:[]),
+    'Perspective distortion may affect scale — hold camera perpendicular to floor',
+    'No depth correction applied — assumes flat, horizontal foot and card',
+    'Requires validation against manual tape measurement',
+  ];
+
+  S.result = {
+    schema_version: '5.0',
+    timestamp: new Date().toISOString(),
+    mode: 'internal_rnd_engineering_camera_scan',
+    reference_object: {
+      name: 'ISO/IEC 7810 ID-1 card',
+      real_width_mm: CARD_W,
+      real_height_mm: CARD_H,
+      box_px: {x:Math.round(S.refBox.x),y:Math.round(S.refBox.y),w:Math.round(S.refBox.w),h:Math.round(S.refBox.h)},
+    },
+    reference_detection_method: S.refMethod,
+    foot_detection_method: S.footMethod,
+    image_resolution: {video_w:S.vidW, video_h:S.vidH, display_w:S.disW, display_h:S.disH},
+    image_quality_score: S.qualScore,
+    image_brightness_score: S.brightScore,
+    px_per_mm: parseFloat(S.pixPerMM.toFixed(4)),
+    foot_box_px: {x:Math.round(S.footBox.x),y:Math.round(S.footBox.y),w:Math.round(S.footBox.w),h:Math.round(S.footBox.h)},
+    estimated_foot_length_mm: parseFloat(fl.toFixed(1)),
+    estimated_foot_width_mm:  parseFloat(fw.toFixed(1)),
+    estimated_foot_index:     parseFloat((fw/fl*100).toFixed(1)),
+    size_estimates: {
+      note: 'Approximate. Verify against brand-specific chart. ISO 19407.',
+      mondopoint: Math.round(fl/5)*5,
+      eu:  Math.round((fl/10)*1.5+2),
+      us_mens:   Math.round((fl/8.467)-22.5),
+      us_womens: Math.round((fl/8.467)-21.0),
+      uk:        Math.round((fl/8.467)-23.0),
+      jp_cm:     parseFloat((fl/10).toFixed(1)),
+    },
+    confidence_score: conf,
+    confidence_factors:{
+      lighting:     Math.round(lightF*100),
+      reference_size: Math.round(refSzF*100),
+      sanity_range: Math.round(saneF*100),
+      aspect_ratio: Math.round(aspF*100),
+      detection_method: Math.round(methF*100),
+    },
+    warnings: warns,
+    border_rejection: {
+      ref_touches_border: S.refBox ? (S.refBox.x<=BORDER_MARGIN||S.refBox.y<=BORDER_MARGIN||
+        (S.refBox.x+S.refBox.w)>=S.disW-BORDER_MARGIN||(S.refBox.y+S.refBox.h)>=S.disH-BORDER_MARGIN) : null,
+      foot_touches_border: S.footBox ? (S.footBox.x<=BORDER_MARGIN||S.footBox.y<=BORDER_MARGIN||
+        (S.footBox.x+S.footBox.w)>=S.disW-BORDER_MARGIN||(S.footBox.y+S.footBox.h)>=S.disH-BORDER_MARGIN) : null,
+    },
+    foot_aspect_ratio: {
+      w_h_ratio: S.footBox ? parseFloat((S.footBox.w/Math.max(S.footBox.h,1)).toFixed(3)) : null,
+      expected_range: { min: FOOT_ASPECT_MIN, max: FOOT_ASPECT_MAX },
+    },
+    non_medical_boundary: NON_MEDICAL_BOUNDARY,
+    needs_human_review: true,
+    needs_specialist_review: true,
+    internal_rnd_only: true,
+    public_release_approved: false,
+    no_diagnosis: true,
+    no_treatment_claims: true,
+    error_estimate_note: 'Typical 2D image-based error ±3–8mm. Validate against manual tape.',
+    generated_by: 'ZILFIT LiveFit v5 · Internal R&D',
+  };
+
+  renderResult(S.result);
+  S.step = 4; stepUI(4);
+  show('post-row'); hide('capture-row');
+  dCvs.style.display = 'none'; // lock interaction
+}
+
+/* ══════════════════════
+   RENDER RESULT
+══════════════════════ */
+function renderResult(r){
+  const rc = el('result-card');
+  rc.style.display='block';
+  const chip = el('conf-chip');
+  chip.textContent = r.confidence_score+'% CONF';
+  chip.className = 'conf-chip '+(r.confidence_score>=65?'high':r.confidence_score>=40?'med':'low');
+
+  el('r-len').innerHTML  = Math.round(r.estimated_foot_length_mm)+'<span class="meas-unit">mm</span>';
+  el('r-wid').innerHTML  = Math.round(r.estimated_foot_width_mm) +'<span class="meas-unit">mm</span>';
+  el('r-pxmm').textContent = r.px_per_mm.toFixed(3);
+  el('r-conf').innerHTML = r.confidence_score+'<span class="meas-unit">%</span>';
+  const mth = r.reference_detection_method+' / '+r.foot_detection_method;
+  el('r-det').textContent = mth.length>30?mth.substring(0,30)+'…':mth;
+
+  const s = r.size_estimates;
+  el('sizes-row').innerHTML=[['EU',s.eu],['US M',s.us_mens],['US W',s.us_womens],['UK',s.uk],['JP',s.jp_cm+' cm'],['Mondo',s.mondopoint]]
+    .map(([k,v])=>`<div class="sz-chip"><span>${k}</span> ${v}</div>`).join('');
+
+  el('spec-banner').style.display='block';
+  clearW();
+  r.warnings.forEach(w=>addW('caution',w));
+  if(r.confidence_score>=65) addW('ok','Measurement captured. Confidence: '+r.confidence_score+'%.');
+  else addW('caution','Low confidence ('+r.confidence_score+'%). Verify box placement and lighting before relying on this estimate.');
+
+  renderJSON(r);
+}
+
+/* ══════════════════════
+   OVERLAY DRAW
+══════════════════════ */
+function redrawAll(){
+  oCtx.clearRect(0,0,oCvs.width,oCvs.height);
+  if(S.step>=1&&video.readyState>=2){
+    // subtle video overlay hint (transparent)
+  }
+  drawBox(S.refBox,  '#e8a840', 'REF CARD', S.refConfirmed);
+  drawBox(S.footBox, '#a8c4d8', 'FOOT',     S.footConfirmed);
+  // Draw handles only on unconfirmed, active box
+  if(S.refBox  && !S.refConfirmed)  drawHandles(S.refBox,  '#e8a840');
+  if(S.footBox && !S.footConfirmed) drawHandles(S.footBox, '#a8c4d8');
+  // Dimension lines when foot confirmed
+  if(S.footBox && S.footConfirmed && S.pixPerMM){
+    const fl=Math.round(S.footBox.h/S.pixPerMM), fw=Math.round(S.footBox.w/S.pixPerMM);
+    const b=S.footBox;
+    arrowLine(b.x,b.y+b.h+14,b.x+b.w,b.y+b.h+14,'rgba(168,196,216,.7)');
+    arrowLine(b.x-16,b.y,b.x-16,b.y+b.h,'rgba(168,196,216,.7)');
+    oCtx.fillStyle='rgba(168,196,216,.9)';
+    oCtx.font='bold 11px "Courier New"';
+    oCtx.fillText(fw+'mm',b.x+b.w/2-18,b.y+b.h+26);
+    oCtx.fillText(fl+'mm',b.x-60,b.y+b.h/2+4);
+  }
+}
+
+function drawBox(box, color, label, confirmed){
+  if(!box) return;
+  const {x,y,w,h}=box;
+  oCtx.save();
+  oCtx.strokeStyle = color;
+  oCtx.lineWidth   = confirmed ? 2 : 1.5;
+  oCtx.setLineDash(confirmed ? [] : [7,4]);
+  oCtx.strokeRect(x,y,w,h);
+  oCtx.fillStyle = color.replace(')',', 0.06)').replace('rgb','rgba').replace('#','').length>6
+    ? hexAlpha(color,.06) : hexAlpha(color,.06);
+  oCtx.fillRect(x,y,w,h);
+  // Corner ticks
+  oCtx.setLineDash([]);
+  oCtx.lineWidth=2;
+  [[x,y,1,1],[x+w,y,-1,1],[x,y+h,1,-1],[x+w,y+h,-1,-1]].forEach(([cx,cy,sx,sy])=>{
+    const L=10;
+    oCtx.beginPath();oCtx.moveTo(cx+sx*L,cy);oCtx.lineTo(cx,cy);oCtx.lineTo(cx,cy+sy*L);oCtx.stroke();
+  });
+  // Label
+  oCtx.fillStyle=color;
+  oCtx.font='bold 10px "Courier New"';
+  oCtx.fillText(label+(confirmed?' ✓':''), x+4, Math.max(10, y-4));
+  oCtx.restore();
+}
+
+function hexAlpha(hex, a){
+  const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${a})`;
+}
+
+function drawHandles(box, color){
+  if(!box) return;
+  const {x,y,w,h}=box;
+  const pts=[[x,y],[x+w,y],[x,y+h],[x+w,y+h],[x+w/2,y],[x+w/2,y+h],[x,y+h/2],[x+w,y+h/2]];
+  oCtx.save();
+  pts.forEach(([hx,hy])=>{
+    oCtx.beginPath();
+    oCtx.arc(hx,hy,HANDLE_R/2,0,Math.PI*2);
+    oCtx.fillStyle=hexAlpha(color,.25);
+    oCtx.fill();
+    oCtx.strokeStyle=color;oCtx.lineWidth=1.5;oCtx.stroke();
+  });
+  oCtx.restore();
+}
+
+function arrowLine(x1,y1,x2,y2,color){
+  oCtx.save();
+  oCtx.strokeStyle=color;oCtx.fillStyle=color;oCtx.lineWidth=1;
+  oCtx.beginPath();oCtx.moveTo(x1,y1);oCtx.lineTo(x2,y2);oCtx.stroke();
+  [[x1,y1,Math.atan2(y2-y1,x2-x1)+Math.PI],[x2,y2,Math.atan2(y2-y1,x2-x1)]].forEach(([ax,ay,a])=>{
+    oCtx.beginPath();oCtx.moveTo(ax,ay);oCtx.lineTo(ax-6*Math.cos(a-.4),ay-6*Math.sin(a-.4));oCtx.lineTo(ax-6*Math.cos(a+.4),ay-6*Math.sin(a+.4));oCtx.closePath();oCtx.fill();
+  });
+  oCtx.restore();
+}
+
+// Continuous overlay loop
+(function loop(){
+  if(S.step>=1 && S.step<4 && video.readyState>=2) redrawAll();
+  requestAnimationFrame(loop);
+})();
+
+/* ══════════════════════
+   DEFAULTS
+══════════════════════ */
+function defaultRefBox(){
+  return {x:Math.round(S.disW*.05),y:Math.round(S.disH*.05),w:Math.round(S.disW*.22),h:Math.round(S.disW*.22/CARD_ASPECT)};
+}
+function defaultFootBox(){
+  return {x:Math.round(S.disW*.28),y:Math.round(S.disH*.12),w:Math.round(S.disW*.38),h:Math.round(S.disH*.62)};
+}
+
+/* ══════════════════════
+   GRAB FRAME
+══════════════════════ */
+function grabFrame(){
+  const vw=video.videoWidth||640, vh=video.videoHeight||480;
+  const c=document.createElement('canvas');
+  c.width=vw; c.height=vh;
+  const x=c.getContext('2d');
+  x.drawImage(video,0,0,vw,vh);
+  return {data:x.getImageData(0,0,vw,vh).data, w:vw, h:vh};
+}
+
+function scaleToDisplay(box, fromW, fromH){
+  return {x:Math.round(box.x*S.disW/fromW),y:Math.round(box.y*S.disH/fromH),w:Math.round(box.w*S.disW/fromW),h:Math.round(box.h*S.disH/fromH)};
+}
+
+/* ══════════════════════
+   JSON
+══════════════════════ */
+function renderJSON(r){
+  const raw=JSON.stringify(r,null,2);
+  el('json-out').innerHTML=raw
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"([^"]+)":/g,'<span class="jk">"$1"</span>:')
+    .replace(/: "([^"]*?)"/g,': <span class="jvs">"$1"</span>')
+    .replace(/: ([\d.]+)/g,': <span class="jvn">$1</span>')
+    .replace(/: (true|false)/g,': <span class="jvb">$1</span>');
+}
+function toggleJSON(){
+  const p=el('json-panel');
+  p.style.display=p.style.display==='block'?'none':'block';
+}
+function copyJSON(){
+  if(!S.result){addW('caution','No data to copy.');return;}
+  navigator.clipboard.writeText(JSON.stringify(S.result,null,2)).then(()=>{
+    const b=document.querySelector('.json-copy');
+    const o=b.textContent; b.textContent='Copied ✓';
+    setTimeout(()=>b.textContent=o,1800);
+  }).catch(()=>{
+    const r=document.createRange();
+    r.selectNode(el('json-out'));
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(r);
+  });
+}
+
+/* ══════════════════════
+   RESET
+══════════════════════ */
+function resetAll(){
+  if(S.stream){S.stream.getTracks().forEach(t=>t.stop());S.stream=null;}
+  video.srcObject=null;
+  Object.assign(S,{step:0,vidW:0,vidH:0,refBox:null,refConfirmed:false,footBox:null,footConfirmed:false,
+    refMethod:'none',footMethod:'none',pixPerMM:null,result:null,drag:null,drawMode:null,drawStart:null,
+    qualScore:0,brightScore:0});
+  oCtx.clearRect(0,0,oCvs.width,oCvs.height);
+  dCtx.clearRect(0,0,dCvs.width,dCvs.height);
+  dCvs.style.display='none';
+  document.getElementById('cam-placeholder').style.display='flex';
+  badgeLive('IDLE',false);
+  document.getElementById('quality-strip').style.display='none';
+  el('pxmm-strip').style.display='none';
+  el('result-card').style.display='none';
+  el('json-panel').style.display='none';
+  el('spec-banner').style.display='none';
+  setBtnState('btn-cam',false,'▶ Start Camera');
+  document.getElementById('btn-cam').style.display='';
+  ['ref-row','ref-confirm-row','foot-row','foot-confirm-row','capture-row','post-row'].forEach(hide);
+  clearW(); stepUI(0);
+}
+
+/* ══════════════════════
+   STEP UI
+══════════════════════ */
+const STEP_HINTS=['','Place ID/bank card beside your foot on the same flat surface.','Keep foot flat and fully in frame — heel to longest toe visible.','Review boxes and warnings before confirming.','Measurement complete. Review results below.'];
+const STEP_LABELS=['Start','Card','Foot','Confirm','Done'];
+function stepUI(s){
+  for(let i=0;i<5;i++){
+    const d=el('sd'+i);
+    if(d) d.className='step-dot'+(i===s?' active':i<s?' done':'');
+    if(i<4){const l=el('sl'+i);if(l)l.className='step-line'+(i<s?' done':'');}
+  }
+  el('step-label').innerHTML=`Step ${Math.min(s+1,5)} of 5 — <span>${STEP_LABELS[s]||STEP_LABELS[4]}</span>`;
+  const hint = el('step-hint');
+  if(hint && s>0 && s<5){ hint.style.display='block'; hint.textContent='💡 '+STEP_HINTS[s]; }
+  else if(hint) hint.style.display='none';
+}
+
+/* ══════════════════════
+   GUIDANCE / LIMITS TOGGLES
+══════════════════════ */
+function toggleGuidance(){
+  const b=el('guid-body');
+  const t=el('guid-tog');
+  const open=b.style.display==='block';
+  b.style.display=open?'none':'block';
+  t.textContent=open?'▾ Show':'▴ Hide';
+}
+function toggleLimits(){
+  const b=el('lim-body');
+  const t=el('lim-tog');
+  const open=b.style.display==='block';
+  b.style.display=open?'none':'block';
+  t.textContent=open?'▾ Show':'▴ Hide';
+}
+
+function retakeMeasurement(){
+  // v5: soft retake — clears result but keeps boxes and camera stream
+  S.result = null;
+  S.step = 3;
+  el('result-card').style.display='none';
+  el('json-panel').style.display='none';
+  el('spec-banner').style.display='none';
+  hide('post-row');
+  show('capture-row');
+  dCvs.style.display='block';
+  el('btn-capture').disabled = false;
+  clearW();
+  addW('ok','Ready to retake. Reposition the foot if needed, then capture again.');
+  stepUI(3);
+}
+
+/* ══════════════════════
+   UTILS
+══════════════════════ */
+function el(id){return document.getElementById(id);}
+function show(id){const e=el(id);if(e)e.style.display='flex';}
+function hide(id){const e=el(id);if(e)e.style.display='none';}
+function badgeLive(txt,live){
+  const e=el('cam-badge');e.textContent=txt;
+  e.className=live?'cam-badge live':'cam-badge';
+}
+function setBtnState(id,loading,html){const b=el(id);b.innerHTML=html;b.disabled=loading;}
+function clearW(){el('warn-list').innerHTML='';}
+function addW(type,msg){
+  const icon={ok:'✓',caution:'⚠',error:'✕'}[type]||'·';
+  const d=document.createElement('div');
+  d.className=`warn-item ${type} fadein`;
+  d.innerHTML=`<span class="warn-icon">${icon}</span><span>${msg}</span>`;
+  el('warn-list').appendChild(d);
+}
+if(!window.requestAnimationFrame) window.requestAnimationFrame=cb=>setTimeout(cb,1000/30);
+</script>
+</body>
+</html>
