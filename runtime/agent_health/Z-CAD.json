@@ -1,12 +1,12 @@
 {
   "agent": "Z-CAD",
-  "status": "idle",
-  "current_task": "No active task assigned in C6.",
-  "last_run_utc": null,
+  "status": "ready",
+  "current_task": "D17 readiness — verify CAD integration health post-inventory",
+  "last_run_utc": "2026-05-12T01:10:45Z",
   "last_report_path": null,
   "last_failure": null,
-  "next_sultan_action": "Review C6 heartbeat baseline.",
-  "source_files": [],
-  "confidence": "baseline",
-  "updated_by": "Phase C6 manual baseline"
+  "next_sultan_action": "Review CAD agent health report and approve D17 baseline",
+  "source_files": ["runtime/agent_health/Z-CAD.json"],
+  "confidence": "refreshed",
+  "updated_by": "Phase D17 agent health refresh"
 }
