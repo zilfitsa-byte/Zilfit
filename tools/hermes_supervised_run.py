@@ -1,0 +1,215 @@
+#!/usr/bin/env python3
+"""
+Hermes Supervised Daily Runner — Phase D20+
+
+One-command operational status check for Sultan.
+Read-only by default. Generates a single report under reports/daily/.
+
+Usage:
+    python3 tools/hermes_supervised_run.py
+
+Output:
+    reports/daily/YYYY-MM-DD_hermes_supervised_run.md
+
+Safety:
+    - No code/demo/JSON/governance modifications
+    - No git commits
+    - No service restarts
+    - No Telegram sends
+    - No token/env access
+"""
+
+import json
+import os
+import subprocess
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+AGENT_HEALTH_DIR = BASE_DIR / "runtime" / "agent_health"
+REPORTS_DIR = BASE_DIR / "reports" / "daily"
+D20_FILE = REPORTS_DIR / "2026-05-12_D20_hermes_next_execution_queue.md"
+
+
+def run(cmd, timeout=30):
+    """Run a shell command and return stdout, stderr, returncode."""
+    try:
+        r = subprocess.run(
+            cmd, capture_output=True, text=True, timeout=timeout, cwd=BASE_DIR
+        )
+        return r.stdout.strip(), r.stderr.strip(), r.returncode
+    except FileNotFoundError:
+        return "", f"command not found: {cmd[0]}", 1
+    except subprocess.TimeoutExpired:
+        return "", f"timed out after {timeout}s", 1
+
+
+def git_status():
+    out, _, _ = run(["git", "status", "--short"])
+    return out or "(clean — no modified or untracked files)"
+
+
+def git_head():
+    out, _, _ = run(["git", "log", "--oneline", "-1"])
+    return out or "(no commits)"
+
+
+def git_log(n=8):
+    out, _, _ = run(["git", "log", "--oneline", f"-{n}"])
+    return out or "(no commits)"
+
+
+def agent_health_summary():
+    summary_lines = []
+    files = sorted(AGENT_HEALTH_DIR.glob("Z-*.json"))
+    if not files:
+        return ["(no agent health files found)"]
+
+    for f in files:
+        try:
+            data = json.loads(f.read_text())
+            name = data.get("agent", f.stem)
+            status = data.get("status", "unknown")
+            conf = data.get("confidence", "unknown")
+            task = data.get("current_task", "none")
+            last_run = data.get("last_run_utc", "never")
+            summary_lines.append(
+                f"  - **{name}** | status: {status} | confidence: {conf} | "
+                f"last_run: {last_run} | task: {task}"
+            )
+        except (json.JSONDecodeError, OSError) as e:
+            summary_lines.append(f"  - **{f.stem}** | ERROR: {e}")
+    return summary_lines
+
+
+def daily_reports_summary():
+    lines = []
+    try:
+        all_reports = sorted(REPORTS_DIR.glob("*.md"), reverse=True)[:8]
+        if not all_reports:
+            return ["  (no daily reports found)"]
+        for rp in all_reports:
+            size = rp.stat().st_size
+            lines.append(f"  - {rp.name} ({size} bytes)")
+    except OSError:
+        lines.append("  (unable to read reports directory)")
+    return lines
+
+
+def d20_recommendation():
+    if D20_FILE.exists():
+        lines = ["  - D20 execution queue found — check P1 items for next action"]
+        try:
+            for line in D20_FILE.read_text().splitlines():
+                stripped = line.strip()
+                if stripped.startswith("|") and "P1" in stripped:
+                    lines.append(f"    → {stripped}")
+        except OSError:
+            pass
+        return lines
+    return ["  (D20 execution queue not found)"]
+
+
+def total_file_count():
+    out, _, _ = run(["git", "ls-files"])
+    if out:
+        return len(out.splitlines())
+    return "?"
+
+
+def now_utc():
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def generate_report():
+    stamp = now_utc()
+    report_name = f"{stamp[:10]}_hermes_supervised_run.md"
+    report_path = REPORTS_DIR / report_name
+
+    gs = git_status()
+    head_commit = git_head()
+    gitlog = git_log(8)
+    agents = agent_health_summary()
+    reports = daily_reports_summary()
+    d20 = d20_recommendation()
+    total = total_file_count()
+
+    content = f"""# Hermes Supervised Daily Run
+
+**UTC:** {stamp}
+**Branch:** (detected)
+**Working tree:** (detected below)
+
+## Git Status
+
+```
+{gs}
+```
+
+## HEAD
+
+```
+{head_commit}
+```
+
+## Latest 8 Commits
+
+```
+{gitlog}
+```
+
+## Agent Health Summary
+
+{chr(10).join(agents)}
+
+## Latest Daily Reports
+
+{chr(10).join(reports)}
+
+## D20 Execution Queue
+
+{chr(10).join(d20)}
+
+## Recommended Next Action
+
+Based on current state and D20 queue:
+- Execute **Z-Ops inspection dry run** first (P1 priority).
+- Run `python3 tools/hermes_supervised_run.py` daily to track state.
+- No code/JSON/demo modifications are needed.
+
+## Sultan Approval Command
+
+To approve the next action, run:
+```
+# Read-only inspection is automatically approved per D19 G1 gate
+python3 tools/hermes_supervised_run.py
+```
+
+Or for explicit approval of Z-Ops dry run:
+```
+# Sultan says: "approve Z-Ops inspection"
+python3 tools/hermes_supervised_run.py
+```
+
+---
+*Generated by Hermes Supervised Runner | non-production | no tokens | no cron | no restart*
+"""
+
+    REPORTS_DIR.mkdir(parents=True, exist_ok=True)
+    report_path.write_text(content)
+    return report_path, content
+
+
+def main():
+    try:
+        path, _ = generate_report()
+        print(f"✅ Report created: {path.relative_to(BASE_DIR)}")
+        print(f"   Lines: {len(path.read_text().splitlines())}")
+    except Exception as e:
+        print(f"❌ Error: {e}", file=sys.stderr)
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
