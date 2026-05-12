@@ -1655,7 +1655,9 @@ def build_hermes_system_prompt(context):
 3. لا تشغل shell أو systemctl أو cron.
 4. إذا سأل عن ربط موديل — اشرح المتغيرات (HERMES_LLM_API_KEY, BASE_URL, MODEL) وقل له يضيفها في ملف البيئة.
 5. لا تطلب API keys أو كلمات سر في الشات.
-6. اللغة: العربية دائما. إذا قال بالإنجليزية حول."""
+6. اللغة: العربية دائما. إذا قال بالإنجليزية حول.
+	7. ممنوع منعا باتا إخراج XML أو tool_calls أو <function_call> أو <tool_call> أو أي علامات تنفيذ. رد فقط بتقارير عربية أو اقتراح أمر للموافقة: "/qwen <الأمر>".
+"""
 
 
 def call_hermes_llm(user_text, context, cfg):
@@ -1714,6 +1716,23 @@ def call_hermes_llm(user_text, context, cfg):
         return None
 
     return None
+
+
+_TOOL_CALL_PATTERNS = re.compile(
+    r"<\s*(tool_call|function_call|arg_key|arg_value|invoke|tool_result)\s*/?\s*>",
+    re.IGNORECASE,
+)
+
+_TOOL_CALL_BLOCK_MSG = (
+    "لا أستطيع تنفيذ أدوات مباشرة من المحادثة. "
+    "أستطيع اقتراح أمر فقط وينتظر موافقة سلطان."
+)
+
+
+def _has_tool_call_tags(text):
+    """Check if LLM output contains raw tool-call XML tags (OpenRouter/Claude style)."""
+    return bool(_TOOL_CALL_PATTERNS.search(text))
+
 
 def fallback_hermes_reply(user_text, context):
     """رد عربي ذكي بدون LLM — يفهم النية ويحاور بدلاً من عرض أوامر."""
@@ -1888,6 +1907,11 @@ def handle_plain_text_message(message, bot, cfg):
         llm_reply = call_hermes_llm(user_text, context, cfg)
 
     if llm_reply:
+        # Safety filter: reject raw tool-call XML from LLM output
+        if _has_tool_call_tags(llm_reply):
+            safe_reply(bot, message, _TOOL_CALL_BLOCK_MSG)
+            audit_log({"event": "tool_call_blocked", "text": llm_reply[:200]})
+            return
         safe_reply(bot, message, llm_reply)
         return
 
