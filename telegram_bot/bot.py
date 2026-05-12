@@ -1657,6 +1657,7 @@ def build_hermes_system_prompt(context):
 5. لا تطلب API keys أو كلمات سر في الشات.
 6. اللغة: العربية دائما. إذا قال بالإنجليزية حول.
 	7. ممنوع منعا باتا إخراج XML أو tool_calls أو <function_call> أو <tool_call> أو أي علامات تنفيذ. رد فقط بتقارير عربية أو اقتراح أمر للموافقة: "/qwen <الأمر>".
+	8. ممنوع منعا باتا شرح تفكيرك الداخلي (Thinking, I need to, Let me, I'll simulate, First/Second/Final). أكتب النتيجة النهائية فقط بالعربية بدون مقدمات أو ترقيم خطوات التفكير.
 """
 
 
@@ -1734,38 +1735,46 @@ def _has_tool_call_tags(text):
     return bool(_TOOL_CALL_PATTERNS.search(text))
 
 
+_REASONING_PATTERNS = re.compile(
+    r"(?i)\b(The user wants|They want|The user is asking|Let me think|"
+    r"I need to|I'll simulate|I will simulate|I'll just|"
+    r"I'll respond|I will respond|I should|I think|"
+    r"Chain of thought|chain-of-thought|reasoning|"
+    r"Let me check|Let me look|Let me see|"
+    r"I understand|I'll provide|I will provide|"
+    r"Here's my|Here is my|My response|"
+    r"First,|Second,|Third,|Finally,|In summary,"
+    r")",
+)
+
+_REASONING_BLOCK_MSG = (
+    "لم أستطع توليد تقرير نهائي نظيف. "
+    "أعد صياغة الطلب كتقرير عربي مختصر بدون تفكير داخلي."
+)
+
+
+def _has_internal_reasoning(text):
+    """Check if LLM output contains internal reasoning / chain-of-thought leakage."""
+    return bool(_REASONING_PATTERNS.search(text))
+
+
 def fallback_hermes_reply(user_text, context):
     """رد عربي ذكي بدون LLM — يفهم النية ويحاور بدلاً من عرض أوامر."""
     text_lower = user_text.lower().strip()
 
     # ── فحص النية ──
     is_greeting = any(w in text_lower for w in ["السلام", "هلا", "مرحبا", "صباح", "مساء", "اهلا", "hi", "hello", "hey"])
-    is_status = any(w in text_lower for w in ["الوضع", "وش في", "الحالة", "state", "status", "الملخص", "ملخص", "صار", "اخبار", "وش الاخبار"])
-    is_plan = any(w in text_lower for w in ["تسوي", "اليوم", "الخطة", "خطة", "شغل", "شنسوي", "خطوات", "الخطوة", "قايم"])
-    is_agents = any(w in text_lower for w in ["الوكلاء", "الصحة", "الوكيل", "team", "agents", "agent"])
-    is_execute = any(w in text_lower for w in ["نفذ", "شغل", "commit", "restart", "احذف", "redirect", "run", "execute"])
+    is_execute = any(w in text_lower for w in ["نفذ", "شغل", "commit", "restart", "احذف", "redirect", "run", "execute", "qwen", "approve"])
     is_model = any(w in text_lower for w in ["موديل", "model", "اربط", "llm", "key", "api key", "مفتاح"])
-    is_question_about = any(w in text_lower for w in ["ايش", "وش", "ماذا", "كيف", "ليش", "شرح", "what", "how", "explain"])
-    is_report = any(w in text_lower for w in ["تقرير", "report", "التقرير"])
-    is_help = any(w in text_lower for w in ["help", "مساعدة", "الأوامر", "commands", "/help", "تعليمات", "الاوامر"])
 
     # ── البيانات من السياق ──
     branch = context.get("branch", "?")
     tree = context.get("tree_state", "غير معروف")
-    head = context.get("head", "")
     agents = context.get("agents", [])
     ready = context.get("agents_ready", 0)
     total = context.get("agents_total", 0)
-    commits = context.get("recent_commits", "")
-    reports = context.get("recent_reports", [])
     d20_msg = context.get("d20_msg", "")
     llm_configured = context.get("llm_configured", False)
-
-    # ── استخراج ملخص آخر commit ──
-    last_commit_msg = ""
-    if head:
-        parts = head.split(" ", 1)
-        last_commit_msg = parts[-1] if len(parts) > 1 else head
 
     # ── تحضير معلومات الوكلاء ──
     agent_info = []
@@ -1781,38 +1790,17 @@ def fallback_hermes_reply(user_text, context):
         changes_note = "\n⚠️ في شغل غير م committed على الفرع."
     else:
         changes_note = "\nالمستودع نظيف، كل التغييرات م committed."
-    commits_summary = ""
-    if commits:
-        c_lines = [l.strip() for l in commits.split("\n") if l.strip()][:3]
-        commits_summary = "\n".join(f"• {l}" for l in c_lines)
 
     # =============================================================
     # الردود المباشرة حسب النية
     # =============================================================
 
-    if is_help:
-        return (
-            "تقدر تتحدث معي طبيعي بالعربي وأنا أفهم:\n"
-            "• \"الوضع؟\" — ملخص كامل للمشروع\n"
-            "• \"وش تسوي اليوم؟\" — خطة العمل\n"
-            "• \"حالة الوكلاء؟\" — صحة الفريق\n"
-            "• \"اربط الموديل\" — توصيل ذكاء اصطناعي\n\n"
-            "أو استخدم / مع الأمر المباشر."
-        )
-
-    if is_greeting and not (is_status or is_plan or is_agents or is_question_about):
+    if is_greeting:
         return (
             f"وعليكم السلام يا سلطان 👋\n"
             f"الحمدلله، الوضع مستقر. الفرع {branch} — {tree}.\n"
             f"الوكلاء: {ready} من {total} جاهزين.\n"
             f"وش تحب تعرف بالضبط؟"
-        )
-
-    if is_agents:
-        if not agents:
-            return "ما عندي بيانات عن الوكلاء حالياً."
-        return (
-            f"فيه {ready} وكلاء جاهزين من أصل {total}:\n{agent_summary}"
         )
 
     if is_model:
@@ -1837,56 +1825,12 @@ def fallback_hermes_reply(user_text, context):
             "مثلاً: \"نفذ git status\" أو استخدم /qwen <الأمر>."
         )
 
-    # ── السؤال عن خطة اليوم ──
-    if is_plan:
-        if d20_msg:
-            return (
-                f"الخطة الجاهزة:\n{d20_msg}\n\n"
-                f"تقدر تطلب تفاصيل أكثر أو تقول 'نفذ' عشان أشرح الخطوات."
-            )
-        else:
-            return (
-                f"اليوم على الفرع {branch}.{changes_note}\n"
-                "ما في خطة محددة مسجلة. تقدر تقترح وش تسوي.\n"
-                "إذا تبغى تقرير كامل أرسل /report"
-            )
-
-    # ── طلب تقرير ──
-    if is_report:
-        if reports:
-            latest = reports[0]
-            return (
-                f"آخر تقرير يومي: {latest}\n"
-                "استخدم /report لتقرير عربي كامل\n"
-                "أو /daily_status لملخص سريع."
-            )
-        else:
-            return "ما في تقارير يومية بعد."
-
-    # ── السؤال عن الحالة أو أي سؤال عام ──
-    if is_status or is_question_about:
-        msg = (
-            f"الوضع الحالي:\n"
-            f"• الفرع: {branch}\n"
-            f"• آخر commit: {last_commit_msg}\n"
-            f"• الشجرة: {tree}{changes_note}\n"
-        )
-        if commits_summary:
-            msg += f"\nآخر التغييرات:\n{commits_summary}\n"
-        msg += f"\nالوكلاء ({ready}/{total} جاهز):\n{agent_summary}"
-        if d20_msg:
-            msg += f"\n\nالخطوة التالية:\n{d20_msg}"
-        return msg
-
-    # ── الرد العام لأي كلام آخر ──
+    # ── رد عام لأي كلام آخر (LLM غير متاح) ──
     return (
-        f"أنا Hermes، المشرف على ZILFIT.\n"
-        f"الحين على الفرع {branch} — {tree}.{changes_note}\n"
+        f"أنا Hermes المشرف على ZILFIT.\n"
+        f"الحين الفرع {branch} — {tree}.{changes_note}\n"
         f"الوكلاء: {ready}/{total} جاهزين.\n\n"
-        f"تقدر تسألني:\n"
-        f"• \"الوضع؟\" — أشرح لك كل شيء\n"
-        f"• \"وش تسوي اليوم؟\" — خطة العمل\n"
-        f"• \"اربط الموديل\" — توصيل الذكاء الاصطناعي"
+        f"إذا LLM متصل راح أرد بذكاء. أو استخدم / مع الأمر."
     )
 
 
@@ -1911,6 +1855,11 @@ def handle_plain_text_message(message, bot, cfg):
         if _has_tool_call_tags(llm_reply):
             safe_reply(bot, message, _TOOL_CALL_BLOCK_MSG)
             audit_log({"event": "tool_call_blocked", "text": llm_reply[:200]})
+            return
+        # Safety filter: reject internal reasoning / chain-of-thought leakage
+        if _has_internal_reasoning(llm_reply):
+            safe_reply(bot, message, _REASONING_BLOCK_MSG)
+            audit_log({"event": "reasoning_blocked", "text": llm_reply[:200]})
             return
         safe_reply(bot, message, llm_reply)
         return
