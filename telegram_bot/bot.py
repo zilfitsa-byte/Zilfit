@@ -1616,6 +1616,39 @@ def cmd_daily_plan_ar(cfg):
     return cmd_daily_plan(cfg)
 
 
+def cmd_hermes(cfg):
+    """Hermes supervised status summary — read-only safe reply."""
+    repo = cfg["repo_root"]
+    branch = run_cmd("git branch --show-current", cwd=repo, timeout=10).strip() or "?"
+    head = run_cmd("git log --oneline -1", cwd=repo, timeout=10).strip() or "?"
+    status_short = run_cmd("git status --short", cwd=repo, timeout=10)
+    gitlog = run_cmd("git log --oneline -8", cwd=repo, timeout=10) or "(empty)"
+    tree_state = "CLEAN ✅" if not status_short or status_short == "(empty)" else "DIRTY ⚠️"
+    heartbeat = _read_agent_heartbeat_summary(cfg)
+    latest_report = _get_latest_daily_report(cfg)
+    report_info = os.path.basename(latest_report) if latest_report else "none"
+
+    d20_path = Path(repo) / "reports" / "daily" / "2026-05-12_D20_hermes_next_execution_queue.md"
+    next_action = "Execute Z-Ops inspection dry run (P1 priority)"
+    if d20_path.exists():
+        next_action = "D20 queue available — check P1 items"
+
+    total_agents = len([l for l in heartbeat.split("\n") if l.strip().startswith("-")])
+    return (
+        f"🤖 Hermes Supervised Status\n"
+        f"──────────────\n"
+        f"Branch: `{branch}`\n"
+        f"HEAD: {head}\n"
+        f"Tree: {tree_state}\n\n"
+        f"Latest 8 commits:\n```\n{gitlog}\n```\n\n"
+        f"Agent Health ({total_agents} agents):\n{heartbeat}\n\n"
+        f"Latest Report: {report_info}\n"
+        f"Next Action: {next_action}\n\n"
+        f"read-only | non-production | no tokens | no cron | no restart\n"
+        f"Commands: /status /agents /daily_status /daily_report /help"
+    )
+
+
 def cmd_approval_queue(cfg):
     """Show pending approval-style guidance only; no execution."""
     repo = cfg["repo_root"]
@@ -1652,6 +1685,10 @@ def cmd_help(*_args):
     """List all commands."""
     return textwrap.dedent("""\
     ⬡ ZILFIT Command Center v2
+	    🤖 Hermes Chat
+	    /hermes   — Full repo status, agent health, next action
+	    (any text) — Hermes replies in supervised safe mode
+
 
     📊 تقارير
     /status   — Git branch, HEAD, working tree state
@@ -1696,6 +1733,10 @@ def cmd_help_ar(*_args):
     """Arabic help."""
     return textwrap.dedent("""\
     ⬡ مركز تحكم ZILFIT v2
+
+	    🤖 محادثة Hermes
+	    /hermes   — حالة كاملة للمستودع والوكلاء والإجراء التالي
+	    (أي نص) — Hermes يرد في الوضع المشرف الآمن
 
     📊 التقارير
     /status         — فرع Git، HEAD، حالة الشجرة
@@ -1798,13 +1839,41 @@ COMMANDS = {
     "daily_plan_ar": cmd_daily_plan_ar,
     "approval_queue": cmd_approval_queue,
     "approval_queue_ar": cmd_approval_queue_ar,
+    # ── D21: Hermes Live Chat Bridge ──
+    "hermes": cmd_hermes,
 }
 
 def handle_message(message, bot, cfg):
     """Route incoming message to command handler."""
-    if not message.text or not message.text.startswith("/"):
-        return
     if not is_admin(message, cfg["admin_ids"]):
+        return
+
+    if not message.text:
+        return
+
+    # ── Plain text → Hermes supervised reply (D21 live chat bridge) ──
+    if not message.text.startswith("/"):
+        arabic_mode = is_arabic(message.from_user.id)
+        if arabic_mode:
+            reply = (
+                f"🤖 Hermes — الوضع المشرف\n"
+                f"أنا هنا للإجابة على أسئلتك حول حالة المستودع والوكلاء.\n"
+                f"أستخدم: /hermes للحصول على ملخص كامل\n"
+                f"أو أرسل /help لرؤية جميع الأوامر.\n\n"
+                f"هذه جلسة قراءة فقط — لا يتم تنفيذ أي شيء دون موافقتك.\n"
+                f"non-production | read-only | no tokens | no cron | no restart"
+            )
+        else:
+            reply = (
+                f"🤖 Hermes — Supervised Mode\n"
+                f"I can answer questions about repo state, agents, and reports.\n"
+                f"Use /hermes for a full status summary\n"
+                f"Or send /help to see all commands.\n\n"
+                f"This is a read-only session — nothing executes without your approval.\n"
+                f"non-production | read-only | no tokens | no cron | no restart"
+            )
+        safe_reply(bot, message, reply)
+        audit_log({"event": "hermes_plain_text", "user": message.from_user.id, "text": message.text[:100]})
         return
 
     parts = message.text.strip().split(None, 1)
