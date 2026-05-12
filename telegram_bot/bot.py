@@ -2052,6 +2052,7 @@ def handle_message(message, bot, cfg):
 # Report times in UTC: 08:00, 12:00, 16:00, 21:00
 # If server uses local time other than UTC, adjust here.
 REPORT_HOURS_UTC = [8, 12, 16, 21]
+HERMES_SUPERVISED_HOUR = 7
 
 def scheduler_loop(bot, cfg):
     """
@@ -2060,7 +2061,8 @@ def scheduler_loop(bot, cfg):
     Runs in a background thread.
     """
     last_sent_slots = set()
-    print("⬡ Scheduler thread started (reports at UTC 08:00, 12:00, 16:00, 21:00)")
+    last_supervised_date = ""
+    print("⬡ Scheduler thread started (Arabic reports at UTC 08,12,16,21; supervised run at UTC 07:00)")
 
     while True:
         try:
@@ -2069,8 +2071,8 @@ def scheduler_loop(bot, cfg):
             minute = now_utc.minute
             slot_key = f"{now_utc.date()}_{hour}"
 
+            # ── Scheduled Arabic report ──
             if hour in REPORT_HOURS_UTC and minute == 0 and slot_key not in last_sent_slots:
-                # Send reports to all admin users
                 print(f"⬡ Sending scheduled Arabic report for {now_utc.isoformat()}")
                 report = generate_arabic_report(cfg)
                 for admin_id in cfg["admin_ids"]:
@@ -2080,6 +2082,45 @@ def scheduler_loop(bot, cfg):
                         print(f"⬡ Failed to send report to {admin_id}: {e}")
                 last_sent_slots.add(slot_key)
                 audit_log({"event": "scheduled_report_sent", "slot": slot_key, "admins_count": len(cfg["admin_ids"])})
+
+            # ── Hermes Supervised Run (UTC 07:00 daily) ──
+            today = str(now_utc.date())
+            if hour == HERMES_SUPERVISED_HOUR and minute == 0 and today != last_supervised_date:
+                print(f"⬡ Running Hermes supervised run for {today}")
+                supervisor_script = os.path.join(cfg["repo_root"], "tools", "hermes_supervised_run.py")
+                subprocess.run(
+                    [sys.executable, supervisor_script],
+                    cwd=cfg["repo_root"],
+                    capture_output=True,
+                    timeout=120,
+                )
+                # Find the report just created
+                today_prefix = today.replace("-", "")
+                reports_dir = os.path.join(cfg["repo_root"], "reports", "daily")
+                candidates = sorted(
+                    glob.glob(os.path.join(reports_dir, f"{today}_hermes_supervised_run.md")),
+                    reverse=True,
+                )
+                if candidates:
+                    body = Path(candidates[0]).read_text(encoding="utf-8", errors="replace")
+                    preamble = (
+                        f"⬡ Hermes Supervised Daily Run\n"
+                        f"التاريخ: {today}\n"
+                        f"تم تحديث التقرير الآن. التفاصيل:\n\n"
+                    )
+                    # Telegram message limit ~4000 chars; truncate if needed
+                    msg = preamble + body
+                    if len(msg) > 3900:
+                        msg = msg[:3900] + "\n\n… (مقتطع)"
+                    for admin_id in cfg["admin_ids"]:
+                        try:
+                            bot.send_message(admin_id, msg)
+                        except Exception as e:
+                            print(f"⬡ Failed to send supervised report to {admin_id}: {e}")
+                    last_supervised_date = today
+                    audit_log({"event": "supervised_run_sent", "date": today, "admins_count": len(cfg["admin_ids"])})
+                else:
+                    print(f"⬡ Supervised run completed but no report file found for {today}")
 
             # Clean old slots (keep only today)
             today_prefix = str(now_utc.date())
