@@ -1,53 +1,46 @@
-# ZILFIT Daily Review Report - 2026-05-13
+# ZILFIT Daily Review Report
 
-## 1. Current Repo State
-- Branch: `codex/livefit-camera-ux-isolated-v1`
-- Working tree: clean.
-- Queue request exists: `queue/2026-05-13_daily_review_request.md`
+## 1. حالة المستودع
+- الفرع الحالي: codex/livefit-camera-ux-isolated-v1.
+- يجب فحص git status قبل أي commit.
 
-## 2. Latest Changes
-Recent committed work:
-- Added daily review queue request.
-- Added ZILFIT operating queue templates.
-- Added clinical specialist protocol draft.
-- Added ZILFIT agent roster and model policy.
-- Ignored local Aider session files.
+## 2. آخر التغييرات
+- تمت إضافة طلب مراجعة يومية.
+- تمت إضافة قالب queue.
+- تمت إضافة runner يدوي للتقرير اليومي.
 
-## 3. Agent Health Summary
-Daily agents:
+## 3. الوكلاء اليوميون
 - Z-Ops
 - Z-QA
 - Z-Research
 - Z-Product
 - Z-Claims
 
-On-demand engineering agents:
+## 4. الوكلاء عند الطلب
 - Z-Bio
 - Z-Physics
 - Z-Printability
 - Z-CAD
 - Z-Sim
 
-## 4. Clinical / Specialist Boundary
-- `governance/CLINICAL_SPECIALIST_PROTOCOL_DRAFT.md` is internal R&D only.
-- It is not clinically validated.
-- Public outputs must avoid medical, diagnostic, therapeutic, treatment, pain-relief, prevention, or clinical-efficacy claims.
-- Engineering validation is separate from clinical validation.
+## 5. الحدود السريرية
+- لا توجد مطالبات طبية أو علاجية أو تشخيصية عامة.
+- التحقق السريري لا يزال بانتظار مراجعة متخصصين.
+- جميع المخرجات الحالية هندسية/بحثية داخلية فقط.
 
-## 5. Risks
-- Main risk: confusing engineering assumptions with medical or clinical claims.
-- Secondary risk: wasting budget by using expensive models for simple daily reports.
-- CAD/FEA, clinical protocol, legal-sensitive claims, and source-code edits should use stronger review.
+## 6. المخاطر
+- الخلط بين الافتراضات الهندسية والمطالبات الطبية.
+- استخدام نماذج غالية لمهام تقرير يومي بسيطة.
+- قراءة ملفات كبيرة غير مطلوبة.
 
-## 6. Blockers
-- No technical blockers found.
-- Clinical validation remains pending specialist review.
+## 7. المعوقات
+- لا توجد معوقات تقنية واضحة.
+- التحقق السريري لا يزال غير مكتمل.
 
-## 7. Next Recommended Action
-- Continue daily cheap-model review.
-- Use daily agents for reports, status, inventory, and non-sensitive checks.
-- Use Z-Bio, Z-Physics, Z-Printability, Z-CAD, and Z-Sim only when preparing sample-readiness decisions.
-- Reserve Claude/Sonnet-level model use for CAD/FEA, architecture, code edits, clinical protocol refinement, legal-sensitive claims, and final production-sample decisions.
+## 8. الإجراء التالي
+- الاستمرار بالتقارير اليومية الرخيصة.
+- استخدام Z-Bio/Z-Physics/Z-Printability/Z-CAD/Z-Sim فقط عند قرارات جاهزية العينة.
+- حجز النماذج الأقوى للـ CAD/FEA، الكود، المطالبات الحساسة، والقرارات النهائية.
 
-## 8. Model Sufficiency
-A cheap model is sufficient for this task because it is read-only summarization and reporting. Claude/Sonnet is not required.
+## 9. كفاية النموذج
+- النموذج الرخيص كاف لهذه المهمة لأنها قراءة وتلخيص وتقرير فقط.

@@ -5,8 +5,10 @@ cd /root/hermes/zilfit-ip-core
 
 TODAY="$(date +%F)"
 OUT="reports/daily/${TODAY}_queue_daily_review_report.md"
+REQ="queue/next_daily_review_request.md"
 
 echo "ZILFIT daily review manual run"
+echo "Request: ${REQ}"
 echo "Output: ${OUT}"
 
 cline -c /root/hermes/zilfit-ip-core \
@@ -18,7 +20,9 @@ cline -c /root/hermes/zilfit-ip-core \
   -m google/gemini-2.5-flash-lite \
 "Create exactly one file only: ${OUT}
 
-Use queue/next_daily_review_request.md as the operating request.
+Use this operating request content:
+
+$(cat "$REQ")
 
 Rules:
 - Do not edit demo, Telegram bot, proxy, auth, API keys, cron, systemd, production tunnels, or main branch.
@@ -33,4 +37,4 @@ Rules:
 "
 
 echo "Done. Check:"
-ls -lh "${OUT}"
+ls -lh "$OUT"
