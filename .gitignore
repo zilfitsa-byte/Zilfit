@@ -47,3 +47,4 @@ logs/sample_readiness_*.log*
 
 # Local backups generated during agent/demo work
 _local_backups/
+.venv/
