@@ -1,0 +1,116 @@
+{
+  "artifact_id": "2026-05-13_VITAL_P001_live_chain",
+  "artifact_type": "evidence_chain",
+  "created_utc": "2026-05-13T09:30:00Z",
+  "edition": "VITAL-RECOVER",
+  "prototype": "P001",
+  "scope": "engineering_validation_only",
+  "no_medical_claims": true,
+  "chain": {
+    "input": {
+      "source": "LiveFit Camera UX v5",
+      "scan_mode": "manual_mobile_touch",
+      "foot_selection": "card_reference_and_foot_box",
+      "quality_indicators": [
+        "lighting_check",
+        "angle_check",
+        "distance_check",
+        "blur_check",
+        "foot_visibility_check"
+      ],
+      "output_format": "JSON_with_base64_image"
+    },
+    "estimated_measurements": {
+      "extraction_method": "image_analysis_placeholder",
+      "measurements": {
+        "foot_length_mm": "est_240_280",
+        "foot_width_mm": "est_85_105",
+        "arch_height_mm": "est_15_35",
+        "heel_width_mm": "est_55_75"
+      },
+      "confidence": "simulation_only",
+      "validation_required": "physical_scan_device_not_yet_integrated"
+    },
+    "zones": {
+      "zone_definition_source": "P001_DESIGN_BRIEF.md",
+      "zones_defined": [
+        "heel_cradle",
+        "arch_support_moderate",
+        "metatarsal_pressure_relief",
+        "toe_box_generous",
+        "stimulation_ridge_mild"
+      ],
+      "zone_logic": "pressure_informed_geometry",
+      "wall_thickness_logic": "load_case_dependent",
+      "print_constraints": "monolithic_laceless_TPU"
+    },
+    "recommendation": {
+      "fit_guidance": "based_on_estimated_foot_dimensions",
+      "edition_suggestion": "VITAL-RECOVER",
+      "size_suggestion": "EU_38_42_range",
+      "customization_level": "zone_adaptation_only",
+      "no_guarantees": "fit_guidance_is_engineering_estimate_only"
+    },
+    "agent_handoff": {
+      "review_required_by": [
+        "Z-Bio",
+        "Z-Physics",
+        "Z-CAD",
+        "Z-Sim",
+        "Z-Claims"
+      ],
+      "handoff_packet": "z_livefit_engineering_handoff_v1",
+      "traceability": "all_outputs_logged_in_reports_and_runtime"
+    },
+    "patent_relevance": {
+      "novel_elements": [
+        "pressure_informed_zone_geometry",
+        "monolithic_laceless_print_ready_structure",
+        "stimulation_ridge_integration",
+        "FEMME_specific_fit_adaptation"
+      ],
+      "prior_art_check_required": true,
+      "Z_Patent_review_required": true
+    }
+  },
+  "sources": [
+    "demo/livefit_demo_v4.html",
+    "demo/livefit_camera_ux_v2.html",
+    "prototype/P001_DESIGN_BRIEF.md",
+    "runtime/compute_z_livefit_fit_recommendation_v1.py",
+    "runtime/build_z_livefit_engineering_handoff_v1.py",
+    "agents/AGENTS.md",
+    "governance/ZILFIT_AGENT_ROLES.md",
+    "governance/ZERO_TRUST_AGENT_RULES.md"
+  ],
+  "assumptions": [
+    "Camera scan provides sufficient foot dimension estimates for zone adaptation",
+    "Manual mobile camera is interim solution pending integrated scan hardware",
+    "Estimated measurements are engineering placeholders, not clinical measurements",
+    "Zone logic is based on pressure research, not medical treatment claims",
+    "TPU material properties are sourced from existing research and supplier data"
+  ],
+  "limitations": [
+    "Camera scan accuracy not yet validated against physical foot scanner",
+    "No real-time foot pressure data during scan",
+    "No gait analysis integration",
+    "No clinical validation of fit outcomes",
+    "No physical sample printed and tested yet",
+    "Zone geometry not yet validated by Z-Sim go/no-go",
+    "Wall thickness logic not yet validated by load case testing"
+  ],
+  "agents_review_required": {
+    "Z-Bio": "Validate plantar pressure zone mapping and arch behavior assumptions",
+    "Z-Physics": "Validate load case assumptions and wall thickness logic",
+    "Z-CAD": "Convert zone logic into parametric CAD geometry ready for Z-Sim",
+    "Z-Sim": "Run printability and risk assessment, issue go/no-go decision",
+    "Z-Claims": "Review all user-facing language for medical claim compliance",
+    "Z-Patent": "Assess novelty and prior art overlap for patent filing readiness"
+  },
+  "verification": {
+    "json_valid": true,
+    "schema_version": "evidence_chain_v1",
+    "approved_for_use": false,
+    "next_validation_step": "Z-Bio and Z-Physics review of zone and load assumptions"
+  }
+}
