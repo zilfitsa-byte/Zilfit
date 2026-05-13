@@ -209,7 +209,9 @@ def local_report_reply(user_text: str) -> str | None:
     text_lower = user_text.strip().lower()
 
     triggers = ["تقرير", "report", "hermes_supervised_run", "daily_operating",
-                "آخر تقرير", "ملخص تقرير", "اعرض تقرير"]
+                "آخر تقرير", "ملخص تقرير", "اعرض تقرير",
+                "d12", "d21", "status", "inspection", "ops", "qa",
+                "verification", "plan", "execution"]
     if not any(t in text_lower for t in triggers):
         return None
 
@@ -234,7 +236,19 @@ def local_report_reply(user_text: str) -> str | None:
     elif "daily_operating" in text_lower or "آخر تقرير" in text_lower or "تقرير يومي" in text_lower:
         pattern = "*daily_operating_report*.md"
     else:
-        pattern = "*hermes_supervised_run*.md"
+        matches = sorted(
+            reports_dir.glob("*.md"),
+            key=lambda x: x.stat().st_mtime,
+            reverse=True,
+        )
+        if matches:
+            content = matches[0].read_text(encoding="utf-8", errors="replace")
+            if want_summary:
+                lines = content.splitlines()
+                summary_lines = lines[:100]
+                return "ملخص التقرير (أول {} سطر):\n\n".format(len(summary_lines)) + "\n".join(summary_lines)
+            return content
+        return "لم أجد أي تقرير في reports/daily/."
 
     matches = sorted(
         reports_dir.glob(pattern),
@@ -304,6 +318,10 @@ def handle_text(message):
     "photo", "document", "audio", "voice", "video", "sticker", "location", "contact"
 ])
 def handle_other(message):
+    content_type = message.content_type
+    caption = (message.caption or "")[:100]
+    chat_info = f"chat={message.chat.id} user={message.from_user.id if message.from_user else '?'}"
+    print(f"[bot] ignored non-text msg: type={content_type} {chat_info} caption={caption!r}")
     try:
         send_long(
             message.chat.id,
