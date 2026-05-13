@@ -272,6 +272,25 @@ def local_report_reply(user_text: str) -> str | None:
     return content
 
 
+def split_telegram_text(text, limit=3500):
+    """Split long text into Telegram-safe chunks at markdown boundaries."""
+    if len(text) <= limit:
+        return [text]
+    chunks = []
+    while len(text) > limit:
+        cut = text.rfind("\n## ", 0, limit)
+        if cut < limit // 2:
+            cut = text.rfind("\n---\n", 0, limit)
+        if cut < limit // 2:
+            cut = text.rfind("\n", 0, limit)
+        if cut < limit // 2:
+            cut = limit
+        chunks.append(text[:cut].rstrip())
+        text = text[cut:].lstrip()
+    chunks.append(text)
+    return chunks
+
+
 def send_long(chat_id, text, reply_to_message_id=None):
     text = text or ""
     chunks = []
@@ -297,7 +316,15 @@ def handle_text(message):
     # Try local report before falling back to OpenRouter
     report_reply = local_report_reply(user_text)
     if report_reply:
-        send_long(message.chat.id, report_reply, reply_to_message_id=message.message_id)
+        chunks = split_telegram_text(report_reply)
+        total = len(chunks)
+        for i, chunk in enumerate(chunks, 1):
+            prefix = f"[{i}/{total}]\n" if total > 1 else ""
+            bot.send_message(
+                message.chat.id,
+                prefix + chunk,
+                reply_to_message_id=message.message_id if i == 1 else None,
+            )
         return
 
     try:
