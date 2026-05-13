@@ -198,6 +198,66 @@ def ask_openrouter(user_text: str) -> str:
     return content or "OpenRouter رجع رداً فارغاً."
 
 
+def local_report_reply(user_text: str) -> str | None:
+    """Read Hermes reports from reports/daily/ without calling OpenRouter."""
+    root = Path(__file__).resolve().parents[1]
+    reports_dir = root / "reports" / "daily"
+
+    if not reports_dir.exists():
+        return None
+
+    text_lower = user_text.strip().lower()
+
+    triggers = ["تقرير", "report", "hermes_supervised_run", "daily_operating",
+                "آخر تقرير", "ملخص تقرير", "اعرض تقرير"]
+    if not any(t in text_lower for t in triggers):
+        return None
+
+    # 1) Explicit filename in user message
+    for word in user_text.split():
+        word_clean = word.strip(".,!?\"'`؛،\"")
+        if word_clean.endswith(".md") and ".." not in word_clean and "/" not in word_clean:
+            full_path = reports_dir / word_clean
+            if full_path.exists() and full_path.is_file():
+                content = full_path.read_text(encoding="utf-8", errors="replace")
+                if "ملخص" in text_lower:
+                    lines = content.splitlines()
+                    summary_lines = lines[:100]
+                    return "ملخص التقرير (أول {} سطر):\n\n".format(len(summary_lines)) + "\n".join(summary_lines)
+                return content
+
+    # 2) No explicit filename — determine report type by keywords
+    want_summary = "ملخص" in text_lower
+
+    if "hermes_supervised_run" in text_lower:
+        pattern = "*hermes_supervised_run*.md"
+    elif "daily_operating" in text_lower or "آخر تقرير" in text_lower or "تقرير يومي" in text_lower:
+        pattern = "*daily_operating_report*.md"
+    else:
+        pattern = "*hermes_supervised_run*.md"
+
+    matches = sorted(
+        reports_dir.glob(pattern),
+        key=lambda x: x.stat().st_mtime,
+        reverse=True,
+    )
+    if not matches and pattern == "*hermes_supervised_run*.md":
+        matches = sorted(
+            reports_dir.glob("*daily_operating_report*.md"),
+            key=lambda x: x.stat().st_mtime,
+            reverse=True,
+        )
+    if not matches:
+        return "لم أجد أي تقرير يطابق طلبك في reports/daily/."
+
+    content = matches[0].read_text(encoding="utf-8", errors="replace")
+    if want_summary:
+        lines = content.splitlines()
+        summary_lines = lines[:100]
+        return "ملخص التقرير (أول {} سطر):\n\n".format(len(summary_lines)) + "\n".join(summary_lines)
+    return content
+
+
 def send_long(chat_id, text, reply_to_message_id=None):
     text = text or ""
     chunks = []
@@ -218,6 +278,12 @@ def send_long(chat_id, text, reply_to_message_id=None):
 def handle_text(message):
     user_text = (message.text or "").strip()
     if not user_text:
+        return
+
+    # Try local report before falling back to OpenRouter
+    report_reply = local_report_reply(user_text)
+    if report_reply:
+        send_long(message.chat.id, report_reply, reply_to_message_id=message.message_id)
         return
 
     try:
