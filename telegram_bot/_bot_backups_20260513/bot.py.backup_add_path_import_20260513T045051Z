@@ -5,7 +5,6 @@ import time
 import traceback
 import urllib.request
 import urllib.error
-from pathlib import Path
 
 try:
     import telebot
@@ -74,82 +73,22 @@ SYSTEM_PROMPT = """أنت Hermes، مساعد ZILFIT التشغيلي عبر ت�
 
 
 def load_project_context() -> str:
-    """Return live ZILFIT/Hermes context. Do not rely on old hardcoded D20/D21 reports."""
-    import subprocess
-    from pathlib import Path
-
-    def run(cmd, timeout=8):
-        try:
-            return subprocess.check_output(
-                cmd,
-                shell=True,
-                cwd=Path(__file__).resolve().parents[1],
-                stderr=subprocess.STDOUT,
-                text=True,
-                timeout=timeout,
-            ).strip()
-        except Exception as e:
-            return f"ERROR: {e}"
-
-    root = Path(__file__).resolve().parents[1]
-
-    branch = run("git branch --show-current")
-    head = run("git log -1 --oneline --decorate")
-    status = run("git status --short")
-    tree_state = "CLEAN" if not status else "DIRTY"
-
-    bot_proc = run("ps -eo pid,ppid,etime,cmd | grep -E 'telegram_bot/bot.py|zilfit_master_bot.py' | grep -v grep || true")
-    tmux_state = run("tmux ls 2>/dev/null || true")
-
-    env_lines = []
-    env_path = root / ".env"
-    if env_path.exists():
-        raw = env_path.read_text(encoding="utf-8", errors="replace").splitlines()
-        keys = [
-            "ZILFIT_TELEGRAM_BOT_TOKEN",
-            "ZILFIT_TELEGRAM_ADMIN_IDS",
-            "HERMES_LLM_API_KEY",
-            "HERMES_LLM_BASE_URL",
-            "HERMES_LLM_MODEL",
-        ]
-        for key in keys:
-            value = ""
-            for line in raw:
-                if line.startswith(key + "="):
-                    value = line.split("=", 1)[1].strip()
-                    break
-            if not value:
-                env_lines.append(f"{key}=MISSING")
-            elif "KEY" in key or "TOKEN" in key:
-                env_lines.append(f"{key}=SET_MASKED")
-            else:
-                env_lines.append(f"{key}={value}")
-    else:
-        env_lines.append(".env=MISSING")
-
-    reports_dir = root / "reports" / "daily"
-    latest_reports = []
-    if reports_dir.exists():
-        latest_reports = [
-            f.name for f in sorted(
-                reports_dir.glob("*"),
-                key=lambda x: x.stat().st_mtime,
-                reverse=True,
-            )[:8]
-        ]
-
-    return (
-        "LIVE ZILFIT/HERMES CONTEXT — generated now, not from old D20/D21 static files\n"
-        f"Branch: {branch}\n"
-        f"HEAD: {head}\n"
-        f"Working tree: {tree_state}\n"
-        f"Git status:\n{status or '(clean)'}\n\n"
-        f"Telegram/Hermes processes:\n{bot_proc or '(none)'}\n\n"
-        f"tmux sessions:\n{tmux_state or '(none)'}\n\n"
-        f"Environment:\n" + "\n".join(env_lines) + "\n\n"
-        f"Latest reports:\n" + "\n".join(latest_reports) + "\n\n"
-        "Instruction: Answer the user using this live context. Do not claim Telegram/tmux/services are inactive if the live process/tmux data above shows they are running. Do not repeat old D20/D21 report text as current state unless it is explicitly the latest live report."
-    )
+    files = [
+        "reports/daily/2026-05-13_hermes_supervised_run.md",
+        "reports/daily/2026-05-12_D20_hermes_next_execution_queue.md",
+        "reports/daily/2026-05-12_D19_hermes_daily_agent_operations_plan.md",
+        "reports/daily/2026-05-12_D18_hermes_daily_operation_readiness_check.md",
+        "reports/daily/2026-05-12_D16_full_project_inventory_readonly_report.md",
+    ]
+    parts = []
+    for name in files:
+        path = Path(name)
+        if path.exists():
+            txt = path.read_text(encoding="utf-8", errors="replace")
+            if len(txt) > 6000:
+                txt = txt[:6000]
+            parts.append(f"\n\n--- {name} ---\n{txt}")
+    return "\n".join(parts).strip()
 
 
 def ask_openrouter(user_text: str) -> str:
