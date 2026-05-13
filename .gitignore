@@ -48,3 +48,8 @@ logs/sample_readiness_*.log*
 # Local backups generated during agent/demo work
 _local_backups/
 .venv/
+
+# Local Aider session/cache files
+.aider.chat.history.md
+.aider.input.history
+.aider.tags.cache.v4/
