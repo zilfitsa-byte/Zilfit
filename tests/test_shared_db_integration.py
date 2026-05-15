@@ -36,7 +36,7 @@ class TestSharedDBIntegration(unittest.TestCase):
         # -- read back ----------------------------------------------------
         fetched = db.get(agent_name=agent, task_id=tid)
         self.assertIsNotNone(fetched, "Record written but not found on read")
-        assert fetched is not None  # type guard for Pyright
+        assert fetched is not None
         self.assertEqual(fetched["agent_name"], agent)
         self.assertEqual(fetched["task_id"], tid)
         self.assertEqual(fetched["status"], "completed")
@@ -72,7 +72,7 @@ class TestSharedDBIntegration(unittest.TestCase):
             reader = SharedDB(path)
             fetched = reader.get(agent_name="Z-Bio", task_id="bio-int-001")
             self.assertIsNotNone(fetched, "Separate instance could not read record")
-            assert fetched is not None  # type guard for Pyright
+            assert fetched is not None
             self.assertEqual(fetched["agent_name"], "Z-Bio")
             self.assertEqual(fetched["summary"], "Biomechanical data collection started")
             self.assertEqual(fetched["risk_level"], "medium")
