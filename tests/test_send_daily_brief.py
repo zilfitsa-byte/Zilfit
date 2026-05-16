@@ -17,6 +17,7 @@ from tools.send_daily_brief import (
     format_telegram_brief,
     main,
 )
+from tools.daily_brief_builder import BriefBuilder, _default_config, CONFIG_PATH
 
 
 class TestFormatTelegramBrief(unittest.TestCase):
@@ -174,6 +175,148 @@ class TestDryRunOutput(unittest.TestCase):
                 mod2._project_root = orig_root
             # Cleanup
             import shutil
+            shutil.rmtree(tmpdir)
+
+        self.assertEqual(result, 0)
+
+
+class TestSendBriefBuilderIntegration(unittest.TestCase):
+    """Tests for the integration between send_daily_brief.py and daily_brief_builder.py."""
+
+    def test_parse_report_brief_uses_builder(self):
+        """When a builder is provided, parse_report_brief delegates to BriefBuilder."""
+        cfg = _default_config()
+        builder = BriefBuilder(cfg)
+
+        # Create a temp report
+        content = (
+            "# 2026-05-16 Test Report\n\n"
+            "## Branch\n- **Branch:** `zilfit/integration-test`\n\n"
+            "Status: ✅ COMPLETED\n\n"
+            "## Blockers\nNo blockers.\n"
+        )
+        tmpdir = tempfile.mkdtemp()
+        filepath = os.path.join(tmpdir, "2026-05-16_test.md")
+        with open(filepath, "w", encoding="utf-8") as f:
+            f.write(content)
+
+        try:
+            brief = parse_report_brief(filepath, builder=builder)
+        finally:
+            os.unlink(filepath)
+            os.rmdir(tmpdir)
+
+        # builder.build_from_report uses a richer schema
+        self.assertEqual(brief["date"], "2026-05-16")
+        self.assertIn("مكتمل", brief["status_text"])
+        self.assertEqual(brief["branch"], "zilfit/integration-test")
+
+    def test_parse_report_brief_legacy_fallback(self):
+        """Without a builder, parse_report_brief uses legacy ad-hoc parser."""
+        content = (
+            "# 2026-05-16 Legacy Report\n\n"
+            "## Files Touched\n\n"
+            "| `a.py` | Created | Test |\n"
+            "| `b.py` | Modified | Test |\n\n"
+            "## Summary\nLegacy summary text.\n\n"
+            "## Blockers\nNone.\n\n"
+            "## Next Recommended Actions\nLegacy next action.\n"
+        )
+        tmpdir = tempfile.mkdtemp()
+        filepath = os.path.join(tmpdir, "2026-05-16_legacy.md")
+        with open(filepath, "w", encoding="utf-8") as f:
+            f.write(content)
+
+        try:
+            brief = parse_report_brief(filepath, builder=None)
+        finally:
+            os.unlink(filepath)
+            os.rmdir(tmpdir)
+
+        self.assertEqual(brief["date"], "2026-05-16")
+        self.assertEqual(brief["files_touched"], "2")
+        self.assertIn("Legacy", brief["summary"])
+
+    def test_format_telegram_brief_uses_builder_template(self):
+        """When builder is provided, formatting uses the config template."""
+        cfg = _default_config()
+        builder = BriefBuilder(cfg)
+
+        brief = {
+            "date": "2026-05-16",
+            "status_text": "✅ مكتمل",
+            "branch": "zilfit/test",
+            "commit_count": "3",
+            "latest_msg": "test commit",
+            "test_status": "PASS",
+            "passed": "10",
+            "executed": "10",
+            "blockers": "لا توجد عوائق",
+            "action_text": "Next step",
+            "claims_status": "✅ هندسة فقط",
+            "prod_readiness": "⚠️ قيد المراجعة",
+            "files_count": "5",
+        }
+
+        msg = format_telegram_brief(brief, builder=builder)
+        # Config template fields present
+        self.assertIn("2026-05-16", msg)
+        self.assertIn("مكتمل", msg)
+
+    def test_format_telegram_brief_legacy_fallback(self):
+        """Without builder, format_telegram_brief uses original formatter."""
+        brief = {
+            "date": "2026-05-16",
+            "status": "✅ مكتمل",
+            "files_touched": "3",
+            "summary": "Test summary.",
+            "risks": "No risks.",
+            "blockers": "No blockers.",
+            "next_action": "Next step.",
+        }
+        msg = format_telegram_brief(brief, builder=None)
+        self.assertIn("ZILFIT", msg)
+        self.assertIn("نبضة يومية", msg)
+        self.assertIn("2026-05-16", msg)
+
+    def test_format_telegram_brief_no_sensitive_data(self):
+        """Formatted messages never contain sensitive data."""
+        cfg = _default_config()
+        builder = BriefBuilder(cfg)
+        brief = {"date": "2026-05-16", "status_text": "Test"}
+        msg = format_telegram_brief(brief, builder=builder)
+        self.assertNotIn("token", msg.lower())
+        self.assertNotIn("secret", msg.lower())
+        # Also test legacy path
+        msg2 = format_telegram_brief(brief, builder=None)
+        self.assertNotIn("token", msg2.lower())
+        self.assertNotIn("secret", msg2.lower())
+
+    def test_dry_run_with_builder_integration(self):
+        """main() dry-run loads config, builds brief, and returns 0."""
+        import tools.send_daily_brief as mod
+        import shutil
+
+        tmpdir = tempfile.mkdtemp()
+        report_dir = os.path.join(tmpdir, "reports", "daily")
+        os.makedirs(report_dir)
+        report_file = os.path.join(report_dir, "2026-05-16_test.md")
+        with open(report_file, "w", encoding="utf-8") as f:
+            f.write("# Test Report\nStatus: ✅ COMPLETED\n")
+        # Also copy config to tmpdir structure
+        config_dir = os.path.join(tmpdir, "config")
+        os.makedirs(config_dir)
+        shutil.copy(CONFIG_PATH, config_dir)
+
+        orig_argv = sys.argv
+        orig_root = mod._project_root
+        try:
+            mod._project_root = tmpdir
+            sys.argv = ["send_daily_brief.py", "--dry-run"]
+            result = main()
+        finally:
+            sys.argv = orig_argv
+            mod._project_root = orig_root
             shutil.rmtree(tmpdir)
 
         self.assertEqual(result, 0)
