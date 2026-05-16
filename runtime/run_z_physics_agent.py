@@ -21,6 +21,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from runtime.run_z_bio_agent import build_bio_output as bio_build
+from runtime.shared_db import SharedDB
 
 # ---------------------------------------------------------------------------
 # Material properties (TPU 75A-80A, engineering reference range)
@@ -254,6 +255,21 @@ def main(argv: list[str] | None = None) -> dict:
         activity=args.activity,
         pronation=args.pronation,
     )
+
+    # -- SharedDB: write task-state record and verify read-back ----------------
+    db = SharedDB()
+    task_id = output["task_id"]
+    db.upsert(
+        agent_name="Z-Physics",
+        task_id=task_id,
+        status="completed",
+        summary="Physics load case analysis completed — engineering design proposal generated",
+        risk_level="low",
+        next_action=output.get("next_required_validation", ""),
+    )
+    # Verify read-back
+    _record_check = db.get(agent_name="Z-Physics", task_id=task_id)
+    output["shared_db_persisted"] = _record_check is not None
 
     if args.out:
         args.out.parent.mkdir(parents=True, exist_ok=True)
