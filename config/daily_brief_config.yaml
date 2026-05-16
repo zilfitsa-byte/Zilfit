@@ -18,13 +18,13 @@ brief:
   version: "1.0"
   locale: "ar-SA"
   max_length_chars: 4000
-  footer_brand: "ZILFIT Cloud \U0001F1F8\U0001F1E6 — هندسة فقط"
+  footer_brand: "ZILFIT Cloud 🇸🇦 — هندسة فقط"
 
 sections:
   # P0 section — always required
   - id: header
     title_en: "ZILFIT Daily Brief"
-    title_ar: "\U0001F4CB ZILFIT — نبضة يومية"
+    title_ar: "📋 ZILFIT — نبضة يومية"
     required: true
     fields:
       - date          # YYYY-MM-DD
@@ -33,7 +33,7 @@ sections:
   # P0 section — always required
   - id: project_status
     title_en: "Project Status"
-    title_ar: "\U0001F4CA حالة المشروع"
+    title_ar: "📊 حالة المشروع"
     required: true
     fields:
       - status_icon   # ✅ ❌ ⚠️
@@ -44,7 +44,7 @@ sections:
   # P0 section — always required
   - id: commits
     title_en: "Commits"
-    title_ar: "\U0001F4DD العمليات"
+    title_ar: "📝 العمليات"
     required: true
     fields:
       - count         # number of commits today
@@ -54,7 +54,7 @@ sections:
   # P0 section — always required
   - id: tests
     title_en: "Tests"
-    title_ar: "\U0001F9EA الاختبارات"
+    title_ar: "🧪 الاختبارات"
     required: true
     fields:
       - executed      # number of tests run
@@ -65,7 +65,7 @@ sections:
   # P0 section — required even if empty ("No blockers")
   - id: blockers
     title_en: "Blockers"
-    title_ar: "\U0001F6A7 العوائق"
+    title_ar: "🚧 العوائق"
     required: true
     fields:
       - has_blockers  # true/false
@@ -74,7 +74,7 @@ sections:
   # P0 section — always required
   - id: next_action
     title_en: "Next Action"
-    title_ar: "\U0001F7E2 الخطوة التالية"
+    title_ar: "🟢 الخطوة التالية"
     required: true
     fields:
       - action_text   # recommended next task
@@ -82,7 +82,7 @@ sections:
   # P0 section — always required
   - id: claims_safety
     title_en: "Claims Safety"
-    title_ar: "\U0001F6E1\ufe0f سلامة المطالبات"
+    title_ar: "🛡️ سلامة المطالبات"
     required: true
     fields:
       - clean         # true/false (no medical/clinical/treatment claims)
@@ -91,7 +91,7 @@ sections:
   # P0 section — always required
   - id: production_readiness
     title_en: "Production Readiness"
-    title_ar: "\U0001F512 الجاهزية للإنتاج"
+    title_ar: "🔒 الجاهزية للإنتاج"
     required: true
     fields:
       - ready         # true/false
@@ -101,7 +101,7 @@ sections:
   # Optional section
   - id: files_touched
     title_en: "Files Modified"
-    title_ar: "\U0001F4C2 الملفات المعدّلة"
+    title_ar: "📂 الملفات المعدّلة"
     required: false
     fields:
       - count
@@ -110,7 +110,7 @@ sections:
   # Optional section
   - id: risks
     title_en: "Risks"
-    title_ar: "\U0001F6A8 المخاطر"
+    title_ar: "🚨 المخاطر"
     required: false
     fields:
       - has_risks     # true/false
@@ -136,23 +136,23 @@ validation:
 
 # Telegram message template (positional, filled by send_daily_brief.py)
 telegram_template: |
-  $\U0001F4CB *ZILFIT — نبضة يومية* | {date}
+  📋 *ZILFIT — نبضة يومية* | {date}
 
-  $\U0001F4CA *حالة المشروع:* {status_text}
+  📊 *حالة المشروع:* {status_text}
   🇸🇦 الفرع: {branch}
 
-  $\U0001F4DD *العمليات:* {commit_count} عملية | آخر: {latest_msg}
+  📝 *العمليات:* {commit_count} عملية | آخر: {latest_msg}
 
-  $\U0001F9EA *الاختبارات:* {test_status} ({passed}/{executed})
+  🧪 *الاختبارات:* {test_status} ({passed}/{executed})
 
-  $\U0001F6A7 *العوائق:* {blockers}
+  🚧 *العوائق:* {blockers}
 
-  $\U0001F7E2 *الخطوة التالية:* {next_action}
+  🟢 *الخطوة التالية:* {next_action}
 
-  $\U0001F6E1\ufe0f *سلامة المطالبات:* {claims_status}
+  🛡️ *سلامة المطالبات:* {claims_status}
 
-  $\U0001F512 *الجاهزية للإنتاج:* {prod_readiness}
+  🔒 *الجاهزية للإنتاج:* {prod_readiness}
 
-  $\U0001F4C2 *الملفات:* {files_count}
+  📂 *الملفات:* {files_count}
 
   _{footer_brand}_

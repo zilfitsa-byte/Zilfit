@@ -191,13 +191,13 @@ def format_telegram_brief(brief, builder=None):
     next_preview = next_preview.replace("\n", " ").strip()
 
     return (
-        f"\U0001f4cb *ZILFIT \u2014 \u0646\u0628\u0636\u0629 \u064a\u0648\u0645\u064a\u0629* | {date}\\n\\n"
-        f"\u0627\u0644\u062d\u0627\u0644\u0629: {status}\\n\\n"
-        f"\u0627\u0644\u0645\u0644\u0641\u0627\u062a \u0645\u0639\u062f\u0651\u0644\u0629: {files}\\n\\n"
-        f"{summary_preview}\\n\\n"
-        f"\u26a0\ufe0f \u0627\u0644\u0639\u0648\u0627\u0626\u0642: {blockers[:80]}\\n\\n"
-        f"\u27a1\ufe0f \u0627\u0644\u062a\u0627\u0644\u064a: {next_preview}\\n\\n"
-        f"_ZILFIT Cloud \U0001f1f8\U0001f1e6 \u2014 \u0647\u0646\u062f\u0633\u0629 \u0641\u0642\u0637_"
+        f"📋*ZILFIT — نبضة يومية* | {date}\n\n"
+        f"الحالة: {status}\n\n"
+        f"الملفات المعدّلة: {files}\n\n"
+        f"{summary_preview}\n\n"
+        f"⚠️ العوائق: {blockers[:80]}\n\n"
+        f"➡️ التالي: {next_preview}\n\n"
+        f"_ZILFIT Cloud 🇸🇦 — هندسة فقط_"
     )
 
 
