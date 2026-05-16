@@ -20,8 +20,100 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from runtime.run_z_bio_agent import build_bio_output as bio_build
 from runtime.shared_db import SharedDB
+
+# ---------------------------------------------------------------------------
+# Local pressure-map fallback contract.
+# When no SharedDB Z-Bio record is provided, Z-Physics computes a neutral
+# pressure estimate internally rather than importing Z-Bio runtime code.
+# This preserves agent isolation: communication flows through SharedDB
+# records or caller-supplied JSON, not direct runtime imports.
+# ---------------------------------------------------------------------------
+
+_ZONES = ["heel", "arch", "metatarsal", "toe_box", "lateral_edge"]
+_GAIT_PHASES = ["heel_strike", "midstance", "toe_off"]
+
+_BASE_FRACTIONS: dict[str, dict[str, float]] = {
+    "heel_strike": {
+        "heel": 0.60, "arch": 0.05, "metatarsal": 0.15,
+        "toe_box": 0.05, "lateral_edge": 0.15,
+    },
+    "midstance": {
+        "heel": 0.20, "arch": 0.15, "metatarsal": 0.35,
+        "toe_box": 0.10, "lateral_edge": 0.20,
+    },
+    "toe_off": {
+        "heel": 0.05, "arch": 0.05, "metatarsal": 0.50,
+        "toe_box": 0.25, "lateral_edge": 0.15,
+    },
+}
+
+_ACTIVITY_MULTIPLIER: dict[str, float] = {
+    "standing": 1.0, "walking": 1.2, "running": 2.5, "high_impact": 3.0,
+}
+
+
+def _neutral_pressure_map_kpa(
+    weight_kg: float = 75.0,
+    foot_length_mm: float = 265.0,
+    activity: str = "walking",
+) -> dict[str, dict[str, float]]:
+    """Compute a neutral (pronation=neutral) pressure-map fallback.
+
+    Returns {phase: {zone: pressure_kpa}} so Z-Physics can operate
+    without importing Z-Bio runtime. Engineering estimate only — FEA required.
+    """
+    peak_force_n = weight_kg * 9.81 * _ACTIVITY_MULTIPLIER.get(activity, 1.2)
+    result: dict[str, dict[str, float]] = {}
+    for phase in _GAIT_PHASES:
+        fracs = _BASE_FRACTIONS.get(phase, {})
+        total = sum(fracs.values())
+        normed = {z: fracs.get(z, 0.0) / total if total > 0 else 1.0 / len(_ZONES) for z in _ZONES}
+        result[phase] = {
+            z: (normed[z] * peak_force_n * 1000) / (foot_length_mm * foot_length_mm * 1e-6)
+            for z in _ZONES
+        }
+    return result
+
+
+def _make_fallback_bio_output(
+    weight_kg: float = 75.0,
+    foot_length_mm: float = 265.0,
+    activity: str = "walking",
+) -> dict:
+    """Build a minimal bio-shaped output dict from the local pressure map.
+
+    Matches the structure of Z-Bio's build_bio_output so existing Z-Physics
+    logic (which expects bio_output["biomech_signal"]["pressure_map_kpa"])
+    continues to work.
+    """
+    pressure_map = _neutral_pressure_map_kpa(
+        weight_kg=weight_kg, foot_length_mm=foot_length_mm, activity=activity,
+    )
+    zone_map = {}
+    for zone in _ZONES:
+        peak_p = max(pressure_map[ph][zone] for ph in _GAIT_PHASES)
+        wall = round(0.6 + (peak_p / max(
+            pressure_map[ph][z] for ph in _GAIT_PHASES for z in _ZONES
+        )) * 0.4, 2) if any(pressure_map[ph][z] > 0 for ph in _GAIT_PHASES for z in _ZONES) else 0.6
+        zone_map[zone] = {
+            "peak_pressure_kpa": round(peak_p, 2),
+            "wall_thickness_mm": max(0.6, wall),
+            "lattice_relative_density": 0.3,
+            "lattice_type": "gyroid",
+            "cell_size_mm": 6.0,
+        }
+    return {
+        "biomech_signal": {
+            "gait_phases": _GAIT_PHASES,
+            "zones": _ZONES,
+            "pressure_map_kpa": pressure_map,
+            "peak_force_n": round(weight_kg * 9.81 * _ACTIVITY_MULTIPLIER.get(activity, 1.2), 2),
+            "activity_level": activity,
+            "pronation_type": "neutral",
+        },
+        "design_proposal": {"zone_map": zone_map},
+    }
 
 # ---------------------------------------------------------------------------
 # Material properties (TPU 75A-80A, engineering reference range)
@@ -107,11 +199,11 @@ def perform_load_case_analysis(
         pressure_map = bio_output["biomech_signal"]["pressure_map_kpa"]
         zone_guidance = bio_output.get("design_proposal", {}).get("zone_map", {})
     else:
-        bio = bio_build(weight_kg=weight_kg, foot_length_mm=foot_length_mm,
-                        width_mm=100.0, arch_height_mm=25.0,
-                        activity=activity, pronation=pronation, use_case="daily_wear")
-        pressure_map = bio["biomech_signal"]["pressure_map_kpa"]
-        zone_guidance = bio.get("design_proposal", {}).get("zone_map", {})
+        _fb = _make_fallback_bio_output(
+            weight_kg=weight_kg, foot_length_mm=foot_length_mm, activity=activity,
+        )
+        pressure_map = _fb["biomech_signal"]["pressure_map_kpa"]
+        zone_guidance = _fb.get("design_proposal", {}).get("zone_map", {})
 
     load_cases: dict[str, dict] = {}
     wall_thickness_map: dict[str, float] = {}
