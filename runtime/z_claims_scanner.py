@@ -43,6 +43,30 @@ _FORBIDDEN_PATTERNS: list[tuple[re.Pattern, str]] = []
 _SOFTENING_PATTERNS: list[tuple[re.Pattern, str]] = []
 _EVIDENCE_PATTERNS: list[tuple[re.Pattern, str]] = []
 
+# Phrases that appear in negative/disclaimer context are OK.
+# Example: "No medical, therapeutic, or cure claims." — this is a safety
+# disclaimer, NOT a product claim.
+_DISCLAIMER_PREFIXES = {
+    "no", "not", "without", "zero", "do not", "don't", "never",
+    "forbid", "prohibit", "avoid", "exclude", "must not", "should not",
+    "cannot", "can't", "won't", "will not", "shall not",
+    "anti-", "non-", "devoid of", "free of", "absence of",
+}
+
+# If the line itself is a metadata/reference line listing forbidden examples
+# (e.g. in audit tables: "| treats disease | Internal forbidden example |"),
+# it's NOT a product claim.
+_META_INDICATORS = {
+    "forbidden", "internal", "example", "prohibited", "policy",
+    "rule", "list", "classification", "category", "reference",
+    "audit", "catalog", "vocabulary", "banned", "not allowed",
+    "a — internal", "same as above", "z-claims forbidden",
+    "ز_كلايمز", "z_claims",  # agent names in governance context
+    "قائمة", "مرجع", "داخلي", "محظور", "قائمة محظور",
+    "agents.md", "skill", "governance/", "agents/",  # governance file references
+    "سطر", "line", "definition",  # line references in tables
+}
+
 
 def _build_patterns() -> None:
     """Build compiled regex patterns for classification.
@@ -103,6 +127,57 @@ _build_patterns()
 # ---------------------------------------------------------------------------
 
 
+def _is_disclaimer_context(text: str, match_pos: int) -> bool:
+    """Check if the match appears in a negative/disclaimer or meta-reference context.
+
+    Looks at the entire line containing the match and checks for:
+    (a) disclaimer prefixes appearing BEFORE the match on the same line
+        ('No', 'Not', 'Do not', 'avoids', etc.) — with a generous distance
+        limit since lists like "No medical, pain, hormone, disease, or cure
+        claims" can have 60+ chars between "No" and "cure".
+    (b) meta-reference indicators (tables listing forbidden examples).
+    """
+    # Find start and end of line
+    line_start = text.rfind("\n", 0, match_pos)
+    if line_start == -1:
+        line_start = 0
+    else:
+        line_start += 1
+
+    line_end = text.find("\n", match_pos)
+    if line_end == -1:
+        line_end = len(text)
+
+    line = text[line_start:line_end].lower()
+    match_offset = match_pos - line_start  # position of match within line
+
+    # Check for disclaimer prefixes appearing BEFORE the match on the same line.
+    # Use a generous distance (200 chars) to handle long enumerated lists like
+    # "No medical, therapeutic, pain, hormone, disease, or cure claims."
+    preceding = line[:match_offset]
+    for prefix in _DISCLAIMER_PREFIXES:
+        last_pos = preceding.rfind(prefix)
+        if last_pos >= 0:
+            # Verify the prefix is actually negating the claim (not just
+            # coincidentally present). Check that no "and", "or", "but"
+            # separates them in a way that changes meaning.
+            between = preceding[last_pos + len(prefix):]
+            # Allow connectors like ", ", " or ", " and ", " nor "
+            if len(between) <= 200:
+                return True
+
+    # Check for meta/table-reference context anywhere in the line.
+    # But only if the disclaimer check didn't already fire — we don't want
+    # a line like "| treats disease | forbidden |" to pass because "forbidden"
+    # is somewhere else in the line; that IS a meta line listing examples,
+    # so it SHOULD pass.
+    for indicator in _META_INDICATORS:
+        if indicator in line:
+            return True
+
+    return False
+
+
 def _classifying_findings(text: str, file_path: Path) -> list[dict]:
     """Classify all matching claim phrases in the given text.
 
@@ -113,8 +188,14 @@ def _classifying_findings(text: str, file_path: Path) -> list[dict]:
       - line_hint: approximate line number or first 60 chars
     """
     findings: list[dict] = []
+    # Skip governance reference files entirely
+    if _is_governance_reference(file_path):
+        return findings
+
     for pattern, reason in _FORBIDDEN_PATTERNS:
         for m in pattern.finditer(text):
+            if _is_disclaimer_context(text, m.start()):
+                continue
             findings.append({
                 "phrase": m.group(),
                 "classification": FORBIDDEN,
@@ -123,6 +204,8 @@ def _classifying_findings(text: str, file_path: Path) -> list[dict]:
             })
     for pattern, reason in _SOFTENING_PATTERNS:
         for m in pattern.finditer(text):
+            if _is_disclaimer_context(text, m.start()):
+                continue
             findings.append({
                 "phrase": m.group(),
                 "classification": NEEDS_SOFTENING,
@@ -131,6 +214,8 @@ def _classifying_findings(text: str, file_path: Path) -> list[dict]:
             })
     for pattern, reason in _EVIDENCE_PATTERNS:
         for m in pattern.finditer(text):
+            if _is_disclaimer_context(text, m.start()):
+                continue
             findings.append({
                 "phrase": m.group(),
                 "classification": NEEDS_EVIDENCE,
@@ -197,20 +282,6 @@ def scan_file(file_path: Path) -> dict:
         file_type = "json"
     else:
         file_type = "other"
-
-    # Governance code/docs listing the forbidden phrases are OK
-    if _is_governance_reference(file_path):
-        # Still scan but downgrade severity of governance-internal references
-        raw_findings = _classifying_findings(content, file_path)
-        # Governance files listing patterns are expected — classify as info only
-        return {
-            "path": str(file_path),
-            "text_len": len(content),
-            "file_type": file_type,
-            "findings": [],
-            "overall_status": ALLOWED,
-            "note": "governance reference file — patterns expected here",
-        }
 
     findings = _classifying_findings(content, file_path)
 

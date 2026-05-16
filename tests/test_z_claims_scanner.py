@@ -219,6 +219,58 @@ class TestScanFileAllowed(unittest.TestCase):
         self.assertIn("error", r)
 
 
+class TestDisclaimerContext(unittest.TestCase):
+    """Safety disclaimers like 'No ... cure claims' should NOT be flagged."""
+
+    def _tmp(self, suffix, content):
+        fd, path = tempfile.mkstemp(suffix=suffix)
+        os.write(fd, content.encode())
+        os.close(fd)
+        return Path(path)
+
+    def test_no_cure_claims_not_flagged(self):
+        p = self._tmp(".md", "This product avoids medical, therapeutic, or cure claims.")
+        try:
+            r = scan_file(p)
+            self.assertEqual(r["overall_status"], ALLOWED)
+            self.assertEqual(len(r["findings"]), 0)
+        finally:
+            p.unlink()
+
+    def test_forbidden_from_product_not_skipped(self):
+        p = self._tmp(".md", "Our product cures chronic foot pain permanently.")
+        try:
+            r = scan_file(p)
+            self.assertEqual(r["overall_status"], FORBIDDEN)
+            self.assertTrue(len(r["findings"]) > 0)
+        finally:
+            p.unlink()
+
+    def test_not_diagnoses_not_flagged(self):
+        p = self._tmp(".md", "This device does not diagnoses medical conditions.")
+        try:
+            r = scan_file(p)
+            self.assertEqual(r["overall_status"], ALLOWED)
+        finally:
+            p.unlink()
+
+    def test_without_therapeutic_not_flagged(self):
+        p = self._tmp(".md", "Designed without therapeutic benefits.")
+        try:
+            r = scan_file(p)
+            self.assertEqual(r["overall_status"], ALLOWED)
+        finally:
+            p.unlink()
+
+    def test_zero_medical_claims_not_flagged(self):
+        p = self._tmp(".md", "Zero medical, diagnostic, or therapeutic claims.")
+        try:
+            r = scan_file(p)
+            self.assertEqual(r["overall_status"], ALLOWED)
+        finally:
+            p.unlink()
+
+
 class TestGovernanceReferenceSkip(unittest.TestCase):
     """Governance and test files listing the forbidden phrases should self-flag."""
 
