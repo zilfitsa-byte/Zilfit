@@ -12,6 +12,7 @@ from pathlib import Path
 
 from runtime.shared_db import SharedDB
 from runtime.run_z_physics_agent import perform_load_case_analysis
+from runtime.run_z_printability_agent import perform_printability_check
 
 
 class TestSharedDBIntegration(unittest.TestCase):
@@ -198,6 +199,68 @@ class TestSharedDBIntegration(unittest.TestCase):
             self.assertEqual(record_check["status"], "completed")
             print(f"[PASS] Z-Physics main() shared_db_persisted flag: "
                   f"task_id={task_id}, persisted=True")
+        finally:
+            if os.path.exists(db_path):
+                os.remove(db_path)
+
+    def test_z_printability_runtime_db_write_and_query(self):
+        """Z-Printability: run perform_printability_check() → SharedDB write → query back.
+
+        Exercises the same runtime path the agent uses in production:
+        1. perform_printability_check() generates a printability output dict
+        2. Write a task-state record to SharedDB (mimics main() logic)
+        3. Query the record back and verify it matches
+        """
+        fd, db_path = tempfile.mkstemp(suffix="_zprintability.db")
+        os.close(fd)
+        try:
+            # Step 1: Run the printability analysis
+            print_output = perform_printability_check()
+            task_id = print_output["task_id"]
+            self.assertTrue(task_id.startswith("zprint-"),
+                            f"Task ID should start with 'zprint-', got '{task_id}'")
+            self.assertEqual(print_output["agent_name"], "Z-Printability")
+
+            # Step 2: Write task-state record to SharedDB (same as main() logic)
+            db = SharedDB(db_path)
+            db.upsert(
+                agent_name="Z-Printability",
+                task_id=task_id,
+                status="completed",
+                summary="3D print feasibility validation completed — engineering design proposal generated",
+                risk_level="low",
+                next_action=print_output.get("next_required_validation", ""),
+            )
+
+            # Step 3: Query it back
+            record = db.get(agent_name="Z-Printability", task_id=task_id)
+            self.assertIsNotNone(record, "Z-Printability record not found after write")
+            assert record is not None
+            self.assertEqual(record["agent_name"], "Z-Printability")
+            self.assertEqual(record["task_id"], task_id)
+            self.assertEqual(record["status"], "completed")
+            self.assertEqual(record["risk_level"], "low")
+            self.assertEqual(
+                record["summary"],
+                "3D print feasibility validation completed — engineering design proposal generated",
+            )
+            # Verify next_action points to expected validation
+            self.assertIn("Z-Sim", record["next_action"])
+
+            # Step 4: Verify list_by_agent returns the Z-Printability record
+            zprint_records = db.list_by_agent("Z-Printability")
+            self.assertEqual(len(zprint_records), 1,
+                             f"Expected 1 Z-Printability record, got {len(zprint_records)}")
+            self.assertEqual(zprint_records[0]["task_id"], task_id)
+
+            # Step 5: Verify print output contains key engineering fields
+            self.assertIn("print_ready_status", print_output)
+            self.assertIn("mesh_integrity", print_output)
+            self.assertIn("material_usage_estimate", print_output)
+
+            print(f"[PASS] Z-Printability runtime DB: task_id={task_id}, "
+                  f"print_ready={print_output['print_ready_status']}, "
+                  f"mesh={print_output['mesh_integrity']}")
         finally:
             if os.path.exists(db_path):
                 os.remove(db_path)

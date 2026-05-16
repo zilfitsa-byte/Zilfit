@@ -20,6 +20,8 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from runtime.shared_db import SharedDB
+
 # ---------------------------------------------------------------------------
 # Print constraints
 # ---------------------------------------------------------------------------
@@ -265,6 +267,21 @@ def main(argv: list[str] | None = None) -> dict:
         physics_output=physics_output,
         bio_output=bio_output,
     )
+
+    # -- SharedDB: write task-state record and verify read-back ----------------
+    db = SharedDB()
+    task_id = output["task_id"]
+    db.upsert(
+        agent_name="Z-Printability",
+        task_id=task_id,
+        status="completed",
+        summary="3D print feasibility validation completed — engineering design proposal generated",
+        risk_level="low",
+        next_action=output.get("next_required_validation", ""),
+    )
+    # Verify read-back
+    _record_check = db.get(agent_name="Z-Printability", task_id=task_id)
+    output["shared_db_persisted"] = _record_check is not None
 
     if args.out:
         args.out.parent.mkdir(parents=True, exist_ok=True)
