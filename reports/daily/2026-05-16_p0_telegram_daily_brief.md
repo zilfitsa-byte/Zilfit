@@ -12,7 +12,6 @@
 | File | Action | Purpose |
 |------|--------|---------|
 | `tools/send_daily_brief.py` | Created | Reads latest report, formats Arabic brief, sends via Telegram |
-| `tools/__init__.py` | Created | Package init for tools imports |
 | `tests/test_send_daily_brief.py` | Created | Unit tests, mocks only, no network calls |
 
 ## Summary
@@ -41,10 +40,10 @@ python3 -m pytest tests/test_send_daily_brief.py -v
 
 | Test Class | Tests | Result |
 |------------|-------|--------|
-| TestFormatTelegramBrief | 2 (formatting, no sensitive data) | ✅ |
 | TestParseReportBrief | 2 (basic parsing, empty file) | ✅ |
-| TestFormatTruncation | 2 (long text truncation, special chars) | ✅ |
-| TestDryRunPrints | 1 (dry-run output format) | ✅ |
+| TestFormatTelegramBrief | 3 (formatting, no sensitive data, truncation) | ✅ |
+| TestFindLatestReport | 2 (missing dir, not found) | ✅ |
+| TestDryRunOutput | 1 (dry-run output format) | ✅ |
 
 ## Risks
 
@@ -80,8 +79,8 @@ python3 -m pytest tests/test_send_daily_brief.py -v
 
 تم إنشاء أداة بسيطة لقراءة آخر تقرير يومي من `reports/daily/` وتنسيقه كنبضة قصيرة بالعربية وإرسالها عبر تيليجرام.
 
-- **الملفات:** ٣ ملفات جديدة (أداة + تهيئة + اختبارات)
-- **الاختبارات:** ٧ اختبارات — جميعها نجحت
+- **الملفات:** ملفان جديدان (أداة + اختبارات)
+- **الاختبارات:** ٨ اختبارات — جميعها نجحت
 - **الأمان:** التوكن فقط من متغيرات البيئة. لا يتم تخزينها أو طباعتها
 - **وضع جاف:** يمكن معاينة الرسالة بدون إرسالها عبر `--dry-run`
 - **الكتل:** لا توجد عوائق
