@@ -238,3 +238,51 @@ class TestGenerateReport:
         report = generate_report(entries, classifications, pathlib.Path("intake.md"))
         assert "https://x.com/123" in report
         assert "Important" in report
+class TestImprovedClassification:
+    """Tests for improved classification based on v3 intake report feedback."""
+
+    def test_dna_nanostructures_maps_to_manufacturing_materials(self):
+        entry = {
+            "source": "",
+            "content": "Build DNA nanostructures with precision using programmable molecular assembly and atomic-scale construction",
+            "notes": "",
+        }
+        cats = classify_entry(entry)
+        assert "manufacturing_materials" in cats, f"Expected manufacturing_materials, got {cats}"
+
+    def test_ai_prototyping_maps_to_content_and_production(self):
+        entry = {
+            "source": "",
+            "content": "Product leaders should stop hiding behind PRDs and product strategy docs because AI prototyping changed product development",
+            "notes": "prototype-first execution, faster validation",
+        }
+        cats = classify_entry(entry)
+        assert "content_marketing" in cats, f"Expected content_marketing, got {cats}"
+        assert "production_readiness" in cats, f"Expected production_readiness, got {cats}"
+
+    def test_claude_agent_training_maps_to_ai_agents(self):
+        entry = {
+            "source": "",
+            "content": "2-hour Claude agent training. Structuring agents that manage themselves, terminal access, file system memory, blocking hallucinations with hooks",
+            "notes": "Relevant to Hermes architecture, safer agent execution",
+        }
+        cats = classify_entry(entry)
+        assert "ai_agents" in cats, f"Expected ai_agents, got {cats}"
+
+    def test_agent_employment_maps_to_ai_agents(self):
+        entry = {
+            "source": "",
+            "content": "Turn Claude Into a Full-Time AI Employee in 7 Days",
+            "notes": "",
+        }
+        cats = classify_entry(entry)
+        assert "ai_agents" in cats, f"Expected ai_agents, got {cats}"
+
+    def test_posture_mechanoreceptor_remains_claims_risk(self):
+        entry = {
+            "source": "",
+            "content": "Nike shoe posture claim about feet, mechanoreceptors, brain signaling, posture, balance, and movement",
+            "notes": "Treat as claims compliance risk",
+        }
+        cats = classify_entry(entry)
+        assert "claims_compliance_risk" in cats, f"Expected claims_compliance_risk, got {cats}"

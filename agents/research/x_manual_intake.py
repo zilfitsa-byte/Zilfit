@@ -77,6 +77,9 @@ CLASSIFIER_RULES = [
             r"\bautonomous[\s]+ai", r"\bswar[mms]\b.*\bai", r"\blangchain\b",
             r"\bcrewai\b", r"\bautogpt\b", r"\bmeta[gpt]?\b",
             r"\borchestrat.*agent", r"\bswarm\b.*\bai",
+            # Agent training, AI employee, self-managing agents
+            r"agent.*manag.*themselv",
+            r"\bai[\s]+employee",
         ],
     },
     # Competitor Footwear / Product
@@ -100,6 +103,14 @@ CLASSIFIER_RULES = [
             r"\bsinter", r"\bfdm\b", r"\bsla\b.", r"\breprap\b",
             r"\b(elastomer|thermoplastic)", r"\bmaterial[s]?.*?\bprint",
             r"\bprint.*?\bmaterial", r"\bdmf\b", r"\bdesign[\s]+for[\s]+manufactur",
+            # Programmable molecular / atomic-scale / DNA nanostructures
+            r"\bdna[\s_]?nanostructur",
+            r"\bprogrammable[\s]+molecular",
+            r"\batomic.scale",
+            r"\bnano[\s_]?assembl",
+            r"\bmolecular[\s]+engineering",
+            r"\bmolecular[\s]+fabrication",
+            r"self.\s*assembl",
         ],
     },
     # 3D Scanning / Measurement
@@ -124,6 +135,11 @@ CLASSIFIER_RULES = [
             r"\bvolume[\s]+produc", r"\bmass[\s]+produc", r"\bdfm\b",
             r"\bmanufactur.*workflow", r"\bfrom[\s]+design[\s]+to[\s]+sample",
             r"\bmanufactur.*pipeline",
+            # Prototype-first, PRD, product strategy
+            r"\bAI[\s]+prototyp",
+            r"\bprototyp.*first",
+            r"\bPRD\b",
+            r"product[\s]+strateg",
         ],
     },
     # Claims / Compliance Risk
@@ -136,6 +152,11 @@ CLASSIFIER_RULES = [
             r"\bhealth[\s]+claim", r"\bpain[\s]+(relief|management|reduction)",
             r"\bpain[\s]+free", r"\bmedical[\s]+grade", r"\borthopedic[s]?",
             r"\bpatent\b.*\bsue", r"\blawyer[s]?[sm]?\b.*\bsue",
+            # Neural/posture/biomechanical claims that may overstep
+            r"\bmechanoreceptor",
+            r"brain[\s]+signal",
+            r"\bposture.*claim",
+            r"\bnervous[\s]+system.*shoe",
         ],
     },
     # Content / Marketing Ideas
@@ -147,6 +168,11 @@ CLASSIFIER_RULES = [
             r"\bhook\b", r"\bnarrative\b", r"\bstorytelling\b",
             r"\bux[\s]+pattern", r"\bdesign[\s]+inspiration",
             r"\bminimalist[\s]+design\b", r"\bluxury[\s]+aesthetic",
+            # AI prototyping / PRD / product strategy
+            r"\bAI[\s]+prototyp",
+            r"\bprototyp.*first",
+            r"\bPRD\b",
+            r"product[\s]+strateg",
         ],
     },
 ]
