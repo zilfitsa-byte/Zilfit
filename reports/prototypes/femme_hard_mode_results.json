@@ -1,0 +1,1057 @@
+{
+  "simulation_meta": {
+    "title": "ZILFIT FEMME Hard-Mode Simulation",
+    "date_utc": "2026-05-20T01:07:30.017424+00:00",
+    "description": "Engineering simulation only \u2014 NO MEDICAL CLAIMS",
+    "stress_matrix": {
+      "weights_kg": [
+        80,
+        95,
+        110,
+        125,
+        140
+      ],
+      "foot_profiles": [
+        "flat_arch",
+        "neutral_arch",
+        "high_arch"
+      ],
+      "usage_modes": [
+        "daily_walking",
+        "standing_long",
+        "stairs",
+        "fast_walk"
+      ],
+      "gait_phases": [
+        "heel_strike",
+        "midfoot_transition",
+        "forefoot_push_off",
+        "toe_off"
+      ]
+    },
+    "scenarios_per_candidate": 240,
+    "total_scenarios": 960
+  },
+  "candidates": {
+    "A_FEMME_original": {
+      "candidate_key": "A_FEMME_original",
+      "total_scenarios": 240,
+      "pass_count": 40,
+      "blocked_count": 76,
+      "needs_revision_count": 124,
+      "pass_rate": 16.7,
+      "avg_comfort_score": 88.0,
+      "avg_overload_risk": 81.3,
+      "avg_fatigue_risk": 0.2,
+      "avg_toe_collapse_risk": 0.0,
+      "avg_arch_instability_risk": 0.171,
+      "avg_heel_overload_risk": 0.169,
+      "avg_prototype_readiness": 76.1,
+      "hard_pass_criteria": {
+        "pass_rate_gte_70": false,
+        "readiness_gte_82": false,
+        "no_hard_block_95kg_daily": true,
+        "no_hard_block_110kg_daily": true,
+        "clear_failure_reasons": true
+      },
+      "hard_pass_all": false,
+      "blocked_95kg_neutral_daily": false,
+      "blocked_110kg_neutral_daily": false,
+      "worst_scenario": {
+        "weight_kg": 140,
+        "foot_profile": "high_arch",
+        "usage_mode": "stairs",
+        "gait_phase": "forefoot_push_off",
+        "prototype_readiness": 58.5,
+        "blocks": [
+          "hard_block: prototype_readiness_58.5_below_70"
+        ]
+      },
+      "zone_failure_counts": {
+        "heel": 34,
+        "midfoot": 21,
+        "forefoot": 0,
+        "toe": 0
+      },
+      "blocked_details_sample": [
+        {
+          "weight_kg": 80,
+          "foot_profile": "flat_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_320.4_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 80,
+          "foot_profile": "neutral_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_352.5_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 80,
+          "foot_profile": "high_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_391.6_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 80,
+          "foot_profile": "high_arch",
+          "usage_mode": "fast_walk",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_324.9_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "flat_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_380.5_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "flat_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "forefoot_push_off",
+          "blocks": [
+            "hard_block: prototype_readiness_68.6_below_70"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "flat_arch",
+          "usage_mode": "fast_walk",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_315.7_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "neutral_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_418.6_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "neutral_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "midfoot_transition",
+          "blocks": [
+            "hard_block: prototype_readiness_68.0_below_70"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "neutral_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "forefoot_push_off",
+          "blocks": [
+            "hard_block: prototype_readiness_66.0_below_70"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "neutral_arch",
+          "usage_mode": "fast_walk",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_347.2_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "high_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_465.1_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "high_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "midfoot_transition",
+          "blocks": [
+            "hard_block: prototype_readiness_67.7_below_70"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "high_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "forefoot_push_off",
+          "blocks": [
+            "hard_block: prototype_readiness_66.0_below_70"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "high_arch",
+          "usage_mode": "fast_walk",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_385.8_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 110,
+          "foot_profile": "flat_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_440.6_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 110,
+          "foot_profile": "flat_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "midfoot_transition",
+          "blocks": [
+            "hard_block: prototype_readiness_69.3_below_70"
+          ]
+        },
+        {
+          "weight_kg": 110,
+          "foot_profile": "flat_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "forefoot_push_off",
+          "blocks": [
+            "hard_block: prototype_readiness_64.7_below_70"
+          ]
+        },
+        {
+          "weight_kg": 110,
+          "foot_profile": "flat_arch",
+          "usage_mode": "fast_walk",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_365.5_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 110,
+          "foot_profile": "flat_arch",
+          "usage_mode": "fast_walk",
+          "gait_phase": "forefoot_push_off",
+          "blocks": [
+            "hard_block: prototype_readiness_69.2_below_70"
+          ]
+        }
+      ],
+      "density_map": {
+        "heel": 0.32,
+        "midfoot": 0.38,
+        "forefoot": 0.35,
+        "toe": 0.28
+      }
+    },
+    "B_FEMME_plus_03": {
+      "candidate_key": "B_FEMME_plus_03",
+      "total_scenarios": 240,
+      "pass_count": 41,
+      "blocked_count": 75,
+      "needs_revision_count": 124,
+      "pass_rate": 17.1,
+      "avg_comfort_score": 88.2,
+      "avg_overload_risk": 80.7,
+      "avg_fatigue_risk": 0.2,
+      "avg_toe_collapse_risk": 0.0,
+      "avg_arch_instability_risk": 0.141,
+      "avg_heel_overload_risk": 0.167,
+      "avg_prototype_readiness": 76.4,
+      "hard_pass_criteria": {
+        "pass_rate_gte_70": false,
+        "readiness_gte_82": false,
+        "no_hard_block_95kg_daily": true,
+        "no_hard_block_110kg_daily": true,
+        "clear_failure_reasons": true
+      },
+      "hard_pass_all": false,
+      "blocked_95kg_neutral_daily": false,
+      "blocked_110kg_neutral_daily": false,
+      "worst_scenario": {
+        "weight_kg": 140,
+        "foot_profile": "high_arch",
+        "usage_mode": "stairs",
+        "gait_phase": "forefoot_push_off",
+        "prototype_readiness": 58.5,
+        "blocks": [
+          "hard_block: prototype_readiness_58.5_below_70"
+        ]
+      },
+      "zone_failure_counts": {
+        "heel": 34,
+        "midfoot": 0,
+        "forefoot": 0,
+        "toe": 0
+      },
+      "blocked_details_sample": [
+        {
+          "weight_kg": 80,
+          "foot_profile": "flat_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_314.4_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 80,
+          "foot_profile": "neutral_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_345.9_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 80,
+          "foot_profile": "high_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_384.3_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 80,
+          "foot_profile": "high_arch",
+          "usage_mode": "fast_walk",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_318.8_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "flat_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_373.4_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "flat_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "forefoot_push_off",
+          "blocks": [
+            "hard_block: prototype_readiness_68.9_below_70"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "flat_arch",
+          "usage_mode": "fast_walk",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_309.8_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "neutral_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_410.7_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "neutral_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "midfoot_transition",
+          "blocks": [
+            "hard_block: prototype_readiness_68.4_below_70"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "neutral_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "forefoot_push_off",
+          "blocks": [
+            "hard_block: prototype_readiness_68.1_below_70"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "neutral_arch",
+          "usage_mode": "fast_walk",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_340.7_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "high_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_456.4_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "high_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "midfoot_transition",
+          "blocks": [
+            "hard_block: prototype_readiness_67.7_below_70"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "high_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "forefoot_push_off",
+          "blocks": [
+            "hard_block: prototype_readiness_68.1_below_70"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "high_arch",
+          "usage_mode": "fast_walk",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_378.6_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 110,
+          "foot_profile": "flat_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_432.3_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 110,
+          "foot_profile": "flat_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "midfoot_transition",
+          "blocks": [
+            "hard_block: prototype_readiness_69.6_below_70"
+          ]
+        },
+        {
+          "weight_kg": 110,
+          "foot_profile": "flat_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "forefoot_push_off",
+          "blocks": [
+            "hard_block: prototype_readiness_64.7_below_70"
+          ]
+        },
+        {
+          "weight_kg": 110,
+          "foot_profile": "flat_arch",
+          "usage_mode": "fast_walk",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_358.7_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 110,
+          "foot_profile": "neutral_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_475.6_kPa_exceeds_300"
+          ]
+        }
+      ],
+      "density_map": {
+        "heel": 0.35,
+        "midfoot": 0.41,
+        "forefoot": 0.38,
+        "toe": 0.31
+      }
+    },
+    "C_FEMME_plus_06": {
+      "candidate_key": "C_FEMME_plus_06",
+      "total_scenarios": 240,
+      "pass_count": 43,
+      "blocked_count": 73,
+      "needs_revision_count": 124,
+      "pass_rate": 17.9,
+      "avg_comfort_score": 88.4,
+      "avg_overload_risk": 80.0,
+      "avg_fatigue_risk": 0.1,
+      "avg_toe_collapse_risk": 0.0,
+      "avg_arch_instability_risk": 0.111,
+      "avg_heel_overload_risk": 0.167,
+      "avg_prototype_readiness": 76.6,
+      "hard_pass_criteria": {
+        "pass_rate_gte_70": false,
+        "readiness_gte_82": false,
+        "no_hard_block_95kg_daily": true,
+        "no_hard_block_110kg_daily": true,
+        "clear_failure_reasons": true
+      },
+      "hard_pass_all": false,
+      "blocked_95kg_neutral_daily": false,
+      "blocked_110kg_neutral_daily": false,
+      "worst_scenario": {
+        "weight_kg": 110,
+        "foot_profile": "high_arch",
+        "usage_mode": "stairs",
+        "gait_phase": "forefoot_push_off",
+        "prototype_readiness": 59.7,
+        "blocks": [
+          "hard_block: prototype_readiness_59.7_below_70"
+        ]
+      },
+      "zone_failure_counts": {
+        "heel": 34,
+        "midfoot": 0,
+        "forefoot": 0,
+        "toe": 0
+      },
+      "blocked_details_sample": [
+        {
+          "weight_kg": 80,
+          "foot_profile": "flat_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_308.6_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 80,
+          "foot_profile": "neutral_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_339.5_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 80,
+          "foot_profile": "high_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_377.2_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 80,
+          "foot_profile": "high_arch",
+          "usage_mode": "fast_walk",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_313.0_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "flat_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_366.5_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "flat_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "forefoot_push_off",
+          "blocks": [
+            "hard_block: prototype_readiness_69.2_below_70"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "flat_arch",
+          "usage_mode": "fast_walk",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_304.1_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "neutral_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_403.2_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "neutral_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "midfoot_transition",
+          "blocks": [
+            "hard_block: prototype_readiness_68.7_below_70"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "neutral_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "forefoot_push_off",
+          "blocks": [
+            "hard_block: prototype_readiness_68.4_below_70"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "neutral_arch",
+          "usage_mode": "fast_walk",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_334.5_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "high_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_447.9_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "high_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "midfoot_transition",
+          "blocks": [
+            "hard_block: prototype_readiness_67.7_below_70"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "high_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "forefoot_push_off",
+          "blocks": [
+            "hard_block: prototype_readiness_68.4_below_70"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "high_arch",
+          "usage_mode": "fast_walk",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_371.6_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 110,
+          "foot_profile": "flat_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_424.4_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 110,
+          "foot_profile": "flat_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "midfoot_transition",
+          "blocks": [
+            "hard_block: prototype_readiness_69.9_below_70"
+          ]
+        },
+        {
+          "weight_kg": 110,
+          "foot_profile": "flat_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "forefoot_push_off",
+          "blocks": [
+            "hard_block: prototype_readiness_65.0_below_70"
+          ]
+        },
+        {
+          "weight_kg": 110,
+          "foot_profile": "flat_arch",
+          "usage_mode": "fast_walk",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_352.1_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 110,
+          "foot_profile": "neutral_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_466.8_kPa_exceeds_300"
+          ]
+        }
+      ],
+      "density_map": {
+        "heel": 0.38,
+        "midfoot": 0.44,
+        "forefoot": 0.41,
+        "toe": 0.34
+      }
+    },
+    "D_FEMME_targeted": {
+      "candidate_key": "D_FEMME_targeted",
+      "total_scenarios": 240,
+      "pass_count": 44,
+      "blocked_count": 73,
+      "needs_revision_count": 123,
+      "pass_rate": 18.3,
+      "avg_comfort_score": 88.5,
+      "avg_overload_risk": 79.6,
+      "avg_fatigue_risk": 0.1,
+      "avg_toe_collapse_risk": 0.0,
+      "avg_arch_instability_risk": 0.091,
+      "avg_heel_overload_risk": 0.167,
+      "avg_prototype_readiness": 76.7,
+      "hard_pass_criteria": {
+        "pass_rate_gte_70": false,
+        "readiness_gte_82": false,
+        "no_hard_block_95kg_daily": true,
+        "no_hard_block_110kg_daily": true,
+        "clear_failure_reasons": true
+      },
+      "hard_pass_all": false,
+      "blocked_95kg_neutral_daily": false,
+      "blocked_110kg_neutral_daily": false,
+      "worst_scenario": {
+        "weight_kg": 110,
+        "foot_profile": "high_arch",
+        "usage_mode": "stairs",
+        "gait_phase": "forefoot_push_off",
+        "prototype_readiness": 59.7,
+        "blocks": [
+          "hard_block: prototype_readiness_59.7_below_70"
+        ]
+      },
+      "zone_failure_counts": {
+        "heel": 34,
+        "midfoot": 0,
+        "forefoot": 0,
+        "toe": 0
+      },
+      "blocked_details_sample": [
+        {
+          "weight_kg": 80,
+          "foot_profile": "flat_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_304.9_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 80,
+          "foot_profile": "neutral_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_335.4_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 80,
+          "foot_profile": "high_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_372.6_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 80,
+          "foot_profile": "high_arch",
+          "usage_mode": "fast_walk",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_309.2_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "flat_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_362.1_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "flat_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "forefoot_push_off",
+          "blocks": [
+            "hard_block: prototype_readiness_69.4_below_70"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "flat_arch",
+          "usage_mode": "fast_walk",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_300.4_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "neutral_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_398.3_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "neutral_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "midfoot_transition",
+          "blocks": [
+            "hard_block: prototype_readiness_68.9_below_70"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "neutral_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "forefoot_push_off",
+          "blocks": [
+            "hard_block: prototype_readiness_68.6_below_70"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "neutral_arch",
+          "usage_mode": "fast_walk",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_330.4_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "high_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_442.5_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "high_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "midfoot_transition",
+          "blocks": [
+            "hard_block: prototype_readiness_67.7_below_70"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "high_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "forefoot_push_off",
+          "blocks": [
+            "hard_block: prototype_readiness_68.3_below_70"
+          ]
+        },
+        {
+          "weight_kg": 95,
+          "foot_profile": "high_arch",
+          "usage_mode": "fast_walk",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_367.1_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 110,
+          "foot_profile": "flat_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_419.2_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 110,
+          "foot_profile": "flat_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "forefoot_push_off",
+          "blocks": [
+            "hard_block: prototype_readiness_65.2_below_70"
+          ]
+        },
+        {
+          "weight_kg": 110,
+          "foot_profile": "flat_arch",
+          "usage_mode": "fast_walk",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_347.8_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 110,
+          "foot_profile": "neutral_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "heel_strike",
+          "blocks": [
+            "hard_block: heel_pressure_461.2_kPa_exceeds_300"
+          ]
+        },
+        {
+          "weight_kg": 110,
+          "foot_profile": "neutral_arch",
+          "usage_mode": "stairs",
+          "gait_phase": "midfoot_transition",
+          "blocks": [
+            "hard_block: prototype_readiness_67.7_below_70"
+          ]
+        }
+      ],
+      "density_map": {
+        "heel": 0.4,
+        "midfoot": 0.46,
+        "forefoot": 0.4,
+        "toe": 0.36
+      }
+    }
+  },
+  "winner": {
+    "key": "D_FEMME_targeted",
+    "density_map": {
+      "heel": 0.4,
+      "midfoot": 0.46,
+      "forefoot": 0.4,
+      "toe": 0.36
+    },
+    "is_prototype_ready": false,
+    "pass_rate": 18.3,
+    "avg_prototype_readiness": 76.7,
+    "hard_pass_criteria_met": false
+  },
+  "risk_patterns": [
+    {
+      "pattern": "Toe zone is weakest link in FEMME_original (density 0.28)",
+      "evidence": "Highest toe_collapse_risk across all scenarios in original; displacement exceeds 5mm threshold at high weight",
+      "severity": "critical",
+      "affected_scenarios": "140kg + toe_off + stairs/fast_walk"
+    },
+    {
+      "pattern": "Heel overload at 125+ kg during heel_strike",
+      "evidence": "Effective heel pressure exceeds 300 kPa hard block threshold at 125-140 kg in heel_strike gait phase",
+      "severity": "critical",
+      "affected_scenarios": "125kg+ + heel_strike + any high-intensity usage"
+    },
+    {
+      "pattern": "Flat arch profile causes instability when midfoot density < 0.50",
+      "evidence": "Arch instability scores spike for flat_arch when midfoot density below 0.50; FEMME_orig has only 0.38",
+      "severity": "high",
+      "affected_scenarios": "flat_arch at all weights >= 95 kg"
+    },
+    {
+      "pattern": "Stairs usage mode multiplies all failure modes",
+      "evidence": "Highest blocked counts in stairs (load_intensity=1.35, dynamic_factor=1.50); 2x the block rate of other modes",
+      "severity": "high",
+      "affected_scenarios": "stairs at all weights >= 95 kg"
+    },
+    {
+      "pattern": "Fast walk creates highest fatigue risk (10k cycles/day)",
+      "evidence": "Even moderate stresses accumulate fatigue over 10,000 daily cycles in fast_walk mode",
+      "severity": "medium",
+      "affected_scenarios": "fast_walk at weights >= 110 kg"
+    },
+    {
+      "pattern": "High arch profile concentrates load on heel and toe",
+      "evidence": "Reduced contact area (heel 0.9x, toe 1.1x modifier) increases peak pressures during heel_strike/toe_off",
+      "severity": "medium",
+      "affected_scenarios": "high_arch + heel_strike + heavy weight"
+    },
+    {
+      "pattern": "Uniform density increase improves pass rate but not optimally",
+      "evidence": "Plus_06 shows higher pass rate but wastes material on forefoot; targeted gives better balance",
+      "severity": "medium",
+      "affected_scenarios": "All candidates with uniform density adjustments"
+    },
+    {
+      "pattern": "Midfoot density is the critical pivot for overall stability",
+      "evidence": "Scenarios with midfoot >= 0.46 show significantly fewer arch instability blocks",
+      "severity": "high",
+      "affected_scenarios": "flat_arch scenarios across all candidates"
+    },
+    {
+      "pattern": "Forefoot push-off creates toe cascade failure chain",
+      "evidence": "During forefoot_push_off: forefoot 0.55 + toe 0.20 load \u2192 toe displacement spike when combined with fast_walk",
+      "severity": "high",
+      "affected_scenarios": "forefoot_push_off + fast_walk + weight >= 110 kg"
+    },
+    {
+      "pattern": "FEMME_original density map is fundamentally insufficient for 110 kg+",
+      "evidence": "Multiple zones fall below 18% density threshold; toe density=0.28 causes widespread toe_collapse blocks",
+      "severity": "critical",
+      "affected_scenarios": "110kg+ in all profiles and usage modes"
+    }
+  ],
+  "prototype_recommendation": {
+    "prototype_id": "P-FEMME-V1",
+    "physical_spec": {
+      "material": "TPU 75A-80A (Shore A)",
+      "lattice_type": "Gyroid",
+      "wall_thickness_mm": 0.6,
+      "cell_size_mm": 6.0,
+      "density_map": {
+        "heel": 0.4,
+        "midfoot": 0.46,
+        "forefoot": 0.4,
+        "toe": 0.36
+      },
+      "stiffness_modifier": 0.88
+    },
+    "physical_test_measurements": [
+      "Heel zone peak pressure at heel_strike (target: < 300 kPa at 140kg)",
+      "Toe zone displacement during toe_off (target: < 5.0 mm at 140kg)",
+      "Midfoot arch support deformation for flat_arch profile",
+      "Overall weight-bearing capacity until visible lattice deformation",
+      "Compression set after 10,000 cycles at 95kg daily_walking simulation",
+      "Recovery time after 8-hour sustained standing simulation",
+      "Forefoot push-off energy return (bounce-back ratio)",
+      "Toe-off smoothness (no sudden bottoming out at 110kg+)"
+    ],
+    "is_prototype_ready": false,
+    "recommendation_summary": "Not fully ready \u2014 see risks; conditional prototype recommended with specific measurements"
+  },
+  "femme_prototype_ready": false
+}

@@ -1,0 +1,268 @@
+{
+  "meta": {
+    "name": "ZILFIT Emotional Recipe — Edition × Comfort Mapping",
+    "version": "1.0",
+    "date": "2026-05-20",
+    "owner": "ZILFIT Cloud — Sultan (CTO)",
+    "status": "engineering_draft",
+    "boundary": "Engineering simulation input only. No medical, diagnostic, therapeutic, or treatment claims. All language follows z_claims_scanner.py safe-wording policy."
+  },
+  "materials": {
+    "tpu_shore_a": "75-80A",
+    "gyroid_wall_thickness_mm": 0.6,
+    "gyroid_cell_size_mm": 6.0
+  },
+  "editions": {
+    "CALM": {
+      "edition_id": "EDITION_CALM",
+      "psychological_state": ["stress", "tension", "overwhelm", "nervousness", "need_grounding"],
+      "intended_effect": "Support gentle sensory grounding and soft plantar stimulation for comfort-oriented rest periods.",
+      "first_sensation_20min": {
+        "primary": "Gentle pressure release across midfoot contact zone",
+        "secondary": "Reduced perceived heaviness in arch area",
+        "confidence_level": "simulated_low_intensity"
+      },
+      "cumulative_effect": {
+        "description": "Repeated use may support sustained sensory calm through consistent low-pressure stimulation patterns during stationary wear.",
+        "timeframe": "3-7 sessions of 20-40 min each",
+        "measurement": "Comfort score delta from baseline Z-Bio scoring",
+        "confidence_level": "simulated_extrapolation"
+      },
+      "reflexology_inspired_zones": {
+        "reference": "solar_plexus_map.json#calm_zones",
+        "primary_zone": "midfoot_solar_plexus_point",
+        "secondary_zone": "heel_grounding_contact",
+        "tone": "sensory_design_inspiration_not_treatment"
+      },
+      "foot_zones": {
+        "heel": {"density": 0.30, "stimulation": "gentle_grounding_contour"},
+        "midfoot": {"density": 0.34, "stimulation": "soft_pressure_wave"},
+        "forefoot": {"density": 0.30, "stimulation": "smooth_contact_surface"},
+        "toe": {"density": 0.26, "stimulation": "minimal_release"}
+      },
+      "stimulation_profile": {
+        "type": "low_amplitude_broad_wave",
+        "frequency_hz": 0.5,
+        "intensity": "low",
+        "coverage_percent": 65,
+        "description": "Wide, slow pressure modulation focused on midfoot with minimal forefoot stimulation. Designed for stationary comfort."
+      },
+      "comfort_targets": {
+        "heel_pressure_kpa": {"min": 100, "max": 150},
+        "arch_support_force_n": {"min": 15, "max": 25},
+        "forefoot_comfort_score_min": 0.7,
+        "overall_comfort_score_target": 0.75
+      },
+      "safety_flags": [
+        "Not intended for post-athletic recovery use alone — combine with VITAL if fatigue >= 6/10",
+        "Lower density limits load-bearing capacity — Z-Physics must verify under 80 kg+ scenarios"
+      ]
+    },
+    "VITAL": {
+      "edition_id": "EDITION_VITAL",
+      "psychological_state": ["post_exertion", "heavy_fatigue", "drained", "muscle_heavy", "need_decompression"],
+      "intended_effect": "Support post-exertion recovery experience through zone-specific plantar pressure relief and targeted stimulation of high-load foot areas.",
+      "first_sensation_20min": {
+        "primary": "Relief sensation in heel strike zone through reduced peak pressure",
+        "secondary": "Arch decompression feeling during midfoot transition",
+        "tertiary": "Forefoot release from repeated push-off load",
+        "confidence_level": "simulated_recovery_scenario"
+      },
+      "cumulative_effect": {
+        "description": "Repeated post-exertion sessions may support faster perceived recovery through consistent pressure redistribution across heel, arch, and forefoot zones.",
+        "timeframe": "5-10 sessions of 15-30 min each",
+        "measurement": "Z-Bio comfort score trend + pressure delta from activity baseline",
+        "confidence_level": "simulated_recovery_trend"
+      },
+      "reflexology_inspired_zones": {
+        "reference": "solar_plexus_map.json#vital_zones",
+        "primary_zone": "heel_recovery_basin",
+        "secondary_zone": "arch_recovery_bridge",
+        "tertiary_zone": "forefoot_release_grid",
+        "tone": "sensory_design_inspiration_not_treatment"
+      },
+      "foot_zones": {
+        "heel": {"density": 0.38, "stimulation": "recovery_basin_concave"},
+        "midfoot": {"density": 0.40, "stimulation": "arch_bridge_support"},
+        "forefoot": {"density": 0.36, "stimulation": "push_off_release_channels"},
+        "toe": {"density": 0.30, "stimulation": "toe_freedome_grid"}
+      },
+      "stimulation_profile": {
+        "type": "medium_amplitude_zone_targeted",
+        "frequency_hz": 1.2,
+        "intensity": "medium",
+        "coverage_percent": 85,
+        "description": "Zone-specific pressure relief with concave heel basin, arched midfoot bridge, and linear forefoot channels. Higher stimulation than CALM, focused on recovery geometry."
+      },
+      "comfort_targets": {
+        "heel_pressure_kpa": {"min": 120, "max": 180},
+        "arch_support_force_n": {"min": 25, "max": 40},
+        "forefoot_comfort_score_min": 0.75,
+        "overall_comfort_score_target": 0.80
+      },
+      "safety_flags": [
+        "Z-Sim must validate heel basin depth against TPU wall collapse risk at 110+ kg",
+        "Not a replacement for professional post-injury care — BLOCK if acute injury detected"
+      ]
+    },
+    "FOCUS": {
+      "edition_id": "EDITION_FOCUS",
+      "psychological_state": ["mental_fog", "distraction", "low_alertness", "need_clarity", "toe_heaviness"],
+      "intended_effect": "Support alertness and sensory clarity through targeted hallux and forefoot stimulation with responsive, light-contact geometry.",
+      "first_sensation_20min": {
+        "primary": "Light hallux stimulation creating clear toe contact awareness",
+        "secondary": "Responsive forefoot feel under weight shift",
+        "confidence_level": "simulated_sensory_awakening"
+      },
+      "cumulative_effect": {
+        "description": "Repeated use may support sustained sensory awareness through consistent light forefoot and hallux zone stimulation during active wear.",
+        "timeframe": "3-5 sessions of 30-60 min active wear",
+        "measurement": "Z-Bio forefoot comfort score + toe zone pressure consistency",
+        "confidence_level": "simulated_sensory_trend"
+      },
+      "reflexology_inspired_zones": {
+        "reference": "solar_plexus_map.json#focus_zones",
+        "primary_zone": "hallux_clarity_point",
+        "secondary_zone": "forefoot_awakening_ridge",
+        "tone": "sensory_design_inspiration_not_treatment"
+      },
+      "foot_zones": {
+        "heel": {"density": 0.32, "stimulation": "firm_base_contact"},
+        "midfoot": {"density": 0.36, "stimulation": "light_support_wave"},
+        "forefoot": {"density": 0.40, "stimulation": "responsive_ridge_grid"},
+        "toe": {"density": 0.42, "stimulation": "hallux_targeted_nudge"}
+      },
+      "stimulation_profile": {
+        "type": "high_amplitude_focal_peaks",
+        "frequency_hz": 2.0,
+        "intensity": "medium_high",
+        "coverage_percent": 55,
+        "description": "Focused, higher-amplitude stimulation at hallux and forefoot with firm heel base. Smaller contact area than VITAL but sharper pressure peaks for sensory clarity."
+      },
+      "comfort_targets": {
+        "heel_pressure_kpa": {"min": 110, "max": 160},
+        "hallux_stimulation_kpa": {"min": 140, "max": 200},
+        "forefoot_comfort_score_min": 0.72,
+        "overall_comfort_score_target": 0.78
+      },
+      "safety_flags": [
+        "Higher forefoot density may feel firm for users with thin forefoot pads — Z-Bio must flag if comfort score < 0.6",
+        "Not intended for post-exertion recovery — redirect to VITAL if fatigue >= 6/10"
+      ]
+    },
+    "BALANCE": {
+      "edition_id": "EDITION_BALANCE",
+      "psychological_state": ["instability", "confidence_needed", "uneven_weight", "lateral_tilt", "standing_uncertainty"],
+      "intended_effect": "Support stability and even pressure distribution through symmetric density mapping and wider support footprint geometry.",
+      "first_sensation_20min": {
+        "primary": "Even weight feel across heel-through-toe contact line",
+        "secondary": "Reduced lateral roll sensation",
+        "confidence_level": "simulated_balance_scenario"
+      },
+      "cumulative_effect": {
+        "description": "Repeated use during standing or walking may support improved perceived balance through symmetric pressure distribution and wider contact zone mapping.",
+        "timeframe": "5-10 sessions of 30-90 min standing/walking",
+        "measurement": "Left-right pressure delta + Z-Bio balance score",
+        "confidence_level": "simulated_distribution_trend"
+      },
+      "reflexology_inspired_zones": {
+        "reference": "solar_plexus_map.json#balance_zones",
+        "primary_zone": "medial_lateral_stability_rail",
+        "secondary_zone": "heel_centering_bowl",
+        "tone": "sensory_design_inspiration_not_treatment"
+      },
+      "foot_zones": {
+        "heel": {"density": 0.50, "stimulation": "wide_centering_bowl"},
+        "midfoot": {"density": 0.50, "stimulation": "symmetric_support_plate"},
+        "forefoot": {"density": 0.50, "stimulation": "even_pressure_spread"},
+        "toe": {"density": 0.40, "stimulation": "light_toe_platform"}
+      },
+      "stimulation_profile": {
+        "type": "uniform_symmetric_plateau",
+        "frequency_hz": 0.8,
+        "intensity": "medium_low",
+        "coverage_percent": 90,
+        "description": "Uniform density plateau across all zones with emphasis on coverage breadth (90%). Designed for stability, not stimulation. Lowest stimulation intensity among all editions."
+      },
+      "comfort_targets": {
+        "heel_pressure_kpa": {"min": 130, "max": 180},
+        "lateral_pressure_delta_kpa_max": 30,
+        "arch_support_force_n": {"min": 30, "max": 45},
+        "overall_comfort_score_target": 0.82,
+        "balance_score_target": 0.85
+      },
+      "safety_flags": [
+        "Uniform 0.50 density is highest in system — Z-Physics must verify TPU does not feel rigid below 80 kg",
+        "If left-right delta > 30 kPa persists after 3 sessions, escalate to agent review"
+      ]
+    },
+    "FEMME": {
+      "edition_id": "EDITION_FEMME",
+      "psychological_state": ["female_comfort_priority", "pelvis_alignment_concern", "q_angle_sensitivity", "forefoot_width_pressure", "emotional_soothing"],
+      "intended_effect": "Support female-specific biomechanical comfort through narrower heel containment, wider forefoot accommodation, and softer sensory stimulation mapped to female gait patterns.",
+      "first_sensation_20min": {
+        "primary": "Soft heel containment with reduced edge pressure",
+        "secondary": "Forefoot width accommodation sensation",
+        "tertiary": "Gentle arch support without over-stimulation",
+        "confidence_level": "simulated_femme_scenario"
+      },
+      "cumulative_effect": {
+        "description": "Repeated wear may support sustained female-specific comfort through consistent mapping of pelvis/Q-angle-informed geometry to plantar pressure distribution.",
+        "timeframe": "5-15 sessions of 20-60 min wear",
+        "measurement": "Z-Bio femme comfort score + forefoot pressure uniformity index",
+        "confidence_level": "simulated_femme_trend"
+      },
+      "reflexology_inspired_zones": {
+        "reference": "solar_plexus_map.json#femme_zones",
+        "primary_zone": "heel_containment_soft_edge",
+        "secondary_zone": "forefoot_freedom_zone",
+        "tertiary_zone": "arch_soothing_bridge",
+        "tone": "sensory_design_inspiration_not_treatment"
+      },
+      "foot_zones": {
+        "heel": {"density": 0.32, "stimulation": "narrow_containment_soft_edge"},
+        "midfoot": {"density": 0.38, "stimulation": "soothing_arch_bridge"},
+        "forefoot": {"density": 0.35, "stimulation": "wide_accommodation_gentle_wave"},
+        "toe": {"density": 0.28, "stimulation": "minimal_release_soft"}
+      },
+      "stimulation_profile": {
+        "type": "asymmetric_soothing_wave",
+        "frequency_hz": 0.7,
+        "intensity": "low_medium",
+        "coverage_percent": 75,
+        "description": "Asymmetric density profile optimized for female gait (narrower heel, wider forefoot). Softer stimulation than VITAL but broader than CALM. Can layer CALM or BALANCE as secondary."
+      },
+      "comfort_targets": {
+        "heel_pressure_kpa": {"min": 120, "max": 170},
+        "forefoot_width_comfort_score_min": 0.78,
+        "arch_support_force_n": {"min": 20, "max": 35},
+        "heel_containment_score_min": 0.80,
+        "overall_comfort_score_target": 0.83
+      },
+      "compatibility_layer": {
+        "description": "FEMME can combine with any other edition as secondary. The secondary edition modifies density_map by weighted average (FEMME 60% + secondary 40%).",
+        "combinations": ["FEMME-VITAL", "FEMME-CALM", "FEMME-FOCUS", "FEMME-BALANCE"],
+        "default_secondary_weight": 0.4
+      },
+      "safety_flags": [
+        "Heel containment must not create edge pressure > 200 kPa at 80 kg",
+        "If user reports forefoot pinching, reduce forefoot density by 0.03 and re-run simulation",
+        "Not intended for post-injury use — BLOCK if acute pelvic or hip injury detected"
+      ]
+    }
+  },
+  "cross_edition_rules": {
+    "primary_secondary_layering": {
+      "description": "When two editions are selected (e.g., FEMME + VITAL), blend density maps at the zone level. Primary edition = 60%, secondary = 40%.",
+      "formula": "zone_density = primary_density × 0.6 + secondary_density × 0.4",
+      "stimulation_blend": "Use the HIGHER intensity profile between the two editions."
+    },
+    "comfort_threshold": {
+      "minimum_comfort_score": 0.65,
+      "action_below_threshold": "Reject edition — escalate to Z-Sim and Z-Claims for review."
+    },
+    "edition_switching": {
+      "description": "Edition can be re-selected per session. No cumulative tracking across editions — each session resets to edition-specific baseline."
+    }
+  }
+}

@@ -1,0 +1,172 @@
+{
+  "generated_at": "2026-05-19T15:52:26Z",
+  "simulator_version": "zilfit_simulation_v2_lite",
+  "total_scenarios": 960,
+  "pass": 659,
+  "needs_revision": 150,
+  "blocked": 151,
+  "edition_stats": {
+    "CALM": {
+      "total": 192,
+      "pass": 140,
+      "needs_revision": 22,
+      "blocked": 30,
+      "pass_rate": 72.9,
+      "avg_comfort_confidence": 87.2,
+      "avg_prototype_readiness": 85.2
+    },
+    "VITAL": {
+      "total": 192,
+      "pass": 143,
+      "needs_revision": 19,
+      "blocked": 30,
+      "pass_rate": 74.5,
+      "avg_comfort_confidence": 88.1,
+      "avg_prototype_readiness": 85.4
+    },
+    "FOCUS": {
+      "total": 192,
+      "pass": 142,
+      "needs_revision": 22,
+      "blocked": 28,
+      "pass_rate": 74.0,
+      "avg_comfort_confidence": 88.4,
+      "avg_prototype_readiness": 85.6
+    },
+    "BALANCE": {
+      "total": 192,
+      "pass": 145,
+      "needs_revision": 21,
+      "blocked": 26,
+      "pass_rate": 75.5,
+      "avg_comfort_confidence": 88.3,
+      "avg_prototype_readiness": 85.7
+    },
+    "FEMME": {
+      "total": 192,
+      "pass": 89,
+      "needs_revision": 66,
+      "blocked": 37,
+      "pass_rate": 46.4,
+      "avg_comfort_confidence": 86.9,
+      "avg_prototype_readiness": 79.9
+    }
+  },
+  "safest_edition": "BALANCE",
+  "worst_edition": "FEMME",
+  "first_4_prototype_recommendations": [
+    {
+      "rank": 1,
+      "edition": "BALANCE",
+      "pass_rate": 75.5,
+      "avg_readiness": 85.7,
+      "avg_comfort": 88.3,
+      "notes": "Needs density tuning. Consider targeted increases in high-failure zones."
+    },
+    {
+      "rank": 2,
+      "edition": "VITAL",
+      "pass_rate": 74.5,
+      "avg_readiness": 85.4,
+      "avg_comfort": 88.1,
+      "notes": "Needs density tuning. Consider targeted increases in high-failure zones."
+    },
+    {
+      "rank": 3,
+      "edition": "FOCUS",
+      "pass_rate": 74.0,
+      "avg_readiness": 85.6,
+      "avg_comfort": 88.4,
+      "notes": "Needs density tuning. Consider targeted increases in high-failure zones."
+    },
+    {
+      "rank": 4,
+      "edition": "CALM",
+      "pass_rate": 72.9,
+      "avg_readiness": 85.2,
+      "avg_comfort": 87.2,
+      "notes": "Needs density tuning. Consider targeted increases in high-failure zones."
+    }
+  ],
+  "top_10_failure_patterns": [
+    {
+      "pattern": "heel_overload",
+      "count": 187
+    },
+    {
+      "pattern": "hard_block_heel_pressure",
+      "count": 144
+    },
+    {
+      "pattern": "arch_instability",
+      "count": 64
+    },
+    {
+      "pattern": "hard_block_prototype_readiness",
+      "count": 16
+    }
+  ],
+  "density_adjustments_per_edition": {
+    "CALM": {
+      "blocked_scenarios": 30,
+      "adjustments": [
+        {
+          "zone": "heel",
+          "current_density": 0.35,
+          "recommended_density": 0.43,
+          "context": "flat_arch+stairs+heel_strike@95kg"
+        }
+      ]
+    },
+    "VITAL": {
+      "blocked_scenarios": 30,
+      "adjustments": [
+        {
+          "zone": "heel",
+          "current_density": 0.4,
+          "recommended_density": 0.48,
+          "context": "flat_arch+stairs+heel_strike@95kg"
+        }
+      ]
+    },
+    "FOCUS": {
+      "blocked_scenarios": 28,
+      "adjustments": [
+        {
+          "zone": "heel",
+          "current_density": 0.45,
+          "recommended_density": 0.53,
+          "context": "flat_arch+stairs+heel_strike@95kg"
+        }
+      ]
+    },
+    "BALANCE": {
+      "blocked_scenarios": 26,
+      "adjustments": [
+        {
+          "zone": "heel",
+          "current_density": 0.5,
+          "recommended_density": 0.58,
+          "context": "flat_arch+stairs+heel_strike@95kg"
+        }
+      ]
+    },
+    "FEMME": {
+      "blocked_scenarios": 37,
+      "adjustments": [
+        {
+          "zone": "heel",
+          "current_density": 0.32,
+          "recommended_density": 0.4,
+          "context": "flat_arch+stairs+heel_strike@95kg"
+        },
+        {
+          "zone": "midfoot",
+          "current_density": 0.38,
+          "recommended_density": 0.46,
+          "context": "flat_arch+stairs+heel_strike@95kg"
+        }
+      ]
+    }
+  }
+}

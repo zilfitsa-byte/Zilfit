@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ZILFIT Emotion Pipeline Result",
+  "description": "Engineering-only pipeline output for session persistence. No medical, diagnostic, therapeutic, or treatment claims.",
+  "type": "object",
+  "required": [
+    "session_id",
+    "timestamp",
+    "edition",
+    "emotional_target",
+    "density_map",
+    "pressure_zones",
+    "geometry_hints",
+    "cad_directives",
+    "simulation_profile",
+    "warnings",
+    "raw_payload_json"
+  ],
+  "properties": {
+    "session_id": {
+      "type": "string",
+      "description": "Unique session identifier (UUID)."
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 UTC timestamp when the session was created."
+    },
+    "edition": {
+      "type": "string",
+      "enum": ["CALM", "VITAL", "FOCUS", "BALANCE", "FEMME"],
+      "description": "Primary ZILFIT edition."
+    },
+    "emotional_target": {
+      "type": "string",
+      "description": "Primary emotional/comfort target for the edition (e.g. grounding, release, alertness, stability, soothing)."
+    },
+    "density_map": {
+      "type": "object",
+      "description": "Per-zone density values for heel, midfoot, forefoot, and toe.",
+      "required": ["heel", "midfoot", "forefoot", "toe"],
+      "properties": {
+        "heel": { "type": "number" },
+        "midfoot": { "type": "number" },
+        "forefoot": { "type": "number" },
+        "toe": { "type": "number" }
+      }
+    },
+    "pressure_zones": {
+      "type": "array",
+      "description": "List of active pressure zone identifiers from solar_plexus_map.",
+      "items": { "type": "string" }
+    },
+    "geometry_hints": {
+      "type": "object",
+      "description": "Zone geometry hints for Z-CAD (shape, depth, diameter, height, cad_direction)."
+    },
+    "cad_directives": {
+      "type": "object",
+      "description": "Engineering directives for Z-CAD geometry generation (stimulation type, coverage, intensity)."
+    },
+    "simulation_profile": {
+      "type": "object",
+      "description": "Stimulation profile: type, frequency_hz, intensity, coverage_percent, description."
+    },
+    "warnings": {
+      "type": "array",
+      "description": "Engineering validation warnings. Empty list if none.",
+      "items": { "type": "string" }
+    },
+    "raw_payload_json": {
+      "type": "string",
+      "description": "Full raw pipeline result serialized as a JSON string for audit/comparison."
+    }
+  },
+  "additionalProperties": false
+}
