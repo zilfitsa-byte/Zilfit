@@ -1,0 +1,127 @@
+{
+  "config_id": "P01-BALANCE-MESH",
+  "prototype_id": "P01-BALANCE-540F2A6A",
+  "timestamp": "2026-05-21T07:46:54.062294+00:00",
+  "edition": "BALANCE",
+  "shrink_compensation_pct": 1.5,
+  "outer_shell_mm": 0.8,
+  "body_wall_mm": 0.65,
+  "cell_size_mm": 6.0,
+  "zone_meshes": [
+    {
+      "zone_name": "heel",
+      "density_target": 0.3,
+      "wall_thickness_shell_mm": 0.8,
+      "wall_thickness_body_mm": 0.65,
+      "cell_size_mm": 6.0,
+      "infill_pattern": "gyroid",
+      "gyroid": {
+        "kx": 0.523599,
+        "ky": 0.523599,
+        "kz": 0.523599,
+        "threshold": -0.0
+      },
+      "voxel_grid": {
+        "resolution_mm": 0.25,
+        "surface_value": -0.0
+      }
+    },
+    {
+      "zone_name": "metatarsal",
+      "density_target": 0.29,
+      "wall_thickness_shell_mm": 0.8,
+      "wall_thickness_body_mm": 0.65,
+      "cell_size_mm": 6.0,
+      "infill_pattern": "gyroid",
+      "gyroid": {
+        "kx": 0.523599,
+        "ky": 0.523599,
+        "kz": 0.523599,
+        "threshold": 0.02667
+      },
+      "voxel_grid": {
+        "resolution_mm": 0.25,
+        "surface_value": 0.02667
+      }
+    },
+    {
+      "zone_name": "midfoot",
+      "density_target": 0.32,
+      "wall_thickness_shell_mm": 0.8,
+      "wall_thickness_body_mm": 0.65,
+      "cell_size_mm": 6.0,
+      "infill_pattern": "gyroid",
+      "gyroid": {
+        "kx": 0.523599,
+        "ky": 0.523599,
+        "kz": 0.523599,
+        "threshold": -0.05334
+      },
+      "voxel_grid": {
+        "resolution_mm": 0.25,
+        "surface_value": -0.05334
+      }
+    },
+    {
+      "zone_name": "arch",
+      "density_target": 0.28,
+      "wall_thickness_shell_mm": 0.8,
+      "wall_thickness_body_mm": 0.65,
+      "cell_size_mm": 6.0,
+      "infill_pattern": "gyroid",
+      "gyroid": {
+        "kx": 0.523599,
+        "ky": 0.523599,
+        "kz": 0.523599,
+        "threshold": 0.05334
+      },
+      "voxel_grid": {
+        "resolution_mm": 0.25,
+        "surface_value": 0.05334
+      }
+    },
+    {
+      "zone_name": "forefoot",
+      "density_target": 0.31,
+      "wall_thickness_shell_mm": 0.8,
+      "wall_thickness_body_mm": 0.65,
+      "cell_size_mm": 6.0,
+      "infill_pattern": "gyroid",
+      "gyroid": {
+        "kx": 0.523599,
+        "ky": 0.523599,
+        "kz": 0.523599,
+        "threshold": -0.02667
+      },
+      "voxel_grid": {
+        "resolution_mm": 0.25,
+        "surface_value": -0.02667
+      }
+    },
+    {
+      "zone_name": "toes",
+      "density_target": 0.26,
+      "wall_thickness_shell_mm": 0.8,
+      "wall_thickness_body_mm": 0.65,
+      "cell_size_mm": 6.0,
+      "infill_pattern": "gyroid",
+      "gyroid": {
+        "kx": 0.523599,
+        "ky": 0.523599,
+        "kz": 0.523599,
+        "threshold": 0.10668
+      },
+      "voxel_grid": {
+        "resolution_mm": 0.25,
+        "surface_value": 0.10668
+      }
+    }
+  ],
+  "bounding_box_mm": {
+    "x": 260,
+    "y": 100,
+    "z": 24
+  },
+  "export_format": "stl_binary",
+  "units": "mm"
+}

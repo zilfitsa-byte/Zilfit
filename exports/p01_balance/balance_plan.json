@@ -1,0 +1,365 @@
+{
+  "prototype_id": "P01-BALANCE-540F2A6A",
+  "timestamp": "2026-05-21T07:46:54.062294+00:00",
+  "edition": "BALANCE",
+  "process": "MJF",
+  "material": "TPU 95A",
+  "ready_for_nTop": true,
+  "ready_for_print": true,
+  "ready_for_stl": true,
+  "density_by_zone": {
+    "heel": 0.3,
+    "metatarsal": 0.29,
+    "midfoot": 0.32,
+    "arch": 0.28,
+    "forefoot": 0.31,
+    "toes": 0.26
+  },
+  "density_range": {
+    "min": 0.26,
+    "max": 0.32,
+    "floor": 0.18,
+    "ceiling": 0.45
+  },
+  "wall_thickness": {
+    "outer_shell_mm": 0.8,
+    "body_wall_mm": 0.65
+  },
+  "cell_size_mm": 6.0,
+  "infill_pattern": "gyroid",
+  "sigmoid_transitions": {
+    "enabled": true,
+    "hard_edges_allowed": false,
+    "adjacent_delta_max": 0.06,
+    "transitions": [
+      {
+        "zone": "heel->metatarsal",
+        "from_zone": "heel",
+        "to_zone": "metatarsal",
+        "from_density": 0.3,
+        "to_density": 0.29,
+        "transition_points": [
+          {
+            "index": 0,
+            "t": -4.0,
+            "sigmoid": 0.018,
+            "rho": 0.2998
+          },
+          {
+            "index": 1,
+            "t": -3.0,
+            "sigmoid": 0.0474,
+            "rho": 0.2995
+          },
+          {
+            "index": 2,
+            "t": -2.0,
+            "sigmoid": 0.1192,
+            "rho": 0.2988
+          },
+          {
+            "index": 3,
+            "t": -1.0,
+            "sigmoid": 0.2689,
+            "rho": 0.2973
+          },
+          {
+            "index": 4,
+            "t": 0.0,
+            "sigmoid": 0.5,
+            "rho": 0.295
+          },
+          {
+            "index": 5,
+            "t": 1.0,
+            "sigmoid": 0.7311,
+            "rho": 0.2927
+          },
+          {
+            "index": 6,
+            "t": 2.0,
+            "sigmoid": 0.8808,
+            "rho": 0.2912
+          },
+          {
+            "index": 7,
+            "t": 3.0,
+            "sigmoid": 0.9526,
+            "rho": 0.2905
+          },
+          {
+            "index": 8,
+            "t": 4.0,
+            "sigmoid": 0.982,
+            "rho": 0.2902
+          }
+        ],
+        "max_gradient": 0.0023
+      },
+      {
+        "zone": "metatarsal->midfoot",
+        "from_zone": "metatarsal",
+        "to_zone": "midfoot",
+        "from_density": 0.29,
+        "to_density": 0.32,
+        "transition_points": [
+          {
+            "index": 0,
+            "t": -4.0,
+            "sigmoid": 0.018,
+            "rho": 0.2905
+          },
+          {
+            "index": 1,
+            "t": -3.0,
+            "sigmoid": 0.0474,
+            "rho": 0.2914
+          },
+          {
+            "index": 2,
+            "t": -2.0,
+            "sigmoid": 0.1192,
+            "rho": 0.2936
+          },
+          {
+            "index": 3,
+            "t": -1.0,
+            "sigmoid": 0.2689,
+            "rho": 0.2981
+          },
+          {
+            "index": 4,
+            "t": 0.0,
+            "sigmoid": 0.5,
+            "rho": 0.305
+          },
+          {
+            "index": 5,
+            "t": 1.0,
+            "sigmoid": 0.7311,
+            "rho": 0.3119
+          },
+          {
+            "index": 6,
+            "t": 2.0,
+            "sigmoid": 0.8808,
+            "rho": 0.3164
+          },
+          {
+            "index": 7,
+            "t": 3.0,
+            "sigmoid": 0.9526,
+            "rho": 0.3186
+          },
+          {
+            "index": 8,
+            "t": 4.0,
+            "sigmoid": 0.982,
+            "rho": 0.3195
+          }
+        ],
+        "max_gradient": 0.0069
+      },
+      {
+        "zone": "midfoot->arch",
+        "from_zone": "midfoot",
+        "to_zone": "arch",
+        "from_density": 0.32,
+        "to_density": 0.28,
+        "transition_points": [
+          {
+            "index": 0,
+            "t": -4.0,
+            "sigmoid": 0.018,
+            "rho": 0.3193
+          },
+          {
+            "index": 1,
+            "t": -3.0,
+            "sigmoid": 0.0474,
+            "rho": 0.3181
+          },
+          {
+            "index": 2,
+            "t": -2.0,
+            "sigmoid": 0.1192,
+            "rho": 0.3152
+          },
+          {
+            "index": 3,
+            "t": -1.0,
+            "sigmoid": 0.2689,
+            "rho": 0.3092
+          },
+          {
+            "index": 4,
+            "t": 0.0,
+            "sigmoid": 0.5,
+            "rho": 0.3
+          },
+          {
+            "index": 5,
+            "t": 1.0,
+            "sigmoid": 0.7311,
+            "rho": 0.2908
+          },
+          {
+            "index": 6,
+            "t": 2.0,
+            "sigmoid": 0.8808,
+            "rho": 0.2848
+          },
+          {
+            "index": 7,
+            "t": 3.0,
+            "sigmoid": 0.9526,
+            "rho": 0.2819
+          },
+          {
+            "index": 8,
+            "t": 4.0,
+            "sigmoid": 0.982,
+            "rho": 0.2807
+          }
+        ],
+        "max_gradient": 0.0092
+      },
+      {
+        "zone": "arch->forefoot",
+        "from_zone": "arch",
+        "to_zone": "forefoot",
+        "from_density": 0.28,
+        "to_density": 0.31,
+        "transition_points": [
+          {
+            "index": 0,
+            "t": -4.0,
+            "sigmoid": 0.018,
+            "rho": 0.2805
+          },
+          {
+            "index": 1,
+            "t": -3.0,
+            "sigmoid": 0.0474,
+            "rho": 0.2814
+          },
+          {
+            "index": 2,
+            "t": -2.0,
+            "sigmoid": 0.1192,
+            "rho": 0.2836
+          },
+          {
+            "index": 3,
+            "t": -1.0,
+            "sigmoid": 0.2689,
+            "rho": 0.2881
+          },
+          {
+            "index": 4,
+            "t": 0.0,
+            "sigmoid": 0.5,
+            "rho": 0.295
+          },
+          {
+            "index": 5,
+            "t": 1.0,
+            "sigmoid": 0.7311,
+            "rho": 0.3019
+          },
+          {
+            "index": 6,
+            "t": 2.0,
+            "sigmoid": 0.8808,
+            "rho": 0.3064
+          },
+          {
+            "index": 7,
+            "t": 3.0,
+            "sigmoid": 0.9526,
+            "rho": 0.3086
+          },
+          {
+            "index": 8,
+            "t": 4.0,
+            "sigmoid": 0.982,
+            "rho": 0.3095
+          }
+        ],
+        "max_gradient": 0.0069
+      },
+      {
+        "zone": "forefoot->toes",
+        "from_zone": "forefoot",
+        "to_zone": "toes",
+        "from_density": 0.31,
+        "to_density": 0.26,
+        "transition_points": [
+          {
+            "index": 0,
+            "t": -4.0,
+            "sigmoid": 0.018,
+            "rho": 0.3091
+          },
+          {
+            "index": 1,
+            "t": -3.0,
+            "sigmoid": 0.0474,
+            "rho": 0.3076
+          },
+          {
+            "index": 2,
+            "t": -2.0,
+            "sigmoid": 0.1192,
+            "rho": 0.304
+          },
+          {
+            "index": 3,
+            "t": -1.0,
+            "sigmoid": 0.2689,
+            "rho": 0.2966
+          },
+          {
+            "index": 4,
+            "t": 0.0,
+            "sigmoid": 0.5,
+            "rho": 0.285
+          },
+          {
+            "index": 5,
+            "t": 1.0,
+            "sigmoid": 0.7311,
+            "rho": 0.2734
+          },
+          {
+            "index": 6,
+            "t": 2.0,
+            "sigmoid": 0.8808,
+            "rho": 0.266
+          },
+          {
+            "index": 7,
+            "t": 3.0,
+            "sigmoid": 0.9526,
+            "rho": 0.2624
+          },
+          {
+            "index": 8,
+            "t": 4.0,
+            "sigmoid": 0.982,
+            "rho": 0.2609
+          }
+        ],
+        "max_gradient": 0.0116
+      }
+    ]
+  },
+  "shrink_compensation_pct": 1.5,
+  "print_specs": {
+    "layer_height_mm": 0.12,
+    "process": "MJF",
+    "material": "TPU 95A",
+    "post_processing": "bead_blast",
+    "color_hint": "vantablack_matte"
+  }
+}

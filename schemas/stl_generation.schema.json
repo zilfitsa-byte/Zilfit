@@ -1,0 +1,301 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ZILFIT STL Generation Config",
+  "description": "Mathematical field and mesh configuration for gyroid STL generation from a GeometryPlan.",
+  "type": "object",
+  "required": [
+    "config_id",
+    "timestamp",
+    "source_plan_id",
+    "edition",
+    "is_hybrid",
+    "readiness",
+    "gyroid_fields",
+    "voxel_grid",
+    "zone_meshes",
+    "export_metadata",
+    "constraints_enforced"
+  ],
+  "properties": {
+    "config_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier for this STL generation configuration"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of config generation"
+    },
+    "source_plan_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "UUID of the source GeometryPlan"
+    },
+    "edition": {
+      "type": "string",
+      "enum": ["CALM", "VITAL", "FOCUS", "BALANCE", "FEMME"],
+      "description": "Edition name"
+    },
+    "is_hybrid": {
+      "type": "boolean",
+      "description": "True if this is a hybrid edition"
+    },
+    "readiness": {
+      "type": "object",
+      "required": ["score", "is_ready", "checks", "blockers", "warnings"],
+      "properties": {
+        "score": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "STL readiness score 0.0→1.0"
+        },
+        "is_ready": {
+          "type": "boolean"
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "passed"],
+            "properties": {
+              "name": {"type": "string"},
+              "passed": {"type": "boolean"},
+              "detail": {"type": "string"}
+            }
+          }
+        },
+        "blockers": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "warnings": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      }
+    },
+    "gyroid_fields": {
+      "type": "array",
+      "minItems": 7,
+      "items": {
+        "type": "object",
+        "required": [
+          "cell_size_x_mm",
+          "cell_size_y_mm",
+          "cell_size_z_mm",
+          "threshold",
+          "coefficient_x",
+          "coefficient_y",
+          "coefficient_z",
+          "zone_name"
+        ],
+        "properties": {
+          "cell_size_x_mm": {"type": "number", "minimum": 5.0, "maximum": 7.0},
+          "cell_size_y_mm": {"type": "number", "minimum": 5.0, "maximum": 7.0},
+          "cell_size_z_mm": {"type": "number", "minimum": 5.0, "maximum": 7.0},
+          "threshold": {
+            "type": "number",
+            "minimum": -1.0,
+            "maximum": 1.0,
+            "description": "Implicit surface threshold derived from density"
+          },
+          "coefficient_x": {"type": "number", "minimum": 0},
+          "coefficient_y": {"type": "number", "minimum": 0},
+          "coefficient_z": {"type": "number", "minimum": 0},
+          "zone_name": {
+            "type": "string",
+            "enum": ["heel", "midfoot", "forefoot", "toe", "arch", "medial_edge", "lateral_edge"]
+          },
+          "edition": {"type": "string"},
+          "is_hybrid": {"type": "boolean"},
+          "secondary_edition": {"type": ["string", "null"]}
+        }
+      },
+      "description": "Per-zone implicit gyroid field parameters"
+    },
+    "voxel_grid": {
+      "type": "object",
+      "required": [
+        "grid_size_x",
+        "grid_size_y",
+        "grid_size_z",
+        "resolution_mm",
+        "bounding_box",
+        "total_voxels",
+        "memory_estimate_bytes"
+      ],
+      "properties": {
+        "grid_size_x": {"type": "integer", "minimum": 2},
+        "grid_size_y": {"type": "integer", "minimum": 2},
+        "grid_size_z": {"type": "integer", "minimum": 2},
+        "resolution_mm": {"type": "number", "minimum": 0.01, "maximum": 1.0},
+        "bounding_box": {
+          "type": "object",
+          "required": ["x_min", "x_max", "y_min", "y_max", "z_min", "z_max"],
+          "properties": {
+            "x_min": {"type": "number"},
+            "x_max": {"type": "number"},
+            "y_min": {"type": "number"},
+            "y_max": {"type": "number"},
+            "z_min": {"type": "number"},
+            "z_max": {"type": "number"}
+          }
+        },
+        "total_voxels": {"type": "integer", "minimum": 1},
+        "memory_estimate_bytes": {"type": "integer", "minimum": 1}
+      },
+      "description": "Voxel grid configuration for marching cubes"
+    },
+    "zone_meshes": {
+      "type": "array",
+      "minItems": 7,
+      "items": {
+        "type": "object",
+        "required": [
+          "zone_name",
+          "density_target",
+          "wall_thickness_mm",
+          "cell_size_mm",
+          "mesh_resolution_mm",
+          "mc_surface_value"
+        ],
+        "properties": {
+          "zone_name": {
+            "type": "string",
+            "enum": ["heel", "midfoot", "forefoot", "toe", "arch", "medial_edge", "lateral_edge"]
+          },
+          "density_target": {
+            "type": "number",
+            "minimum": 0.15,
+            "maximum": 0.45
+          },
+          "wall_thickness_mm": {
+            "type": "number",
+            "minimum": 0.6,
+            "description": "Must be >= 0.6mm"
+          },
+          "cell_size_mm": {
+            "type": "number",
+            "minimum": 5.0,
+            "maximum": 7.0
+          },
+          "mesh_resolution_mm": {"type": "number", "minimum": 0.01, "maximum": 1.0},
+          "stimulation_type": {"type": "string", "enum": ["static", "graded", "zoned_firm"]},
+          "structural_role": {
+            "type": "string",
+            "enum": ["shock_absorption", "support", "proprioceptive", "stability"]
+          },
+          "mc_surface_value": {
+            "type": "number",
+            "minimum": -1.0,
+            "maximum": 1.0,
+            "description": "Marching cubes iso-surface value"
+          },
+          "mc_gradient_steps": {"type": "integer", "minimum": 1, "maximum": 4},
+          "mc_smooth_iterations": {"type": "integer", "minimum": 0, "maximum": 10},
+          "field_params": {
+            "type": "object",
+            "description": "Embedded gyroid field parameters"
+          }
+        }
+      },
+      "description": "Per-zone mesh generation configuration"
+    },
+    "export_metadata": {
+      "type": "object",
+      "required": [
+        "plan_id",
+        "edition",
+        "total_zones",
+        "total_voxels",
+        "estimated_triangles",
+        "format_hint",
+        "units",
+        "coordinate_system"
+      ],
+      "properties": {
+        "plan_id": {"type": "string", "format": "uuid"},
+        "source_session_id": {"type": "string"},
+        "edition": {"type": "string"},
+        "is_hybrid": {"type": "boolean"},
+        "secondary_edition": {"type": ["string", "null"]},
+        "blend_ratio": {
+          "type": "array",
+          "items": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "timestamp": {"type": "string", "format": "date-time"},
+        "total_zones": {"type": "integer", "minimum": 1},
+        "total_voxels": {"type": "integer", "minimum": 1},
+        "estimated_triangles": {"type": "integer", "minimum": 0},
+        "estimated_filesize_mb": {"type": "number", "minimum": 0},
+        "format_hint": {"type": "string", "enum": ["stl_ascii", "stl_binary", "obj", "3mf"]},
+        "units": {"type": "string", "const": "mm"},
+        "coordinate_system": {"type": "string"}
+      }
+    },
+    "constraints_enforced": {
+      "type": "object",
+      "required": ["wall_thickness_mm", "density_range", "cell_size_range"],
+      "properties": {
+        "wall_thickness_mm": {
+          "type": "object",
+          "required": ["minimum", "enforced", "actual_min"],
+          "properties": {
+            "minimum": {"type": "number", "const": 0.6},
+            "enforced": {"type": "boolean"},
+            "actual_min": {"type": "number", "minimum": 0.6}
+          }
+        },
+        "density_range": {
+          "type": "object",
+          "required": ["minimum", "maximum", "enforced", "actual_range"],
+          "properties": {
+            "minimum": {"type": "number", "const": 0.15},
+            "maximum": {"type": "number", "const": 0.45},
+            "enforced": {"type": "boolean"},
+            "actual_range": {
+              "type": "array",
+              "items": {"type": "number"},
+              "minItems": 2,
+              "maxItems": 2
+            }
+          }
+        },
+        "cell_size_range": {
+          "type": "object",
+          "required": ["minimum", "maximum", "enforced", "actual_range"],
+          "properties": {
+            "minimum": {"type": "number", "const": 5.0},
+            "maximum": {"type": "number", "const": 7.0},
+            "enforced": {"type": "boolean"},
+            "actual_range": {
+              "type": "array",
+              "items": {"type": "number"},
+              "minItems": 2,
+              "maxItems": 2
+            }
+          }
+        }
+      },
+      "description": "Enforcement record of hard constraints"
+    },
+    "zone_transition_config": {
+      "type": "object",
+      "description": "Per-zone-pair transition configuration for gradient smoothing",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "density_delta": {"type": "number", "minimum": 0.0, "maximum": 0.3},
+          "transition_width_mm": {"type": "number", "minimum": 0.5},
+          "requires_smoothing": {"type": "boolean"},
+          "interpolation": {"type": "string", "enum": ["linear", "cubic", "spline"]}
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

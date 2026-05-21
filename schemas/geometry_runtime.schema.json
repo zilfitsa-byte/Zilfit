@@ -1,0 +1,246 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ZILFIT Geometry Plan",
+  "description": "Manufacturing-ready geometry plan generated from scientific decision output.",
+  "type": "object",
+  "required": [
+    "plan_id",
+    "timestamp",
+    "source_session_id",
+    "edition",
+    "is_hybrid",
+    "zones",
+    "density_by_zone",
+    "pressure_limits",
+    "gyroid_parameters",
+    "manufacturability",
+    "safety_constraints",
+    "ready_for_stl"
+  ],
+  "properties": {
+    "plan_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier for this geometry plan"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of plan generation"
+    },
+    "source_session_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Link back to the scientific decision session"
+    },
+    "edition": {
+      "type": "string",
+      "enum": ["CALM", "VITAL", "FOCUS", "BALANCE", "FEMME"],
+      "description": "Primary edition for this geometry plan"
+    },
+    "is_hybrid": {
+      "type": "boolean",
+      "description": "True if this is a blended hybrid edition"
+    },
+    "secondary_edition": {
+      "type": ["string", "null"],
+      "enum": ["CALM", "VITAL", "FOCUS", "BALANCE", "FEMME", null],
+      "description": "Secondary edition in hybrid mode"
+    },
+    "blend_ratio": {
+      "type": "array",
+      "items": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+      "minItems": 2,
+      "maxItems": 2,
+      "description": "[primary_weight, secondary_weight] — should sum to 1.0"
+    },
+    "zones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "zone_name",
+          "density_pct",
+          "pressure_limit_kpa",
+          "gyroid_cell_size_mm",
+          "wall_thickness_mm",
+          "stimulation_type",
+          "structural_role"
+        ],
+        "properties": {
+          "zone_name": {
+            "type": "string",
+            "enum": ["heel", "midfoot", "forefoot", "toe", "arch", "medial_edge", "lateral_edge"]
+          },
+          "density_pct": {
+            "type": "number",
+            "minimum": 15.0,
+            "maximum": 45.0,
+            "description": "Gyroid density percentage for this zone"
+          },
+          "pressure_limit_kpa": {
+            "type": "number",
+            "minimum": 0.0,
+            "description": "Maximum pressure this zone should exert"
+          },
+          "gyroid_cell_size_mm": {
+            "type": "number",
+            "minimum": 5.0,
+            "maximum": 7.0,
+            "description": "Gyroid unit cell size in mm"
+          },
+          "wall_thickness_mm": {
+            "type": "number",
+            "minimum": 0.6,
+            "description": "Wall thickness in mm — must be >= 0.6"
+          },
+          "stimulation_type": {
+            "type": "string",
+            "enum": ["static", "graded", "zoned_firm"]
+          },
+          "structural_role": {
+            "type": "string",
+            "enum": ["shock_absorption", "support", "proprioceptive", "stability"]
+          }
+        }
+      },
+      "minItems": 7,
+      "description": "All 7 foot zones with per-zone specifications"
+    },
+    "density_by_zone": {
+      "type": "object",
+      "patternProperties": {
+        "^.*$": {
+          "type": "number",
+          "minimum": 0.15,
+          "maximum": 0.45,
+          "description": "Normalized density (0-1) for each zone"
+        }
+      },
+      "description": "Density map keyed by zone name"
+    },
+    "pressure_limits": {
+      "type": "object",
+      "required": [
+        "heel_max_kpa",
+        "midfoot_max_kpa",
+        "forefoot_max_kpa",
+        "toe_max_kpa",
+        "arch_max_kpa",
+        "global_max_kpa",
+        "global_abs_limit_kpa"
+      ],
+      "properties": {
+        "heel_max_kpa": {"type": "number", "minimum": 0},
+        "midfoot_max_kpa": {"type": "number", "minimum": 0},
+        "forefoot_max_kpa": {"type": "number", "minimum": 0},
+        "toe_max_kpa": {"type": "number", "minimum": 0},
+        "arch_max_kpa": {"type": "number", "minimum": 0},
+        "global_max_kpa": {"type": "number", "minimum": 0},
+        "global_abs_limit_kpa": {
+          "type": "number",
+          "const": 80.0,
+          "description": "Absolute safety cap — never exceed"
+        }
+      }
+    },
+    "gyroid_parameters": {
+      "type": "object",
+      "required": [
+        "cell_size_mm",
+        "wall_thickness_mm",
+        "min_density",
+        "max_density",
+        "unit_cell_type",
+        "lattice_orientation",
+        "gradation_method",
+        "resolution_mm"
+      ],
+      "properties": {
+        "cell_size_mm": {
+          "type": "number",
+          "minimum": 5.0,
+          "maximum": 7.0
+        },
+        "wall_thickness_mm": {
+          "type": "number",
+          "minimum": 0.6
+        },
+        "min_density": {"type": "number", "const": 0.15},
+        "max_density": {"type": "number", "const": 0.45},
+        "unit_cell_type": {"type": "string", "const": "gyroid"},
+        "lattice_orientation": {"type": "string"},
+        "gradation_method": {"type": "string", "enum": ["linear", "cubic", "spline"]},
+        "resolution_mm": {"type": "number", "minimum": 0.01, "maximum": 1.0}
+      }
+    },
+    "manufacturability": {
+      "type": "object",
+      "required": ["passed", "checks", "warnings", "violations"],
+      "properties": {
+        "passed": {"type": "boolean"},
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "passed"],
+            "properties": {
+              "name": {"type": "string"},
+              "passed": {"type": "boolean"},
+              "detail": {"type": "string"}
+            }
+          }
+        },
+        "warnings": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "violations": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      }
+    },
+    "safety_constraints": {
+      "type": "object",
+      "required": [
+        "wall_thickness_enforced",
+        "wall_thickness_mm",
+        "density_range_enforced",
+        "density_min",
+        "density_max",
+        "pressure_cap_enforced",
+        "pressure_cap_kpa",
+        "absolute_pressure_limit_kpa"
+      ],
+      "properties": {
+        "wall_thickness_enforced": {"type": "boolean"},
+        "wall_thickness_mm": {
+          "type": "number",
+          "minimum": 0.6
+        },
+        "density_range_enforced": {"type": "boolean"},
+        "density_min": {"type": "number", "const": 0.15},
+        "density_max": {"type": "number", "const": 0.45},
+        "pressure_cap_enforced": {"type": "boolean"},
+        "pressure_cap_kpa": {"type": "number", "minimum": 0},
+        "absolute_pressure_limit_kpa": {"type": "number", "const": 80.0},
+        "temperature_adjustment_applied": {"type": "boolean"},
+        "pregnancy_restriction_applied": {"type": "boolean"}
+      }
+    },
+    "manufacturing_notes": {
+      "type": "string",
+      "description": "Manufacturing instructions in Arabic (process, material, finish)"
+    },
+    "warnings": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "ready_for_stl": {
+      "type": "boolean",
+      "description": "True if all manufacturability checks passed"
+    }
+  },
+  "additionalProperties": false
+}
