@@ -24,6 +24,7 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple
 # Schema constants
 # ---------------------------------------------------------------------------
 FINGERPRINT_SCHEMA_VERSION = "zilfit-mesh-v1"
+FINGERPRINT_CONTRACT_VERSION = "1.0"  # compatibility alias
 DEFAULT_PRECISION = 6
 DEFAULT_SCALE = 1_000_000  # 10^6 = 6 decimal places as integers
 
@@ -293,6 +294,96 @@ def _validate_bounds_finite(bounds: Dict[str, Any]) -> None:
                 for coord_i, val in enumerate(arr):
                     _validate_finite(val, f"bounds.{direction}[{coord_i}]")
 
+def _assert_finite_numeric(value: Any, context: str = "value") -> None:
+    """Centralized finite numeric validation that raises TypeError/ValueError on non-finite values."""
+    if isinstance(value, float) and not math.isfinite(value):
+        raise ValueError(f"non-finite numeric value in {context}: {value!r}")
+    elif isinstance(value, (int, float)) and math.isnan(value):
+        raise ValueError(f"NaN value in {context}: {value!r}")
+
+
+# ---------------------------------------------------------------------------
+# Float representation stability
+# ---------------------------------------------------------------------------
+def _stable_float_repr(value: float) -> str:
+    """Normalize float representation for cross-platform stability.
+
+    - -0.0 -> "0.0"
+    - Regular floats -> normalized via :.12g
+    - Handles edge cases like subnormals deterministically
+    """
+    if value == 0.0:  # catches -0.0
+        return "0.0"
+    return f"{value:.12g}"
+
+
+# ---------------------------------------------------------------------------
+# Geometry validation — degenerate triangles, non-manifold edges
+# ---------------------------------------------------------------------------
+def _validate_no_non_manifold_edges(
+    triangles: Sequence[Tuple[int, int, int]],
+) -> None:
+    """Reject any edge shared by 3+ triangles (non-manifold).
+
+    Raises ValueError if a non-manifold edge is detected.
+    """
+    edge_count: Dict[Tuple[int, int], int] = {}
+    for tri in triangles:
+        a, b, c = tri
+        for edge_key in [(min(a, b), max(a, b)), (min(b, c), max(b, c)), (min(a, c), max(a, c))]:
+            # Skip self-edges (a == b) — these arise from degenerate tris
+            if edge_key[0] == edge_key[1]:
+                continue
+            edge_count[edge_key] = edge_count.get(edge_key, 0) + 1
+    for edge, count in edge_count.items():
+        if count > 2:
+            raise ValueError(
+                f"non-manifold edge {edge}: shared by {count} triangles (max 2 allowed)"
+            )
+
+
+def _validate_no_degenerate_triangles(
+    unique_verts: List[Tuple[int, int, int]],
+    canonical_tris: List[Tuple[int, int, int]],
+) -> None:
+    """Check for zero-area triangles (same-vertex or collinear).
+
+    Raises ValueError if a degenerate triangle is detected.
+    """
+    for tri in canonical_tris:
+        a, b, c = tri
+        if a == b or b == c or a == c:
+            raise ValueError(
+                f"degenerate triangle {tri}: duplicate indices after dedup"
+            )
+        v0 = unique_verts[a]
+        v1 = unique_verts[b]
+        v2 = unique_verts[c]
+        # Cross product (b-a) x (c-a) for collinearity detection
+        ux, uy, uz = v1[0] - v0[0], v1[1] - v0[1], v1[2] - v0[2]
+        vx, vy, vz = v2[0] - v0[0], v2[1] - v0[1], v2[2] - v0[2]
+        cross_x = uy * vz - uz * vy
+        cross_y = uz * vx - ux * vz
+        cross_z = ux * vy - uy * vx
+        if cross_x == 0 and cross_y == 0 and cross_z == 0:
+            raise ValueError(
+                f"degenerate/collinear triangle {tri}: zero-area triangle (collinear vertices)"
+            )
+
+
+def _validate_no_duplicate_triangles(
+    canonical_tris: List[Tuple[int, int, int]],
+) -> None:
+    """Check for duplicate triangles after canonicalization.
+
+    Raises ValueError if a duplicate canonical triangle is found.
+    """
+    seen: set = set()
+    for tri in canonical_tris:
+        if tri in seen:
+            raise ValueError(f"duplicate triangle found: {tri}")
+        seen.add(tri)
+
 
 # ---------------------------------------------------------------------------
 # Orientation signature — detects inverted triangles
@@ -426,6 +517,10 @@ def _compute_fingerprint_core(
 
     # Canonicalize vertices with integer scaling
     canonical_verts = canonicalize_vertices_scaled(vertices, scale)
+    # Validate that canonical vertices are finite (should be ints, but check)
+    for v_idx, vertex in enumerate(canonical_verts):
+        for coord_i, coord in enumerate(vertex):
+            _assert_finite_numeric(coord, f"canonical_verts[{v_idx}][{coord_i}]")
 
     # Deduplicate vertices and build index mapping
     seen: Dict[Tuple[int, int, int], int] = {}
@@ -497,6 +592,7 @@ def compute_mesh_fingerprint(
     mesh_dict: Dict[str, Any],
     mode: str = "strict",
     strict_topology: bool = True,
+    allow_degenerate: bool = False,
 ) -> str:
     """Compute a deterministic SHA-256 fingerprint for a mesh.
 
@@ -508,6 +604,8 @@ def compute_mesh_fingerprint(
         mode: 'strict' (preserve winding) or 'geometric' (ignore winding).
         strict_topology: True (default) rejects unreferenced vertices (degenerate
                          meshes). Set to False to tolerate unused vertices.
+        allow_degenerate: If True, skip degenerate/duplicate triangle checks.
+                          Non-manifold edges are always rejected.
 
     Returns:
         SHA-256 hex digest string (64 characters).
@@ -528,6 +626,14 @@ def compute_mesh_fingerprint(
     unique_verts, canonical_tris, bounds = _compute_fingerprint_core(
         mesh_dict, mode=mode, strict_topology=strict_topology
     )
+
+    # ── Degenerate geometry rejection (unless allow_degenerate) ──────
+    if not allow_degenerate:
+        _validate_no_degenerate_triangles(unique_verts, canonical_tris)
+        _validate_no_duplicate_triangles(canonical_tris)
+
+    # ── Non-manifold edge rejection (always on) ──────────────────────
+    _validate_no_non_manifold_edges(canonical_tris)
 
     # Canonicalize manifold_flags
     manifold = mesh_dict.get("manifold_flags", {})
@@ -588,6 +694,7 @@ def compute_extended_fingerprint_payload(
 
     payload = {
         "fingerprint": fp,
+        "fingerprint_contract_version": FINGERPRINT_CONTRACT_VERSION,
         "schema_version": FINGERPRINT_SCHEMA_VERSION,
         "mode": mode,
         "precision": DEFAULT_PRECISION,

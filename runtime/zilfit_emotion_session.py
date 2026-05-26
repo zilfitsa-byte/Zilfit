@@ -1,15 +1,10 @@
-#!/usr/bin/env python3
-"""ZILFIT Emotion Session Layer — SQLite persistence.
+"""
+ZILFIT Emotion Session Layer — SQLite Persistence
 
-Stores every emotion-pipeline run in a local SQLite database so that
-sessions can be queried, compared, and audited later.
+Saves every emotion-pipeline session to a local SQLite database.
+Auto-creates tables if they do not exist.
 
-Usage:
-    from runtime.zilfit_emotion_session import EmotionSession
-
-    session = EmotionSession(db_path="learning/experiments.db")
-    session.save(pipeline_result, edition="CALM", payload=raw_dict)
-    latest = session.get_latest()
+Storage: learning/experiments.db
 """
 
 from __future__ import annotations
@@ -21,223 +16,246 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+# ---------------------------------------------------------------------------
+# Paths
+# ---------------------------------------------------------------------------
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent
+_DB_DIR = _PROJECT_ROOT / "learning"
+_DB_PATH = _DB_DIR / "experiments.db"
 
-# ── Database schema ───────────────────────────────────────────────────
-_CREATE_SESSIONS_TABLE = """
-CREATE TABLE IF NOT EXISTS emotion_sessions (
-    id              INTEGER PRIMARY KEY AUTOINCREMENT,
-    session_id      TEXT    NOT NULL UNIQUE,
-    timestamp       TEXT    NOT NULL,
-    edition         TEXT    NOT NULL,
-    emotional_target TEXT   NOT NULL DEFAULT '',
-    density_map     TEXT    NOT NULL DEFAULT '{}',
-    pressure_zones  TEXT    NOT NULL DEFAULT '[]',
-    geometry_hints  TEXT    NOT NULL DEFAULT '{}',
-    cad_directives  TEXT    NOT NULL DEFAULT '{}',
-    simulation_profile TEXT NOT NULL DEFAULT '{}',
-    warnings        TEXT    NOT NULL DEFAULT '[]',
-    raw_payload_json TEXT   NOT NULL
+# ---------------------------------------------------------------------------
+# Schema
+# ---------------------------------------------------------------------------
+_SCHEMA_PATH = _PROJECT_ROOT / "schemas" / "emotion_pipeline.schema.json"
+
+_REQUIRED_PAYLOAD_KEYS = {
+    "session_id",
+    "timestamp",
+    "edition",
+    "emotional_target",
+    "density_map",
+    "pressure_zones",
+    "geometry_hints",
+    "cad_directives",
+    "simulation_profile",
+    "warnings",
+    "raw_payload_json",
+}
+
+# ---------------------------------------------------------------------------
+# SQLite helpers
+# ---------------------------------------------------------------------------
+_TABLE = "emotion_sessions"
+
+_CREATE_TABLE_SQL = f"""
+CREATE TABLE IF NOT EXISTS {_TABLE} (
+    session_id    TEXT PRIMARY KEY,
+    timestamp     TEXT NOT NULL,
+    edition       TEXT NOT NULL,
+    emotional_target TEXT NOT NULL,
+    density_map   TEXT,
+    pressure_zones TEXT,
+    geometry_hints TEXT,
+    cad_directives TEXT,
+    simulation_profile TEXT,
+    warnings      TEXT,
+    raw_payload_json TEXT NOT NULL
 );
 """
 
-# Required keys for payload validation
-_REQUIRED_PAYLOAD_KEYS = {
-    "pipeline_status",
-    "selected_edition",
-    "edition_profile",
-    "zone_geometry",
-    "validation",
-}
 
-
-def _default_db_path() -> Path:
-    """Return the default experiments.db path, creating parent dirs."""
-    root = Path(__file__).resolve().parent.parent
-    db = root / "learning" / "experiments.db"
-    db.parent.mkdir(parents=True, exist_ok=True)
-    return db
-
-
-def _connect(db_path: Optional[str | Path] = None) -> sqlite3.Connection:
-    """Open a connection and ensure the sessions table exists."""
-    p = Path(db_path) if db_path else _default_db_path()
-    p.parent.mkdir(parents=True, exist_ok=True)
-    conn = sqlite3.connect(str(p))
+def _get_connection(db_path: Path | None = None) -> sqlite3.Connection:
+    """Return a connection, creating the database directory if needed."""
+    target = db_path or _DB_PATH
+    target.parent.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(str(target))
     conn.row_factory = sqlite3.Row
-    conn.execute(_CREATE_SESSIONS_TABLE)
-    conn.commit()
     return conn
 
 
-class InvalidPayloadError(Exception):
-    """Raised when a pipeline payload is missing required keys."""
+def _ensure_table(conn: sqlite3.Connection) -> None:
+    conn.execute(_CREATE_TABLE_SQL)
+    conn.commit()
 
 
-class EmotionSession:
-    """Persist and query ZILFIT emotion-pipeline sessions."""
+# ---------------------------------------------------------------------------
+# Public API
+# ---------------------------------------------------------------------------
+def init_db(db_path: Path | None = None) -> Path:
+    """Create the database and tables. Returns the database path."""
+    conn = _get_connection(db_path)
+    try:
+        _ensure_table(conn)
+    finally:
+        conn.close()
+    return db_path or _DB_PATH
 
-    def __init__(self, db_path: Optional[str | Path] = None):
-        self.db_path = db_path or _default_db_path()
 
-    # ── Public API ─────────────────────────────────────────────────
+def save_session(
+    payload: Dict[str, Any],
+    db_path: Path | None = None,
+) -> str:
+    """Save an emotion session to SQLite.
 
-    def save(
-        self,
-        pipeline_result: Dict[str, Any],
-        raw_payload: Optional[Dict[str, Any]] = None,
-    ) -> str:
-        """Save a pipeline run result to SQLite.
+    Accepts a dict that must contain all required keys.
+    Returns the session_id.
 
-        Args:
-            pipeline_result: Structured result from EmotionPipeline.run().
-            raw_payload: Optional original dict for raw_payload_json column.
+    Raises ValueError if required keys are missing.
+    """
+    missing = _REQUIRED_PAYLOAD_KEYS - set(payload.keys())
+    if missing:
+        raise ValueError(f"Missing required payload keys: {sorted(missing)}")
 
-        Returns:
-            The session_id string.
+    session_id = payload["session_id"]
+    density_map = json.dumps(payload["density_map"], ensure_ascii=False) if payload["density_map"] is not None else None
+    pressure_zones = json.dumps(payload["pressure_zones"], ensure_ascii=False) if payload["pressure_zones"] is not None else None
+    geometry_hints = json.dumps(payload["geometry_hints"], ensure_ascii=False) if payload["geometry_hints"] is not None else None
+    cad_directives = json.dumps(payload["cad_directives"], ensure_ascii=False) if payload["cad_directives"] is not None else None
+    simulation_profile = json.dumps(payload["simulation_profile"], ensure_ascii=False) if payload["simulation_profile"] is not None else None
+    warnings = json.dumps(payload["warnings"], ensure_ascii=False) if payload["warnings"] is not None else None
+    raw_payload_json = json.dumps(payload, ensure_ascii=False, default=str)
 
-        Raises:
-            InvalidPayloadError: If the payload is missing required keys.
-        """
-        self._validate_payload(pipeline_result)
-
-        session_id = str(uuid.uuid4())
-        ts = datetime.now(timezone.utc).isoformat()
-
-        edition = pipeline_result.get("selected_edition", "UNKNOWN")
-        edition_profile = pipeline_result.get("edition_profile", {})
-        foot_zones = edition_profile.get("foot_zones", {})
-        density_map = {z: foot_zones[z].get("density", 0.30) for z in foot_zones}
-
-        zone_geometry = pipeline_result.get("zone_geometry", {})
-        pressure_zones = zone_geometry.get("active_zones", [])
-        geometry_hints = zone_geometry.get("zone_geometry_hints", {})
-
-        cad_directives = {
-            "stimulation_type": edition_profile.get(
-                "stimulation_profile", {}
-            ).get("type", "unknown"),
-            "intensity": edition_profile.get(
-                "stimulation_profile", {}
-            ).get("intensity", "unknown"),
-            "coverage_percent": edition_profile.get(
-                "stimulation_profile", {}
-            ).get("coverage_percent", 0),
-        }
-
-        simulation_profile = edition_profile.get("stimulation_profile", {})
-        validation = pipeline_result.get("validation", {})
-        warnings = validation.get("warnings", [])
-
-        emotional_target = edition_profile.get(
-            "reflexology_inspired_zones", {}
-        ).get(
-            "primary_zone",
-            edition_profile.get("intended_effect", ""),
+    conn = _get_connection(db_path)
+    try:
+        _ensure_table(conn)
+        conn.execute(
+            f"""INSERT OR REPLACE INTO {_TABLE}
+               (session_id, timestamp, edition, emotional_target,
+                density_map, pressure_zones, geometry_hints,
+                cad_directives, simulation_profile, warnings,
+                raw_payload_json)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            (
+                session_id,
+                payload["timestamp"],
+                payload["edition"],
+                payload["emotional_target"],
+                density_map,
+                pressure_zones,
+                geometry_hints,
+                cad_directives,
+                simulation_profile,
+                warnings,
+                raw_payload_json,
+            ),
         )
+        conn.commit()
+    finally:
+        conn.close()
 
-        if raw_payload is None:
-            raw_payload = pipeline_result
-        raw_json = json.dumps(raw_payload, ensure_ascii=False)
+    return session_id
 
-        with _connect(self.db_path) as conn:
-            conn.execute(
-                """
-                INSERT INTO emotion_sessions (
-                    session_id, timestamp, edition, emotional_target,
-                    density_map, pressure_zones, geometry_hints,
-                    cad_directives, simulation_profile, warnings,
-                    raw_payload_json
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """,
-                (
-                    session_id,
-                    ts,
-                    edition,
-                    emotional_target,
-                    json.dumps(density_map),
-                    json.dumps(pressure_zones),
-                    json.dumps(geometry_hints),
-                    json.dumps(cad_directives),
-                    json.dumps(simulation_profile),
-                    json.dumps(warnings),
-                    raw_json,
-                ),
-            )
-            conn.commit()
 
-        return session_id
-
-    def get_latest(self, edition: Optional[str] = None) -> Optional[Dict[str, Any]]:
-        """Return the most recent session, optionally filtered by edition."""
-        with _connect(self.db_path) as conn:
-            if edition:
-                row = conn.execute(
-                    "SELECT * FROM emotion_sessions WHERE edition = ? ORDER BY id DESC LIMIT 1",
-                    (edition,),
-                ).fetchone()
-            else:
-                row = conn.execute(
-                    "SELECT * FROM emotion_sessions ORDER BY id DESC LIMIT 1"
-                ).fetchone()
-
+def get_latest_session(
+    db_path: Path | None = None,
+) -> Optional[Dict[str, Any]]:
+    """Return the most recently saved session as a dict, or None."""
+    conn = _get_connection(db_path)
+    try:
+        _ensure_table(conn)
+        row = conn.execute(
+            f"SELECT * FROM {_TABLE} ORDER BY timestamp DESC LIMIT 1"
+        ).fetchone()
         if row is None:
             return None
 
-        return self._row_to_dict(row)
+        result: Dict[str, Any] = dict(row)
+        # Deserialize JSON fields back into native types
+        for key in ("density_map", "pressure_zones", "geometry_hints",
+                     "cad_directives", "simulation_profile", "warnings",
+                     "raw_payload_json"):
+            val = result.get(key)
+            if val is not None:
+                result[key] = json.loads(val)
+        return result
+    finally:
+        conn.close()
 
-    def get_all(self, limit: int = 100) -> List[Dict[str, Any]]:
-        """Return up to *limit* recent sessions."""
-        with _connect(self.db_path) as conn:
-            rows = conn.execute(
-                "SELECT * FROM emotion_sessions ORDER BY id DESC LIMIT ?",
-                (limit,),
-            ).fetchall()
 
-        return [self._row_to_dict(r) for r in rows]
+def get_session(
+    session_id: str,
+    db_path: Path | None = None,
+) -> Optional[Dict[str, Any]]:
+    """Return a single session by ID, or None."""
+    conn = _get_connection(db_path)
+    try:
+        _ensure_table(conn)
+        row = conn.execute(
+            f"SELECT * FROM {_TABLE} WHERE session_id = ?", (session_id,)
+        ).fetchone()
+        if row is None:
+            return None
+        result: Dict[str, Any] = dict(row)
+        for key in ("density_map", "pressure_zones", "geometry_hints",
+                     "cad_directives", "simulation_profile", "warnings",
+                     "raw_payload_json"):
+            val = result.get(key)
+            if val is not None:
+                result[key] = json.loads(val)
+        return result
+    finally:
+        conn.close()
 
-    def count(self) -> int:
-        """Return total number of stored sessions."""
-        with _connect(self.db_path) as conn:
-            row = conn.execute("SELECT COUNT(*) AS c FROM emotion_sessions").fetchone()
-            return row["c"] if row else 0
 
-    def table_exists(self) -> bool:
-        """Check whether the emotion_sessions table exists."""
-        with _connect(self.db_path) as conn:
-            row = conn.execute(
-                """
-                SELECT name FROM sqlite_master
-                WHERE type='table' AND name='emotion_sessions'
-                """
-            ).fetchone()
-            return row is not None
+def list_sessions(db_path: Path | None = None) -> List[Dict[str, str]]:
+    """Return a list of {session_id, timestamp, edition, emotional_target}."""
+    conn = _get_connection(db_path)
+    try:
+        _ensure_table(conn)
+        rows = conn.execute(
+            f"SELECT session_id, timestamp, edition, emotional_target "
+            f"FROM {_TABLE} ORDER BY timestamp DESC"
+        ).fetchall()
+        return [dict(r) for r in rows]
+    finally:
+        conn.close()
 
-    # ── Internal helpers ────────────────────────────────────────────
 
-    @staticmethod
-    def _validate_payload(payload: Dict[str, Any]) -> None:
-        """Raise InvalidPayloadError if required keys are missing."""
-        missing = _REQUIRED_PAYLOAD_KEYS - set(payload.keys())
-        if missing:
-            raise InvalidPayloadError(
-                f"Payload missing required keys: {sorted(missing)}"
-            )
+# ---------------------------------------------------------------------------
+# Schema validation
+# ---------------------------------------------------------------------------
+def load_schema() -> Dict[str, Any]:
+    """Load the emotion_pipeline JSON schema."""
+    if _SCHEMA_PATH.exists():
+        with open(_SCHEMA_PATH, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {}
 
-    @staticmethod
-    def _row_to_dict(row: sqlite3.Row) -> Dict[str, Any]:
-        """Convert a DB row into a clean dict, deserialising JSON fields."""
-        d = dict(row)
-        for json_col in (
-            "density_map",
-            "pressure_zones",
-            "geometry_hints",
-            "cad_directives",
-            "simulation_profile",
-            "warnings",
-            "raw_payload_json",
-        ):
-            try:
-                d[json_col] = json.loads(d[json_col]) if d[json_col] else {}
-            except (json.JSONDecodeError, TypeError):
-                d[json_col] = {}
-        return d
+
+def validate_schema_keys(schema: Dict[str, Any] | None = None) -> bool:
+    """Check that the schema covers all required payload keys."""
+    if schema is None:
+        schema = load_schema()
+    if not schema:
+        return False
+    props = set(schema.get("properties", {}).keys())
+    return _REQUIRED_PAYLOAD_KEYS.issubset(props)
+
+
+# ---------------------------------------------------------------------------
+# Convenience: build a session payload dict
+# ---------------------------------------------------------------------------
+def build_session_payload(
+    edition: str,
+    emotional_target: str,
+    density_map: Any = None,
+    pressure_zones: Any = None,
+    geometry_hints: Any = None,
+    cad_directives: Any = None,
+    simulation_profile: Any = None,
+    warnings: List[str] | None = None,
+) -> Dict[str, Any]:
+    """Build a complete payload dict ready for save_session()."""
+    return {
+        "session_id": str(uuid.uuid4()),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "edition": edition,
+        "emotional_target": emotional_target,
+        "density_map": density_map,
+        "pressure_zones": pressure_zones,
+        "geometry_hints": geometry_hints,
+        "cad_directives": cad_directives,
+        "simulation_profile": simulation_profile,
+        "warnings": warnings or [],
+        "raw_payload_json": "",  # filled during save
+    }

@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "ZILFIT Emotion Pipeline Result",
-  "description": "Engineering-only pipeline output for session persistence. No medical, diagnostic, therapeutic, or treatment claims.",
+  "title": "ZILFIT Emotion Pipeline Session",
+  "description": "Schema for emotion-driven CAD pipeline session payloads.",
   "type": "object",
   "required": [
     "session_id",
@@ -19,59 +19,70 @@
   "properties": {
     "session_id": {
       "type": "string",
-      "description": "Unique session identifier (UUID)."
+      "description": "Unique session identifier (UUID4)."
     },
     "timestamp": {
       "type": "string",
-      "format": "date-time",
-      "description": "ISO-8601 UTC timestamp when the session was created."
+      "description": "ISO-8601 timestamp of session creation.",
+      "format": "date-time"
     },
     "edition": {
       "type": "string",
-      "enum": ["CALM", "VITAL", "FOCUS", "BALANCE", "FEMME"],
-      "description": "Primary ZILFIT edition."
+      "description": "Edition name (e.g., p01_balance, calm, dynamic)."
     },
     "emotional_target": {
       "type": "string",
-      "description": "Primary emotional/comfort target for the edition (e.g. grounding, release, alertness, stability, soothing)."
+      "description": "Target emotional profile (e.g., CALM, dynamic, FOCUS)."
     },
     "density_map": {
-      "type": "object",
-      "description": "Per-zone density values for heel, midfoot, forefoot, and toe.",
-      "required": ["heel", "midfoot", "forefoot", "toe"],
-      "properties": {
-        "heel": { "type": "number" },
-        "midfoot": { "type": "number" },
-        "forefoot": { "type": "number" },
-        "toe": { "type": "number" }
-      }
+      "anyOf": [
+        { "type": "null" },
+        { "type": "object" },
+        { "type": "array" }
+      ],
+      "description": "Density distribution map for the edition."
     },
     "pressure_zones": {
-      "type": "array",
-      "description": "List of active pressure zone identifiers from solar_plexus_map.",
-      "items": { "type": "string" }
+      "anyOf": [
+        { "type": "null" },
+        { "type": "object" },
+        { "type": "array" }
+      ],
+      "description": "Pressure zone definitions (e.g., heel, arch, forefoot)."
     },
     "geometry_hints": {
-      "type": "object",
-      "description": "Zone geometry hints for Z-CAD (shape, depth, diameter, height, cad_direction)."
+      "anyOf": [
+        { "type": "null" },
+        { "type": "object" },
+        { "type": "array" }
+      ],
+      "description": "Geometry hints for CAD generation (wall thickness, cell size, etc.)."
     },
     "cad_directives": {
-      "type": "object",
-      "description": "Engineering directives for Z-CAD geometry generation (stimulation type, coverage, intensity)."
+      "anyOf": [
+        { "type": "null" },
+        { "type": "object" },
+        { "type": "array" }
+      ],
+      "description": "Directives passed to the CAD runtime."
     },
     "simulation_profile": {
-      "type": "object",
-      "description": "Stimulation profile: type, frequency_hz, intensity, coverage_percent, description."
+      "anyOf": [
+        { "type": "null" },
+        { "type": "object" },
+        { "type": "array" }
+      ],
+      "description": "Simulation profile: load cases, constraints, material params."
     },
     "warnings": {
       "type": "array",
-      "description": "Engineering validation warnings. Empty list if none.",
-      "items": { "type": "string" }
+      "items": { "type": "string" },
+      "description": "List of warning strings generated during the session."
     },
     "raw_payload_json": {
       "type": "string",
-      "description": "Full raw pipeline result serialized as a JSON string for audit/comparison."
+      "description": "Full serialized payload as JSON string."
     }
   },
-  "additionalProperties": false
+  "additionalProperties": true
 }

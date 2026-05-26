@@ -329,6 +329,28 @@ def generate_card(
     **Engineering-Only Language:** All statements in this card describe prototypes, simulations, design hypotheses, or engineering estimates requiring validation. No medical or therapeutic language is used.
     """)
 
+    # Append Arabic summary
+    arabic_summary = textwrap.dedent(f"""\
+
+    ---
+
+    ## ملخص بالعربية
+
+    **تم الإنشاء:** {created}
+    **رقم البطاقة:** {card_id}
+    **التصنيف:** {category}
+    **الجمهور المستهدف:** {target}
+
+    **الملخص:** هذه البطاقة تمثل فكرة منتج تم تحويلها إلى خطة تنفيذ هندسية.
+    جميع الأوصاف هي أوصاف هندسية فقط وتتطلب التحقق من خلال المحاكاة والاختبار قبل أي التزام بالإنتاج.
+
+    **حالة المطالبات:** {claims_status}
+
+    **الموافقة:** تم إعداد هذه البطاقة للسلطان — جميع الأوصاف هندسية ولا تحتوي على ادعاءات طبية.
+    """)
+
+    card_text += arabic_summary
+
     # Determine output path
     if output_path:
         out = pathlib.Path(output_path)
