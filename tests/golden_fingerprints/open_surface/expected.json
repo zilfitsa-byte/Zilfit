@@ -1,0 +1,56 @@
+{
+  "name": "open_surface",
+  "purpose": "Open non-closed surface \u2014 all 3 edges are boundary edges",
+  "mode": "strict",
+  "mesh": {
+    "vertices": [
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        2,
+        0,
+        0
+      ],
+      [
+        0,
+        3,
+        0
+      ]
+    ],
+    "triangles": [
+      [
+        0,
+        1,
+        2
+      ]
+    ],
+    "bounds": {
+      "min": [
+        0,
+        0,
+        0
+      ],
+      "max": [
+        2,
+        3,
+        0
+      ]
+    },
+    "manifold_flags": {
+      "is_closed": false,
+      "is_open_surface": true
+    }
+  },
+  "expected_fingerprint_sha256": "0dbf60441f6c8d3d3c693ce718e2af893fe6fc9bdb6bf579d550b6fd608d63d4",
+  "expected_canonical_payload_sha256": "cb9527349aeecc86236f09bbb958b795134f18411d9c613c2e2cb0214dfe7a16",
+  "expected_diagnostics": {
+    "should_succeed": true,
+    "num_vertices": 3,
+    "num_triangles": 1,
+    "is_closed": false,
+    "inverted_edges_count": 0
+  }
+}

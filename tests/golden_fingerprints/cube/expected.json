@@ -1,0 +1,41 @@
+{
+  "name": "cube",
+  "purpose": "Baseline: 8-vertex closed manifold cube (12 triangles)",
+  "mode": "strict",
+  "mesh": {
+    "vertices": [
+      [0, 0, 0],
+      [1, 0, 0],
+      [1, 1, 0],
+      [0, 1, 0],
+      [0, 0, 1],
+      [1, 0, 1],
+      [1, 1, 1],
+      [0, 1, 1]
+    ],
+    "triangles": [
+      [0, 1, 2], [0, 2, 3],
+      [4, 6, 5], [4, 7, 6],
+      [0, 4, 5], [0, 5, 1],
+      [2, 6, 7], [2, 7, 3],
+      [0, 3, 7], [0, 7, 4],
+      [1, 5, 6], [1, 6, 2]
+    ],
+    "bounds": {
+      "min": [0, 0, 0],
+      "max": [1, 1, 1]
+    },
+    "manifold_flags": {
+      "is_closed": true
+    }
+  },
+  "expected_fingerprint_sha256": "835a11aa3a8abcff36b461653c0881259f99d0b2e6269ad3e8871743049c72ca",
+  "expected_canonical_payload_sha256": "addb0db0c7de9caee6d6c8a88a010a8a4879f7ccce0db81ebd4265316252591d",
+  "expected_diagnostics": {
+    "should_succeed": true,
+    "num_vertices": 8,
+    "num_triangles": 12,
+    "is_closed": true,
+    "inverted_edges_count": 0
+  }
+}
