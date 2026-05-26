@@ -101,9 +101,13 @@ def _compute_min_wall_thickness(mesh: trimesh.Trimesh) -> Dict[str, Any]:
     ray_directions = -normals_unit  # cast inward
 
     # --- ray-mesh intersection ---
-    intersector = trimesh.ray.ray_triangle.RayMeshIntersector(mesh)
-    locations, index_ray, index_tri = intersector.intersects_location(
-        ray_origins, ray_directions, multiple_hits=False
+    # Use mesh.ray.intersects_location directly (no rtree required).
+    # RayMeshIntersector triggers an rtree dependency in some trimesh versions.
+    # Use multiple_hits=True to capture both entry and exit intersections.
+    # The first hit on each ray is a self-intersection with the starting face
+    # at approximately epsilon distance; filter it out below.
+    locations, index_ray, index_tri = mesh.ray.intersects_location(
+        ray_origins, ray_directions, multiple_hits=True
     )
 
     if len(locations) == 0:
@@ -118,18 +122,30 @@ def _compute_min_wall_thickness(mesh: trimesh.Trimesh) -> Dict[str, Any]:
             "hard_reject": True,
         }
 
-    # --- compute distances ---
+    # --- compute distances and filter self-intersections ---
     origins = ray_origins[index_ray]
     distances = np.linalg.norm(locations - origins, axis=1)
 
-    if len(distances) == 0:
+    # Rays start at epsilon offset from surface. Self-intersections with the
+    # starting face occur at distance approx epsilon. Filter these out.
+    min_valid = epsilon * 2.0
+    valid_mask = distances > min_valid
+    if not np.any(valid_mask):
         return {
             "check": "minimum_wall_thickness",
             "passed": False,
-            "detail": "all ray intersections produced zero-distance hits",
+            "detail": (
+                "all ray intersections are self-intersections at "
+                f"<= epsilon distance (min_valid={min_valid:.6f} mm) "
+                "— mesh may not be watertight or has no interior wall"
+            ),
             "min_wall_mm": None,
             "hard_reject": True,
         }
+
+    distances = distances[valid_mask]
+    index_ray = index_ray[valid_mask]
+    locations = locations[valid_mask]
 
     min_wall = float(np.min(distances))
     max_wall = float(np.max(distances))

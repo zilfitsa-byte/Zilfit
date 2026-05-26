@@ -43,15 +43,36 @@ def _check_watertight(mesh: trimesh.Trimesh) -> Dict[str, Any]:
 
     A watertight mesh has zero boundary edges.  Non-watertight meshes
     cannot be printed as a solid volume.
+
+    Rejects non-manifold meshes with explicit per-property error messages:
+      - is_watertight         — must be True (closed shell)
+      - is_winding_consistent — must be True (no inverted normals)
+      - euler_number          — must equal 2 (genus-zero closed surface)
     """
     is_watertight = bool(mesh.is_watertight)
-    boundary_edges = int(mesh.report.get("edges_boundary", 0))
+    winding_ok = bool(mesh.is_winding_consistent)
+    euler_ok = bool(mesh.euler_number == 2)
+
+    # Count boundary edges directly (mesh.report is not available in all trimesh versions)
+    edges_sorted = np.sort(mesh.edges, axis=1)
+    _, edge_counts = np.unique(edges_sorted, axis=0, return_counts=True)
+    boundary_edge_count = int(np.sum(edge_counts == 1))
+
+    failures = []
+    if not is_watertight:
+        failures.append(f"mesh is not watertight ({boundary_edge_count} boundary edge(s))")
+    if not winding_ok:
+        failures.append("mesh winding is not consistent")
+    if not euler_ok:
+        failures.append(f"mesh Euler number is {mesh.euler_number} (expected 2)")
+
+    passed = is_watertight and winding_ok and euler_ok
 
     return {
         "check": "watertight",
-        "passed": is_watertight,
-        "detail": "mesh is closed" if is_watertight else f"mesh has {boundary_edges} boundary edge(s)",
-        "boundary_edges": boundary_edges,
+        "passed": passed,
+        "detail": "mesh is closed, winding consistent, Euler number = 2" if passed else "; ".join(failures),
+        "boundary_edges": boundary_edge_count,
     }
 
 

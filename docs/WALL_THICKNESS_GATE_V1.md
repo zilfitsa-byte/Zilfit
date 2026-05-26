@@ -148,10 +148,19 @@ TPU 95A cannot be activated without:
 
 ### Measurement method
 
-1. Sample the mesh surface at ~10 000 points (more for dense meshes).
-2. For each point, cast a ray along the inward-pointing face normal.
-3. The distance to the first surface intersection is the local wall thickness.
-4. Report the minimum, mean, and maximum across all samples.
+1. Sample the mesh surface at ~10 000 points (more for dense meshes) using
+   `trimesh.sample.sample_surface`.
+2. Face indices are returned directly by `sample_surface` alongside sample points.
+   Face normals are read from `mesh.face_normals[face_indices]`.
+   No proximity query is performed.
+3. For each point, cast a ray along the inward-pointing face normal using
+   `mesh.ray.intersects_location` (built-in ray intersection, no rtree required).
+4. The distance to the first surface intersection is the local wall thickness.
+5. Report the minimum, mean, and maximum across all samples.
+
+`rtree` is not required for the core measurement path. If `rtree` is
+present, trimesh may use it to accelerate ray intersection;
+the gate functions correctly with or without it.
 
 ### Pre-requisite
 
