@@ -1,0 +1,128 @@
+solid nonmanifold_5edge
+facet normal 0 0 1
+outer loop
+vertex -10 -10 10
+vertex 10 -10 10
+vertex 10 10 10
+endloop
+endfacet
+facet normal 0 0 1
+outer loop
+vertex -10 -10 10
+vertex 10 10 10
+vertex -10 10 10
+endloop
+endfacet
+facet normal 0 0 -1
+outer loop
+vertex -10 10 -10
+vertex 10 10 -10
+vertex 10 -10 -10
+endloop
+endfacet
+facet normal 0 0 -1
+outer loop
+vertex -10 10 -10
+vertex 10 -10 -10
+vertex -10 -10 -10
+endloop
+endfacet
+facet normal 0 1 0
+outer loop
+vertex -10 10 10
+vertex 10 10 10
+vertex 10 10 -10
+endloop
+endfacet
+facet normal 0 1 0
+outer loop
+vertex -10 10 10
+vertex 10 10 -10
+vertex -10 10 -10
+endloop
+endfacet
+facet normal 0 -1 0
+outer loop
+vertex 10 -10 10
+vertex -10 -10 10
+vertex -10 -10 -10
+endloop
+endfacet
+facet normal 0 -1 0
+outer loop
+vertex 10 -10 10
+vertex -10 -10 -10
+vertex 10 -10 -10
+endloop
+endfacet
+facet normal 1 0 0
+outer loop
+vertex 10 10 10
+vertex 10 -10 10
+vertex 10 -10 -10
+endloop
+endfacet
+facet normal 1 0 0
+outer loop
+vertex 10 10 10
+vertex 10 -10 -10
+vertex 10 10 -10
+endloop
+endfacet
+facet normal -1 0 0
+outer loop
+vertex -10 -10 10
+vertex -10 10 10
+vertex -10 10 -10
+endloop
+endfacet
+facet normal -1 0 0
+outer loop
+vertex -10 -10 10
+vertex -10 10 -10
+vertex -10 -10 -10
+endloop
+endfacet
+facet normal 0 0 1
+outer loop
+vertex -10 -10 -10
+vertex 10 -10 -10
+vertex 0 5 5
+endloop
+endfacet
+facet normal 0 0 -1
+outer loop
+vertex 10 -10 -10
+vertex -10 -10 -10
+vertex 0 5 5
+endloop
+endfacet
+facet normal 0 1 0
+outer loop
+vertex 10 -10 -10
+vertex 0 5 5
+vertex 10 10 -10
+endloop
+endfacet
+facet normal 0 -1 0
+outer loop
+vertex -10 -10 -10
+vertex 0 5 5
+vertex -10 10 -10
+endloop
+endfacet
+facet normal 1 0 0
+outer loop
+vertex 0 5 5
+vertex -10 -10 -10
+vertex 10 -10 -10
+endloop
+endfacet
+facet normal 0 0 1
+outer loop
+vertex 0 5 5
+vertex -10 10 -10
+vertex 10 10 -10
+endloop
+endfacet
+endsolid nonmanifold_5edge

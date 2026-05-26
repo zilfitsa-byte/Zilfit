@@ -143,6 +143,58 @@ TEST_CASES: List[TestCase] = [
             "density_jump_validation":      "SOFT_FAIL",
         },
     },
+    # --- STL edge-case fixtures (Patch 1H) ---
+    # Case 8 — non-manifold STL
+    {
+        "name":       "STL non-manifold edge",
+        "args":       ["--stl", _rel(STL_DIR / "nonmanifold_5edge.stl")],
+        "expect_exit": 1,
+        "expect_verdict": "FAIL",
+        "expect_gates": {
+            "mesh_validation":              "HARD_FAIL",
+            "wall_thickness_validation":    "INPUT_ERROR",
+            "density_jump_validation":      "SKIPPED",
+        },
+    },
+    # Case 9 — ultra-thin wall (HARD_REJECT)
+    {
+        "name":       "STL thinwall 0.5 mm HARD_REJECT",
+        "args":       ["--stl", _rel(STL_DIR / "thinwall_05mm.stl")],
+        "expect_exit": 1,
+        "expect_verdict": "FAIL",
+        "expect_gates": {
+            "mesh_validation":              "PASS",
+            "wall_thickness_validation":    "HARD_FAIL",
+            "density_jump_validation":      "SKIPPED",
+        },
+    },
+    # Case 10 — threshold thin wall (SOFT_FAIL)
+    {
+        "name":       "STL thinwall 0.7 mm SOFT_FAIL",
+        "args":       ["--stl", _rel(STL_DIR / "thinwall_07mm.stl")],
+        "expect_exit": 1,
+        "expect_verdict": "FAIL",
+        "expect_gates": {
+            "mesh_validation":              "PASS",
+            "wall_thickness_validation":    "SOFT_FAIL",
+            "density_jump_validation":      "SKIPPED",
+        },
+    },
+    # Case 11 — open shell STL + density PASS (density runs independently)
+    {
+        "name":       "STL open shell + density PASS",
+        "args":       [
+            "--stl",     _rel(STL_DIR / "open_shell_10faces.stl"),
+            "--density", _rel(DENSITY_DIR / "pass_nominal.json"),
+        ],
+        "expect_exit": 1,
+        "expect_verdict": "FAIL",
+        "expect_gates": {
+            "mesh_validation":              "HARD_FAIL",
+            "wall_thickness_validation":    "INPUT_ERROR",
+            "density_jump_validation":      "PASS",
+        },
+    },
 ]
 # fmt: on
 

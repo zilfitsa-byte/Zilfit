@@ -15,10 +15,45 @@
 | `density/hard_fail_delta_022.json` | 1C | HARD_FAIL | 1 |
 | `density/malformed_missing_fields.json` | 1C | INPUT_ERROR | 1 |
 | `stl/cube_watertight.stl` | 1A, 1B | 1A: PASS, 1B: PASS | 0 |
+| `stl/open_shell_10faces.stl` | 1A, 1B | 1A: FAIL, 1B: FAIL | 1 |
+| `stl/nonmanifold_5edge.stl` | 1A, 1B | 1A: FAIL, 1B: FAIL | 1 |
+| `stl/thinwall_05mm.stl` | 1A, 1B | 1A: PASS, 1B: HARD_FAIL | 1 |
+| `stl/thinwall_07mm.stl` | 1A, 1B | 1A: PASS, 1B: SOFT_FAIL | 1 |
+| `stl/multishell_2body.stl`\* | 1A, 1B | 1A: FAIL, 1B: PASS | 1 |
+| `stl/inverted_winding.stl`\* | 1A, 1B | 1A: FAIL, 1B: PASS | 1 |
+
+> **\* Documentation-only fixtures.** `multishell_2body` and `inverted_winding` exercise
+> Gate 1A policy checks (Euler number, winding consistency) but are watertight and
+> therefore pass Gate 1B. They are excluded from automated regression assertions.
+> Gate 1B intentionally evaluates thickness only on manifold geometry.
 
 **Notes on `stl/cube_watertight.stl`:**
 - **Gate 1A (manifold):** PASS — cube is watertight, winding-consistent, Euler number = 2, all 8 vertices finite. ✅
 - **Gate 1B (wall thickness):** PASS — min wall 20.0035 mm (above 0.8 mm threshold). ✅
+
+**Notes on `stl/open_shell_10faces.stl`:**
+- **Gate 1A (manifold):** FAIL — 4 boundary edges, Euler number = 1 (expected 2). Tests boundary edge detection. ✅
+- **Gate 1B (wall thickness):** FAIL — mesh is not watertight. ✅
+
+**Notes on `stl/nonmanifold_5edge.stl`:**
+- **Gate 1A (manifold):** FAIL — 1 non-manifold edge detected. Tests non-manifold edge detection. ✅
+- **Gate 1B (wall thickness):** FAIL — mesh is not watertight. ✅
+
+**Notes on `stl/thinwall_05mm.stl`:**
+- **Gate 1A (manifold):** PASS — watertight, winding consistent, Euler = 2. ✅
+- **Gate 1B (wall thickness):** HARD_FAIL — min wall 0.5028 mm (below 0.6 mm hard reject). ✅
+
+**Notes on `stl/thinwall_07mm.stl`:**
+- **Gate 1A (manifold):** PASS — watertight, winding consistent, Euler = 2. ✅
+- **Gate 1B (wall thickness):** SOFT_FAIL — min wall 0.7028 mm (below 0.8 mm threshold, above 0.6 mm hard reject). ✅
+
+**Notes on `stl/multishell_2body.stl` (informative):**
+- **Gate 1A (manifold):** FAIL — Euler number = 4 (expected 2), 2 disjoint bodies. ✅
+- **Gate 1B (wall thickness):** PASS — both bodies are watertight, so thickness measurement succeeds. This is expected: Gate 1B only gates on thickness; the topology error is caught by Gate 1A. ✅
+
+**Notes on `stl/inverted_winding.stl` (informative):**
+- **Gate 1A (manifold):** FAIL — winding is not consistent (2 bottom face triangles reversed). ✅
+- **Gate 1B (wall thickness):** PASS — mesh is watertight, so thickness measurement succeeds. Winding errors are caught by Gate 1A. ✅
 
 ---
 
