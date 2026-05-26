@@ -385,6 +385,74 @@ def validate_density_jumps(source: str) -> Dict[str, Any]:
     return report
 
 
+def run(input_path: str) -> Dict[str, Any]:
+    """Programmatic entry point for the unified pre-print runner.
+
+    Wraps validate_density_jumps() and maps the result to a consistent schema:
+      gate, status, metrics, violations, worst
+
+    Args:
+        input_path: Path to a density authority JSON file.
+
+    Returns:
+        Standardized result dict.
+    """
+    try:
+        report = validate_density_jumps(input_path)
+    except FileNotFoundError:
+        return {
+            "gate": "density_jump_validation",
+            "status": "INPUT_ERROR",
+            "metrics": {},
+            "violations": [],
+            "worst": None,
+            "_error": f"file not found: {input_path}",
+        }
+    except json.JSONDecodeError as e:
+        return {
+            "gate": "density_jump_validation",
+            "status": "INPUT_ERROR",
+            "metrics": {},
+            "violations": [],
+            "worst": None,
+            "_error": f"invalid JSON: {e}",
+        }
+    except ValueError as e:
+        return {
+            "gate": "density_jump_validation",
+            "status": "INPUT_ERROR",
+            "metrics": {},
+            "violations": [],
+            "worst": None,
+            "_error": str(e),
+        }
+
+    verdict = report.get("verdict", "")
+
+    if verdict == "PASS":
+        status = "PASS"
+    elif verdict == "HARD FAIL":
+        status = "HARD_FAIL"
+    else:
+        status = "SOFT_FAIL"
+
+    metrics: Dict[str, Any] = {
+        "total_zones": report.get("total_zones", 0),
+        "total_adjacency_pairs_evaluated": report.get("total_adjacency_pairs_evaluated", 0),
+        "edition": report.get("edition", ""),
+        "material": report.get("material", ""),
+    }
+
+    return {
+        "gate": "density_jump_validation",
+        "status": status,
+        "metrics": metrics,
+        "violations": report.get("violations", []),
+        "worst": report.get("worst_pair"),
+        "_report": report,
+    }
+
+
 def main() -> int:
     """CLI entry point. Returns 0 on PASS, 1 on FAIL."""
     parser = argparse.ArgumentParser(
@@ -401,20 +469,14 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    try:
-        report = validate_density_jumps(args.density_authority)
-    except FileNotFoundError:
-        print(f"ERROR: file not found: {args.density_authority}", file=sys.stderr)
-        return 1
-    except json.JSONDecodeError as e:
-        print(f"ERROR: invalid JSON: {e}", file=sys.stderr)
-        return 1
-    except ValueError as e:
-        print(f"ERROR: {e}", file=sys.stderr)
+    result = run(args.density_authority)
+
+    if result["status"] in ("INPUT_ERROR", "DEPENDENCY_ERROR"):
+        print(f"ERROR: {result.get('_error', 'unknown error')}", file=sys.stderr)
         return 1
 
-    _print_report(report)
-    return 0 if report["verdict"] == "PASS" else 1
+    _print_report(result["_report"])
+    return 0 if result["status"] == "PASS" else 1
 
 
 if __name__ == "__main__":

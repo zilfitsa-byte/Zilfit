@@ -220,6 +220,63 @@ def validate_stl(stl_path: str) -> Dict[str, Any]:
     return report
 
 
+def run(input_path: str) -> Dict[str, Any]:
+    """Programmatic entry point for the unified pre-print runner.
+
+    Wraps validate_stl() and maps the result to a consistent schema:
+      gate, status, metrics, violations, worst
+
+    Args:
+        input_path: Path to an STL file.
+
+    Returns:
+        Standardized result dict.
+    """
+    try:
+        report = validate_stl(input_path)
+    except FileNotFoundError:
+        return {
+            "gate": "mesh_validation",
+            "status": "INPUT_ERROR",
+            "metrics": {},
+            "violations": [],
+            "worst": None,
+            "_error": f"STL file not found: {input_path}",
+        }
+    except ValueError as e:
+        return {
+            "gate": "mesh_validation",
+            "status": "INPUT_ERROR",
+            "metrics": {},
+            "violations": [],
+            "worst": None,
+            "_error": str(e),
+        }
+
+    checks = report.get("checks", [])
+    passed_count = sum(1 for c in checks if c.get("passed", False))
+    total_count = len(checks)
+
+    metrics: Dict[str, Any] = {
+        "passed_checks": passed_count,
+        "total_checks": total_count,
+    }
+    for c in checks:
+        metrics[c["check"]] = c.get("detail", "")
+
+    violations = [c for c in checks if not c.get("passed", False)]
+    status = "PASS" if report.get("passed", False) else "HARD_FAIL"
+
+    return {
+        "gate": "mesh_validation",
+        "status": status,
+        "metrics": metrics,
+        "violations": violations,
+        "worst": violations[0] if violations else None,
+        "_report": report,
+    }
+
+
 def main() -> int:
     """CLI entry point. Returns 0 on PASS, 1 on FAIL."""
     parser = argparse.ArgumentParser(
@@ -237,17 +294,14 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    try:
-        report = validate_stl(args.stl)
-    except FileNotFoundError:
-        print(f"ERROR: STL file not found: {args.stl}", file=sys.stderr)
-        return 1
-    except ValueError as e:
-        print(f"ERROR: {e}", file=sys.stderr)
+    result = run(args.stl)
+
+    if result["status"] in ("INPUT_ERROR", "DEPENDENCY_ERROR"):
+        print(f"ERROR: {result.get('_error', 'unknown error')}", file=sys.stderr)
         return 1
 
-    _print_report(report)
-    return 0 if report["passed"] else 1
+    _print_report(result["_report"])
+    return 0 if result["status"] == "PASS" else 1
 
 
 if __name__ == "__main__":

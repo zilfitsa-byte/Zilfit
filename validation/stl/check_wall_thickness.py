@@ -280,6 +280,74 @@ def validate_wall_thickness(stl_path: str) -> Dict[str, Any]:
     return report
 
 
+def run(input_path: str) -> Dict[str, Any]:
+    """Programmatic entry point for the unified pre-print runner.
+
+    Wraps validate_wall_thickness() and maps the result to a consistent schema:
+      gate, status, metrics, violations, worst
+
+    Args:
+        input_path: Path to an STL file.
+
+    Returns:
+        Standardized result dict.
+    """
+    try:
+        report = validate_wall_thickness(input_path)
+    except FileNotFoundError:
+        return {
+            "gate": "wall_thickness_validation",
+            "status": "INPUT_ERROR",
+            "metrics": {},
+            "violations": [],
+            "worst": None,
+            "_error": f"STL file not found: {input_path}",
+        }
+    except ValueError as e:
+        return {
+            "gate": "wall_thickness_validation",
+            "status": "INPUT_ERROR",
+            "metrics": {},
+            "violations": [],
+            "worst": None,
+            "_error": str(e),
+        }
+
+    checks = report.get("checks", [])
+    passed_count = sum(1 for c in checks if c.get("passed", False))
+    total_count = len(checks)
+
+    check = checks[0] if checks else {}
+    metrics: Dict[str, Any] = {
+        "passed_checks": passed_count,
+        "total_checks": total_count,
+        "min_wall_mm": check.get("min_wall_mm"),
+        "mean_wall_mm": check.get("mean_wall_mm"),
+        "max_wall_mm": check.get("max_wall_mm"),
+        "samples_taken": check.get("samples_taken"),
+        "hard_reject": check.get("hard_reject", False),
+    }
+
+    violations = [c for c in checks if not c.get("passed", False)]
+    has_hard_reject = any(c.get("hard_reject", False) for c in checks)
+
+    if report.get("passed", False):
+        status = "PASS"
+    elif has_hard_reject:
+        status = "HARD_FAIL"
+    else:
+        status = "SOFT_FAIL"
+
+    return {
+        "gate": "wall_thickness_validation",
+        "status": status,
+        "metrics": metrics,
+        "violations": violations,
+        "worst": violations[0] if violations else None,
+        "_report": report,
+    }
+
+
 def main() -> int:
     """CLI entry point. Returns 0 on PASS, 1 on FAIL."""
     parser = argparse.ArgumentParser(
@@ -297,17 +365,14 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    try:
-        report = validate_wall_thickness(args.stl)
-    except FileNotFoundError:
-        print(f"ERROR: STL file not found: {args.stl}", file=sys.stderr)
-        return 1
-    except ValueError as e:
-        print(f"ERROR: {e}", file=sys.stderr)
+    result = run(args.stl)
+
+    if result["status"] in ("INPUT_ERROR", "DEPENDENCY_ERROR"):
+        print(f"ERROR: {result.get('_error', 'unknown error')}", file=sys.stderr)
         return 1
 
-    _print_report(report)
-    return 0 if report["passed"] else 1
+    _print_report(result["_report"])
+    return 0 if result["status"] == "PASS" else 1
 
 
 if __name__ == "__main__":
