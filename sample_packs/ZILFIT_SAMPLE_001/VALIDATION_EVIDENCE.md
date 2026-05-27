@@ -1,6 +1,6 @@
 # VALIDATION EVIDENCE — SAMPLE_001
 
-**Generated:** 2026-05-26T22:12:10Z
+**Generated:** 2026-05-27T06:27:32Z
 
 ---
 
@@ -37,5 +37,5 @@
 
 | Artifact | SHA‑256 |
 |----------|---------|
-| Sole STL | `abc123def456` |
-| G‑code | `789abc012def` |
+| Sole STL | `ec577c62896306e7b7dff909951891d103f8c219236208d6b550e9c15c38b6a8` |
+| G‑code | `79307ebd2d2dcf6759a06634f99f6c5488edeeffcd48663bdb968df3fe21e20e` |
