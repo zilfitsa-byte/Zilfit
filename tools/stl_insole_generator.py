@@ -67,8 +67,19 @@ def _height_field(xy, profile, foot_length, foot_width):
     return z
 
 
-def generate_insole_stl(profile, output_path):
-    """Build watertight insole STL via regular grid height field + trim to outline."""
+def generate_insole_stl(profile, output_path, lattice_profile=None):
+    """Build watertight insole STL via regular grid height field + trim to outline.
+
+    Args:
+        profile: Geometry profile dict.
+        output_path: Output .stl file path.
+        lattice_profile: Optional lattice profile dict. If provided, lattice metadata
+                         and sensor cavity coordinates are embedded as comments in the
+                         returned stats dict.
+
+    Returns:
+        Stats dict with triangle_count, bounding_box, etc. + lattice_metadata if provided.
+    """
     fl, fw, hw = 265.0, 80.0, 58.0
 
     # Regular grid covering the foot
@@ -215,4 +226,17 @@ def generate_insole_stl(profile, output_path):
         },
         "file_size_bytes": sz,
         "file_size_kb": round(sz / 1024, 1),
+        "lattice_metadata": (
+            {
+                "source": lattice_profile["profile_id"],
+                "support_preset": lattice_profile.get("support_preset", "balanced"),
+                "zones": lattice_profile.get("zones", {}),
+                "wall_biases": lattice_profile.get("wall_biases", {}),
+                "sensor_cavities_mm": lattice_profile.get("sensor_cavities", []),
+                "comfort_support_ratio": lattice_profile.get("comfort_support_ratio", {}),
+            } if lattice_profile else {
+                "source": "none",
+                "note": "No lattice profile provided. Solid shell only.",
+            }
+        ),
     }
