@@ -83,5 +83,9 @@ runtime/orchestration/deployment_registry.json
 runtime_logs/orchestrator_*.log
 logs/api_runtime.log
 
+# AI Runtime Agent generated reports
+runtime/incidents/*.json
+runtime/recommendations/*.json
+
 # Temporary files
 tmp/

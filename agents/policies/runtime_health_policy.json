@@ -1,0 +1,60 @@
+{
+  "policy": "runtime_health_policy",
+  "version": "1.0.0",
+  "description": "Defines health thresholds and automated responses for runtime conditions detected by the AI runtime agent.",
+  "thresholds": {
+    "healthy": {
+      "min_overall_score": 80,
+      "min_deployment_integrity": 20,
+      "min_runtime_validity": 20,
+      "min_module_availability": 15,
+      "min_json_validation": 12,
+      "min_session_consistency": 12,
+      "action": "none",
+      "description": "All systems operating within normal parameters."
+    },
+    "degraded": {
+      "min_overall_score": 50,
+      "action": "recommend",
+      "description": "System operating below optimal thresholds. Generate recommendations but no automated actions.",
+      "recommendation_priority": ["runtime_validity", "json_validation", "session_consistency"]
+    },
+    "unhealthy": {
+      "min_overall_score": 0,
+      "action": "incident",
+      "description": "System in critical state. Generate incident report with remediation actions.",
+      "incident_priority": ["deployment_integrity", "runtime_validity", "module_availability"]
+    }
+  },
+  "category_alerts": {
+    "deployment_integrity": {
+      "threshold": 15,
+      "message": "Deployment integrity compromised — verify SHA256SUMS and RELEASE_MANIFEST",
+      "remediation": "Re-deploy from verified release package or run sha256sum -c SHA256SUMS.txt"
+    },
+    "runtime_validity": {
+      "threshold": 15,
+      "message": "Required folder structure incomplete — check deployment extraction",
+      "remediation": "Re-extract the release package or verify rsync/zip integrity"
+    },
+    "module_availability": {
+      "threshold": 10,
+      "message": "Python module count critically low — possible incomplete deployment",
+      "remediation": "Re-deploy from release package and verify folder presence"
+    },
+    "json_validation": {
+      "threshold": 10,
+      "message": "Required JSON outputs missing or invalid — data pipeline may be broken",
+      "remediation": "Re-run geometry/lattice/shoe generators and verify outputs"
+    },
+    "session_consistency": {
+      "threshold": 10,
+      "message": "Deployment sessions report integrity failures — audit session history",
+      "remediation": "Review session logs, re-deploy if corruption suspected"
+    }
+  },
+  "scan_frequency_minutes": 5,
+  "auto_recommend": true,
+  "auto_incident_on_critical": true,
+  "max_incidents_per_hour": 5
+}
