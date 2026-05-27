@@ -69,5 +69,12 @@ production_inputs/batch/
 # macOS
 .DS_Store
 
+# Deployment artifacts
+deployments/ZILFIT_*/
+deployments/current
+deployments/previous
+runtime_sessions/DEPLOY-*.json
+runtime_logs/deploy_*.log
+
 # Temporary files
 tmp/
