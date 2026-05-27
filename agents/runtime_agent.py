@@ -40,6 +40,15 @@ ROLLBACK_MAX = 100.0
 API_MAX = 100.0
 RELIABILITY_MAX = 100.0
 
+# Telemetry integration
+try:
+    from monitoring.telemetry import snapshot_all, record_trace
+    _TELEMETRY_AVAILABLE = True
+except ImportError:
+    snapshot_all = None
+    record_trace = None
+    _TELEMETRY_AVAILABLE = False
+
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -326,6 +335,25 @@ def cmd_scan(verbose: bool = False) -> int:
     recommendations = _generate_recommendations(state, axes, incidents)
 
     print("=" * 64)
+    print()
+
+    # Record telemetry snapshot + trace
+    if _TELEMETRY_AVAILABLE and snapshot_all is not None:
+        try:
+            snapshot_all()
+        except Exception:
+            pass
+    if _TELEMETRY_AVAILABLE and record_trace is not None:
+        try:
+            record_trace("agent_scan", {
+                "health": health["health_status"],
+                "score": health["overall_score"],
+                "incidents": len(incidents),
+                "recommendations": len(recommendations),
+            })
+        except Exception:
+            pass
+    print()
     print("  ZILFIT AI Runtime Agent — Scan Report")
     print("=" * 64)
     print(f"  Timestamp: {_ts()}")

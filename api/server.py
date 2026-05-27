@@ -57,6 +57,11 @@ from security.auth_manager import (
 )
 
 # ---------------------------------------------------------------------------
+# Import telemetry
+# ---------------------------------------------------------------------------
+from monitoring.telemetry import record_api_request, record_trace
+
+# ---------------------------------------------------------------------------
 # Startup / shutdown lifespan
 # ---------------------------------------------------------------------------
 
@@ -193,6 +198,10 @@ async def timing_middleware(request: Request, call_next):
     response = await call_next(request)
     elapsed = time.time() - t0
     response.headers["X-Request-Time-Ms"] = f"{elapsed * 1000:.2f}"
+
+    # Record telemetry
+    record_api_request(request.method, request.url.path, response.status_code, elapsed * 1000)
+
     _api_log(f"{request.method} {request.url.path} → {response.status_code} ({elapsed:.3f}s)")
     return response
 
@@ -311,6 +320,7 @@ async def activate_deployment(req: ActivateRequest, token: dict = Depends(_requi
             pass
 
     _api_log(f"ACTIVATE: {req.name} (v{version})")
+    record_trace("deployment", {"action": "activate", "deployment": req.name, "version": version, "commit": commit})
 
     return JSONResponse(content={
         "status": "activated",
@@ -355,6 +365,7 @@ async def rollback(token: dict = Depends(_require_auth)):
             PREVIOUS_LINK.symlink_to(os.path.relpath(old_target, DEPLOYMENTS_DIR))
 
     _api_log(f"ROLLBACK: to {prev_target} (prev was {old_current})")
+    record_trace("rollback", {"action": "rollback", "to": prev_target, "from": old_current})
 
     return JSONResponse(content={
         "status": "rolled_back",

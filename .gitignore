@@ -98,5 +98,11 @@ security/token_registry.json
 security/audit/security_audit.log
 security/keys/*.key
 
+# Telemetry generated files
+monitoring/metrics/*.json
+monitoring/traces/*.json
+monitoring/dashboards/*.json
+monitoring/history/*.jsonl
+
 # Temporary files
 tmp/
