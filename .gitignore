@@ -1,3 +1,4 @@
+# Sensitive files
 .env
 .env.*
 *.key
@@ -7,60 +8,66 @@ config.yaml
 config.yml
 /home/
 root/
+
+# Python virtual environments
+.venv
+.venv*
+.venv*/
+.venv-*
+
+# Python cache
 __pycache__/
 *.pyc
-.hermes/
-*.log
-*.db
-
-# Local/generated autopull reports
-reports/autopull_report_*.json
-research/autopull/*_autopull_raw.json
-research/daily/*_autopull.md
-reports/nightly/
-
-# Local agent run outputs
-reports/agent_runs/
-
-# Local agent run outputs
-reports/agent_runs/
-reports/opportunities/
-
-# Generated quality gate artifacts
-reports/quality/
-logs/quality_gate_tests_*.log
-
-# Generated runtime logs and readiness reports
-logs/
-reports/readiness/
-reports/quality/
-reports/nightly/
-
-# Generated preproduction simulation artifacts
-reports/preproduction/*.json
-reports/preproduction/*.md
-
-# Generated sample readiness artifacts
-reports/samples/*.json
-reports/samples/*.md
-logs/sample_readiness_*.log*
-.worktrees/
-
-# Local backups generated during agent/demo work
-_local_backups/
-.venv/
+.pytest_cache/
+*_cache*
 
 # Local Aider session/cache files
 .aider.chat.history.md
 .aider.input.history
 .aider.tags.cache.v4/
 
-# Python cache
-__pycache__/
-*.pyc
+# Logs
+.hermes/
+*.log
+logs/
 
-# Local SQLite databases
+# Databases
 *.db
+
+# Local/generated agent run reports
+reports/autopull_report_*.json
+research/autopull/*_autopull_raw.json
+research/daily/*_autopull.md
+reports/nightly/
+reports/agent_runs/
+reports/opportunities/
+reports/quality/
+logs/quality_gate_tests_*.log
+reports/readiness/
+reports/preproduction/*.json
+reports/preproduction/*.md
+reports/samples/*.json
+reports/samples/*.md
+logs/sample_readiness_*.log*
+
+# Local backups
+_local_backups/
+
+# Worktrees
+.worktrees/
 
 # Telegram inbox local polling state
 inbox/.last_offset
+
+# Export archives
+exports/*.zip
+
+# Production scan/batch data
+production_inputs/scan_zip/
+production_inputs/batch/
+
+# macOS
+.DS_Store
+
+# Temporary files
+tmp/
