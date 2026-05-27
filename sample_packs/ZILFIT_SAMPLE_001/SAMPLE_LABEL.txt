@@ -1,0 +1,18 @@
+========================================
+ ZILFIT SAMPLE SAMPLE_001
+========================================
+ Material:  TPU_75A_80A
+ Status:    CONDITIONAL_GO
+ Generated: 2026-05-26T22:12:10Z
+========================================
+
+ THIS IS AN ENGINEERING EVALUATION SAMPLE.
+ NOT APPROVED FOR PRODUCTION OR PATIENT USE.
+ DOCTOR EVALUATION ONLY.
+
+ Required before patient use:
+ - Coupon mechanical testing
+ - Full-sole durability testing
+ - Doctor feedback review
+ - Sultan approval
+========================================
