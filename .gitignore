@@ -76,5 +76,11 @@ deployments/previous
 runtime_sessions/DEPLOY-*.json
 runtime_logs/deploy_*.log
 
+# Orchestration state files (generated at runtime)
+runtime/orchestration/system_state.json
+runtime/orchestration/runtime_registry.json
+runtime/orchestration/deployment_registry.json
+runtime_logs/orchestrator_*.log
+
 # Temporary files
 tmp/
