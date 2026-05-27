@@ -87,10 +87,17 @@ def _score_axes(state: dict) -> Dict[str, Any]:
     jv = categories.get("json_validation", {}).get("score", 0)
     consistency = round((ma + jv) / 35.0 * CONSISTENCY_MAX, 1) if (ma + jv) > 0 else 0.0
 
-    # 3. Rollback readiness — is there a previous deployment?
-    rollback = ROLLBACK_MAX if state.get("previous_deployment") else (
-        50.0 if state.get("available_deployments") and len(state["available_deployments"]) > 1 else 0.0
-    )
+    # 3. Rollback readiness — previous deployment + snapshot availability
+    # Count snapshots
+    snapshots_count = len(list((REPO_ROOT / "runtime" / "snapshots").glob("SNAP-*.json")))
+    if state.get("previous_deployment"):
+        rollback = ROLLBACK_MAX  # Full rollback available
+    elif snapshots_count > 0:
+        rollback = 60.0 + min(snapshots_count * 10.0, 30.0)  # Partial: snapshots provide recovery
+    elif state.get("available_deployments") and len(state["available_deployments"]) > 1:
+        rollback = 50.0  # Multiple deployments but no rollback chain
+    else:
+        rollback = 0.0  # Single deployment, no snapshots
 
     # 4. API health — derived from overall health score
     api_health = round((health.get("overall_score", 0) / 100.0) * API_MAX, 1)
@@ -282,12 +289,12 @@ def _generate_recommendations(state: dict, axes: dict, incidents: List[Dict]) ->
         })
 
     # Rollback readiness
-    if not state.get("previous_deployment"):
+    if not state.get("previous_deployment") and len(list((REPO_ROOT / "runtime" / "snapshots").glob("SNAP-*.json"))) == 0:
         recommendations.append({
             "id": "REC-RB-001",
             "priority": "low",
             "action": "Establish rollback chain",
-            "detail": "No previous deployment available. Deploy a new version to create rollback safety net.",
+            "detail": "No previous deployment or snapshots available. Deploy a new version and create a snapshot.",
         })
 
     # General well-being

@@ -87,5 +87,11 @@ logs/api_runtime.log
 runtime/incidents/*.json
 runtime/recommendations/*.json
 
+# Snapshot and recovery generated files
+runtime/snapshots/SNAP-*.json
+runtime/snapshots/SNAP-*.sha256
+runtime/recovery/*.json
+runtime/checkpoints/CHECK-*.json
+
 # Temporary files
 tmp/
