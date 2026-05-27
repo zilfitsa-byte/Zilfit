@@ -1,0 +1,16 @@
+{
+  "grid_size_x": 800,
+  "grid_size_y": 279,
+  "grid_size_z": 96,
+  "resolution_mm": 0.25,
+  "bounding_box": {
+    "x_min": -100.0,
+    "x_max": 100.0,
+    "y_min": -34.8,
+    "y_max": 34.8,
+    "z_min": 0.0,
+    "z_max": 24.0
+  },
+  "total_voxels": 21427200,
+  "memory_estimate_bytes": 85708800
+}

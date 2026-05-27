@@ -1,0 +1,93 @@
+[
+  {
+    "cell_size_x_mm": 6.0,
+    "cell_size_y_mm": 6.0,
+    "cell_size_z_mm": 6.0,
+    "threshold": 0.0,
+    "coefficient_x": 0.523599,
+    "coefficient_y": 0.523599,
+    "coefficient_z": 0.523599,
+    "zone_name": "heel",
+    "edition": "BALANCE",
+    "is_hybrid": false,
+    "secondary_edition": null
+  },
+  {
+    "cell_size_x_mm": 6.0,
+    "cell_size_y_mm": 6.0,
+    "cell_size_z_mm": 6.0,
+    "threshold": 0.106667,
+    "coefficient_x": 0.523599,
+    "coefficient_y": 0.523599,
+    "coefficient_z": 0.523599,
+    "zone_name": "midfoot",
+    "edition": "BALANCE",
+    "is_hybrid": false,
+    "secondary_edition": null
+  },
+  {
+    "cell_size_x_mm": 6.0,
+    "cell_size_y_mm": 6.0,
+    "cell_size_z_mm": 6.0,
+    "threshold": 0.0,
+    "coefficient_x": 0.523599,
+    "coefficient_y": 0.523599,
+    "coefficient_z": 0.523599,
+    "zone_name": "forefoot",
+    "edition": "BALANCE",
+    "is_hybrid": false,
+    "secondary_edition": null
+  },
+  {
+    "cell_size_x_mm": 6.0,
+    "cell_size_y_mm": 6.0,
+    "cell_size_z_mm": 6.0,
+    "threshold": 0.106667,
+    "coefficient_x": 0.523599,
+    "coefficient_y": 0.523599,
+    "coefficient_z": 0.523599,
+    "zone_name": "toe",
+    "edition": "BALANCE",
+    "is_hybrid": false,
+    "secondary_edition": null
+  },
+  {
+    "cell_size_x_mm": 6.0,
+    "cell_size_y_mm": 6.0,
+    "cell_size_z_mm": 6.0,
+    "threshold": 0.256,
+    "coefficient_x": 0.523599,
+    "coefficient_y": 0.523599,
+    "coefficient_z": 0.523599,
+    "zone_name": "arch",
+    "edition": "BALANCE",
+    "is_hybrid": false,
+    "secondary_edition": null
+  },
+  {
+    "cell_size_x_mm": 6.0,
+    "cell_size_y_mm": 6.0,
+    "cell_size_z_mm": 6.0,
+    "threshold": 0.181333,
+    "coefficient_x": 0.523599,
+    "coefficient_y": 0.523599,
+    "coefficient_z": 0.523599,
+    "zone_name": "medial_edge",
+    "edition": "BALANCE",
+    "is_hybrid": false,
+    "secondary_edition": null
+  },
+  {
+    "cell_size_x_mm": 6.0,
+    "cell_size_y_mm": 6.0,
+    "cell_size_z_mm": 6.0,
+    "threshold": 0.181333,
+    "coefficient_x": 0.523599,
+    "coefficient_y": 0.523599,
+    "coefficient_z": 0.523599,
+    "zone_name": "lateral_edge",
+    "edition": "BALANCE",
+    "is_hybrid": false,
+    "secondary_edition": null
+  }
+]

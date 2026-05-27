@@ -1,0 +1,65 @@
+[
+  {
+    "zone_name": "heel",
+    "density_pct": 30.0,
+    "pressure_limit_kpa": 55.0,
+    "gyroid_cell_size_mm": 6.0,
+    "wall_thickness_mm": 0.6,
+    "stimulation_type": "graded",
+    "structural_role": "shock_absorption"
+  },
+  {
+    "zone_name": "midfoot",
+    "density_pct": 28.0,
+    "pressure_limit_kpa": 51.3,
+    "gyroid_cell_size_mm": 6.0,
+    "wall_thickness_mm": 0.6,
+    "stimulation_type": "graded",
+    "structural_role": "support"
+  },
+  {
+    "zone_name": "forefoot",
+    "density_pct": 30.0,
+    "pressure_limit_kpa": 55.0,
+    "gyroid_cell_size_mm": 6.0,
+    "wall_thickness_mm": 0.6,
+    "stimulation_type": "graded",
+    "structural_role": "proprioceptive"
+  },
+  {
+    "zone_name": "toe",
+    "density_pct": 28.0,
+    "pressure_limit_kpa": 51.3,
+    "gyroid_cell_size_mm": 6.0,
+    "wall_thickness_mm": 0.6,
+    "stimulation_type": "graded",
+    "structural_role": "proprioceptive"
+  },
+  {
+    "zone_name": "arch",
+    "density_pct": 25.2,
+    "pressure_limit_kpa": 46.2,
+    "gyroid_cell_size_mm": 6.0,
+    "wall_thickness_mm": 0.6,
+    "stimulation_type": "graded",
+    "structural_role": "support"
+  },
+  {
+    "zone_name": "medial_edge",
+    "density_pct": 26.6,
+    "pressure_limit_kpa": 48.8,
+    "gyroid_cell_size_mm": 6.0,
+    "wall_thickness_mm": 0.6,
+    "stimulation_type": "graded",
+    "structural_role": "stability"
+  },
+  {
+    "zone_name": "lateral_edge",
+    "density_pct": 26.6,
+    "pressure_limit_kpa": 48.8,
+    "gyroid_cell_size_mm": 6.0,
+    "wall_thickness_mm": 0.6,
+    "stimulation_type": "graded",
+    "structural_role": "stability"
+  }
+]

@@ -1,0 +1,19 @@
+{
+  "plan_id": "ca72c84c-eddd-4cb8-a000-1c71cd39fb75",
+  "source_session_id": "GP-2fe9594adf56",
+  "edition": "BALANCE",
+  "is_hybrid": false,
+  "secondary_edition": null,
+  "blend_ratio": [
+    1.0,
+    0.0
+  ],
+  "timestamp": "2026-05-27T17:13:13.845258+00:00",
+  "total_zones": 7,
+  "total_voxels": 21427200,
+  "estimated_triangles": 2571264,
+  "estimated_filesize_mb": 122.61,
+  "format_hint": "stl_binary",
+  "units": "mm",
+  "coordinate_system": "right-handed Y-up"
+}

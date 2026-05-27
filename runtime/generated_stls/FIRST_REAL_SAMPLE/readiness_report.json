@@ -1,0 +1,43 @@
+{
+  "score": 1.0,
+  "is_ready": true,
+  "checks": [
+    {
+      "name": "ready_for_stl_flag",
+      "passed": true,
+      "detail": "Plan must have ready_for_stl=True"
+    },
+    {
+      "name": "manufacturability_passed",
+      "passed": true,
+      "detail": "Manufacturability checks must pass"
+    },
+    {
+      "name": "wall_thickness_min",
+      "passed": true,
+      "detail": "Min wall = 0.6mm, required >= 0.6mm"
+    },
+    {
+      "name": "density_range",
+      "passed": true,
+      "detail": "Density range [0.252, 0.300], required [0.15, 0.45]"
+    },
+    {
+      "name": "cell_size_range",
+      "passed": true,
+      "detail": "Cell sizes [6.0, 6.0], required [5.0, 7.0]"
+    },
+    {
+      "name": "all_zones_present",
+      "passed": true,
+      "detail": "Found 7 zones, expected 7"
+    },
+    {
+      "name": "valid_edition",
+      "passed": true,
+      "detail": "Edition 'BALANCE' not in {'VITAL', 'FOCUS', 'CALM', 'FEMME', 'BALANCE'}"
+    }
+  ],
+  "blockers": [],
+  "warnings": []
+}
