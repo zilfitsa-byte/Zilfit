@@ -25,9 +25,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
 
 # ---------------------------------------------------------------------------
@@ -46,6 +47,13 @@ from runtime.orchestrator import (
     DEPLOYMENTS_DIR, CURRENT_LINK, PREVIOUS_LINK, SESSIONS_DIR, LOGS_DIR,
     ORCHESTRATION_DIR, SYSTEM_STATE_FILE, RUNTIME_REGISTRY_FILE, DEPLOYMENT_REGISTRY_FILE,
     cmd_activate as orch_activate,
+)
+
+# ---------------------------------------------------------------------------
+# Import security module
+# ---------------------------------------------------------------------------
+from security.auth_manager import (
+    authorize_request, audit_log, validate_token,
 )
 
 # ---------------------------------------------------------------------------
@@ -96,6 +104,7 @@ app.add_middleware(
 )
 
 API_LOG = REPO_ROOT / "logs" / "api_runtime.log"
+security_scheme = HTTPBearer(auto_error=False)
 
 # ---------------------------------------------------------------------------
 # Models
@@ -144,6 +153,34 @@ def _error_response(status_code: int, detail: str) -> JSONResponse:
             "timestamp_utc": _ts(),
         },
     )
+
+
+async def _require_auth(request: Request, credentials: HTTPAuthorizationCredentials = Depends(security_scheme)):
+    """FastAPI dependency — validates token and returns token entry on success."""
+    if credentials is None:
+        audit_log("AUTH_DENY", principal="anonymous", endpoint=f"{request.method} {request.url.path}",
+                  result="no_token", ip=request.client.host if request.client else "-")
+        raise HTTPException(status_code=401, detail="Authentication required. Use Authorization: Bearer <token>")
+
+    token_val = credentials.credentials
+    entry, err = validate_token(token_val)
+    if err:
+        audit_log("AUTH_DENY", principal="anonymous", endpoint=f"{request.method} {request.url.path}",
+                  result=err, ip=request.client.host if request.client else "-")
+        raise HTTPException(status_code=401, detail=err)
+
+    # Authorize for this endpoint
+    allowed, auth_err = authorize_request(token_val, request.method, request.url.path)
+    if not allowed:
+        audit_log("AUTH_DENY", principal=entry.get("token_id", "?"),
+                  endpoint=f"{request.method} {request.url.path}",
+                  result=auth_err, ip=request.client.host if request.client else "-")
+        raise HTTPException(status_code=403, detail=auth_err)
+
+    audit_log("AUTH_ALLOW", principal=entry.get("token_id", "?"),
+              endpoint=f"{request.method} {request.url.path}",
+              result="success", ip=request.client.host if request.client else "-")
+    return entry
 
 
 # ---------------------------------------------------------------------------
@@ -233,7 +270,7 @@ async def list_deployments():
 # ---------------------------------------------------------------------------
 
 @app.post("/deployments/activate")
-async def activate_deployment(req: ActivateRequest):
+async def activate_deployment(req: ActivateRequest, token: dict = Depends(_require_auth)):
     """Activate a deployment by name."""
     _ensure_dirs()
     available = _list_deployments()
@@ -290,7 +327,7 @@ async def activate_deployment(req: ActivateRequest):
 # ---------------------------------------------------------------------------
 
 @app.post("/rollback")
-async def rollback():
+async def rollback(token: dict = Depends(_require_auth)):
     """Rollback to the previous deployment."""
     _ensure_dirs()
 

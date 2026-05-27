@@ -42,6 +42,14 @@ LOGS_DIR = REPO_ROOT / "runtime_logs"
 CURRENT_LINK = DEPLOYMENTS_DIR / "current"
 PREVIOUS_LINK = DEPLOYMENTS_DIR / "previous"
 
+# Import security verification
+try:
+    from security.auth_manager import verify_deployment_integrity
+    _SECURITY_AVAILABLE = True
+except ImportError:
+    verify_deployment_integrity = None
+    _SECURITY_AVAILABLE = False
+
 REQUIRED_FOLDERS = [
     "agents", "config", "docs", "editions", "governance",
     "manufacturing", "parameters", "patent", "products", "prototype",
@@ -443,6 +451,20 @@ def deploy(zip_path: Path, *, rollback: bool = False, force: bool = False) -> in
             print("ERROR: Manifest validation failed. Use --force to override.", file=sys.stderr)
             shutil.rmtree(temp_dir, ignore_errors=True)
             return 1
+
+    # Stage 2b: Security verification (signed deployment check)
+    if _SECURITY_AVAILABLE and verify_deployment_integrity is not None:
+        sec_ok, sec_errors = verify_deployment_integrity(deploy_root)
+        if sec_ok:
+            log_lines.append("Security: deployment integrity verified")
+        else:
+            for e in sec_errors:
+                print(f"  Security: {e}")
+            log_lines.append(f"Security: verification issues — {len(sec_errors)} errors")
+            if not force:
+                print("ERROR: Security verification failed. Use --force to override.", file=sys.stderr)
+                shutil.rmtree(temp_dir, ignore_errors=True)
+                return 1
 
     # Stage 3: Structure validation
     print("[4/6] Validating required folders and outputs...")

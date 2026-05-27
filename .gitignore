@@ -93,5 +93,10 @@ runtime/snapshots/SNAP-*.sha256
 runtime/recovery/*.json
 runtime/checkpoints/CHECK-*.json
 
+# Security artifacts (generated at runtime)
+security/token_registry.json
+security/audit/security_audit.log
+security/keys/*.key
+
 # Temporary files
 tmp/

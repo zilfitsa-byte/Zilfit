@@ -1,0 +1,36 @@
+{
+  "policy": "runtime_policy",
+  "version": "1.0.0",
+  "description": "Defines security constraints for runtime operations, deployment management, and API access.",
+  "endpoint_protection": {
+    "protected_endpoints": [
+      "POST /deployments/activate",
+      "POST /rollback",
+      "GET /runtime/logs",
+      "GET /runtime/state"
+    ],
+    "public_endpoints": [
+      "GET /health",
+      "GET /status",
+      "GET /deployments"
+    ],
+    "require_auth_on_all": false
+  },
+  "token_requirements": {
+    "min_length": 32,
+    "prefix": "zf_",
+    "allowed_chars": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-",
+    "expiry_grace_period_minutes": 5
+  },
+  "audit_requirements": {
+    "log_format": "[{timestamp}] {action} | {principal} | {endpoint} | {result} | {ip}",
+    "retain_days": 90,
+    "max_log_size_mb": 50,
+    "mask_sensitive": true
+  },
+  "deployment_security": {
+    "require_signature": false,
+    "require_manifest_checksum_verification": true,
+    "reject_unsigned_deployments": false
+  }
+}
