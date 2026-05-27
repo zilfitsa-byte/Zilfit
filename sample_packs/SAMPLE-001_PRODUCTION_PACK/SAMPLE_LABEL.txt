@@ -1,0 +1,24 @@
+========================================
+ ZILFIT PRODUCTION SAMPLE SAMPLE-001
+========================================
+ Preset:    balanced
+ Size:      EU42 (200mm × 69.6mm)
+ Weight:    208.6g per shoe
+ Material:  PA11 (MJF) + TPU rubber outsole
+ Status:    SAMPLE ONLY — NOT FOR SALE
+ Generated: 2026-05-27T16:55:12Z
+ Architecture: SA-001
+========================================
+
+ THIS IS AN ENGINEERING EVALUATION SAMPLE.
+ NOT APPROVED FOR PRODUCTION OR PATIENT USE.
+ DOCTOR AND PRIVATE TESTER EVALUATION ONLY.
+
+ Required before any production:
+ - Coupon compression tests CT-01 through CT-06 PASS
+ - Full-sole durability testing
+ - Doctor feedback review
+ - Private tester feedback review
+ - Sultan engineering approval
+ - Gate 0–5 sign-off
+========================================

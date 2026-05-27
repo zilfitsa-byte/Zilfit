@@ -1,0 +1,222 @@
+{
+  "bom_id": "BOM-SAMPLE-001",
+  "version": "1.0.0",
+  "sample_id": "SAMPLE-001",
+  "description": "Bill of Materials for ZILFIT SAMPLE-001 — 5-pair physical shoe sample production. ENGINEERING SAMPLE ONLY. NOT FOR PRODUCTION. NOT FOR SALE.",
+  "target_quantity": 5,
+  "units": "pairs",
+  "generated_utc": "2026-05-27T17:00:00Z",
+
+  "components": {
+    "printed_parts": [
+      {
+        "part_id": "SHELL-001",
+        "name": "Outer Shell — Heel Counter",
+        "material": "PA11 (MJF)",
+        "thickness_mm": 2.0,
+        "quantity_per_pair": 1,
+        "total_quantity": 5,
+        "est_weight_g": 13.5,
+        "print_time_min": 45
+      },
+      {
+        "part_id": "SHELL-002",
+        "name": "Outer Shell — Midfoot Chassis",
+        "material": "PA11 (MJF)",
+        "thickness_mm": 2.0,
+        "quantity_per_pair": 1,
+        "total_quantity": 5,
+        "est_weight_g": 15.0,
+        "print_time_min": 55
+      },
+      {
+        "part_id": "SHELL-003",
+        "name": "Outer Shell — Forefoot Cage",
+        "material": "PA11 (MJF)",
+        "thickness_mm": 1.5,
+        "quantity_per_pair": 1,
+        "total_quantity": 5,
+        "est_weight_g": 12.0,
+        "print_time_min": 40
+      },
+      {
+        "part_id": "SHELL-004",
+        "name": "Outer Shell — Toe Cap",
+        "material": "PA11 (MJF)",
+        "thickness_mm": 1.5,
+        "quantity_per_pair": 1,
+        "total_quantity": 5,
+        "est_weight_g": 12.0,
+        "print_time_min": 30
+      },
+      {
+        "part_id": "LATTICE-001",
+        "name": "Lattice Core — Full Foot (gyroid TPMS 5-zone)",
+        "material": "PA11 (MJF)",
+        "thickness_mm": 22.0,
+        "quantity_per_pair": 2,
+        "total_quantity": 10,
+        "est_weight_g": 73.5,
+        "print_time_min": 180,
+        "notes": "Single piece per shoe. 5-zone density graded: heel 0.31, arch 0.30, midfoot 0.28, forefoot 0.29, toe 0.26"
+      },
+      {
+        "part_id": "SKIN-001",
+        "name": "Skin Top (1.5mm solid PA11)",
+        "material": "PA11 (MJF)",
+        "thickness_mm": 1.5,
+        "quantity_per_pair": 2,
+        "total_quantity": 10,
+        "est_weight_g": 8.0,
+        "print_time_min": 30
+      },
+      {
+        "part_id": "SKIN-002",
+        "name": "Skin Bottom (1.5mm solid PA11)",
+        "material": "PA11 (MJF)",
+        "thickness_mm": 1.5,
+        "quantity_per_pair": 2,
+        "total_quantity": 10,
+        "est_weight_g": 8.0,
+        "print_time_min": 30
+      },
+      {
+        "part_id": "OUTSOLE-001",
+        "name": "Outsole — Heel Strike Pad",
+        "material": "TPU rubber Shore 60A",
+        "thickness_mm": 3.0,
+        "quantity_per_pair": 2,
+        "total_quantity": 10,
+        "est_weight_g": 8.0,
+        "print_time_min": 25
+      },
+      {
+        "part_id": "OUTSOLE-002",
+        "name": "Outsole — Lateral Midfoot Pad",
+        "material": "TPU rubber Shore 60A",
+        "thickness_mm": 3.0,
+        "quantity_per_pair": 2,
+        "total_quantity": 10,
+        "est_weight_g": 4.5,
+        "print_time_min": 15
+      },
+      {
+        "part_id": "OUTSOLE-003",
+        "name": "Outsole — Met Heads Pad",
+        "material": "TPU rubber Shore 60A",
+        "thickness_mm": 3.0,
+        "quantity_per_pair": 2,
+        "total_quantity": 10,
+        "est_weight_g": 7.0,
+        "print_time_min": 25
+      },
+      {
+        "part_id": "OUTSOLE-004",
+        "name": "Outsole — Hallux Pad",
+        "material": "TPU rubber Shore 60A",
+        "thickness_mm": 3.0,
+        "quantity_per_pair": 2,
+        "total_quantity": 10,
+        "est_weight_g": 3.1,
+        "print_time_min": 15
+      },
+      {
+        "part_id": "SENSOR-001",
+        "name": "Sensor Plane Housings",
+        "material": "PA12 (SLS)",
+        "thickness_mm": 2.5,
+        "quantity_per_pair": 2,
+        "total_quantity": 10,
+        "est_weight_g": 5.0,
+        "print_time_min": 20
+      }
+    ],
+
+    "non_printed_parts": [
+      {
+        "part_id": "LINER-001",
+        "name": "Removable Liner",
+        "material": "EVA foam (Shore 35C) + TPU lattice backing",
+        "quantity_per_pair": 2,
+        "total_quantity": 10,
+        "est_weight_g": 32.0,
+        "fabrication": "die-cut + heat-press"
+      },
+      {
+        "part_id": "ELEC-001",
+        "name": "ESP32-C3-MINI-1 Module",
+        "spec": "BLE 5.0, coin-cell powered",
+        "quantity_per_pair": 2,
+        "total_quantity": 10,
+        "est_weight_g": 2.0
+      },
+      {
+        "part_id": "ELEC-002",
+        "name": "Li-Po Battery 180 mAh 3.7V",
+        "spec": "USB-C charge port, not charge-in-shoe",
+        "quantity_per_pair": 2,
+        "total_quantity": 10,
+        "est_weight_g": 8.0
+      },
+      {
+        "part_id": "ELEC-003",
+        "name": "Pressure/IMU/Temp Sensor Nodes",
+        "spec": "3 nodes per shoe: heel, arch, forefoot",
+        "quantity_per_pair": 6,
+        "total_quantity": 30,
+        "est_weight_g": 18.0
+      }
+    ],
+
+    "consumables": [
+      {
+        "item": "PA11 powder (MJF)",
+        "est_kg": 1.5,
+        "notes": "Includes 30% waste factor for powder bed"
+      },
+      {
+        "item": "TPU rubber powder",
+        "est_kg": 0.5,
+        "notes": "Outsole pads only"
+      },
+      {
+        "item": "PA12 powder (SLS)",
+        "est_kg": 0.3,
+        "notes": "Sensor housings only"
+      },
+      {
+        "item": "Bead blasting media",
+        "est_kg": 2.0,
+        "notes": "Post-processing surface finish"
+      },
+      {
+        "item": "EVA foam sheet (Shore 35C)",
+        "est_sheets": 2,
+        "notes": "Liner fabrication, 5mm thickness"
+      },
+      {
+        "item": "Adhesive (outsole bonding)",
+        "est_ml": 25,
+        "notes": "Heat-press activated, one per batch peel test"
+      }
+    ]
+  },
+
+  "totals": {
+    "total_parts_per_pair": 41,
+    "total_weight_per_shoe_g": 208.6,
+    "total_weight_per_pair_g": 417.2,
+    "total_pa11_kg": 1.5,
+    "total_tpu_kg": 0.5,
+    "total_pa12_kg": 0.3,
+    "est_total_print_time_min": 470,
+    "est_total_print_time_hours": 7.8,
+    "est_total_assembly_time_hours": 4.0,
+    "est_total_project_hours": 12.0
+  },
+
+  "sample_only": true,
+  "not_for_production": true,
+  "not_for_sale": true,
+  "engineering_evaluation_only": true
+}
