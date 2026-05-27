@@ -1,0 +1,57 @@
+{
+  "sessions": [
+    {
+      "session_id": "ADAPT_001",
+      "pressure_balance": 0.62,
+      "roll_angle": 4.5,
+      "fatigue_signal": 3.2,
+      "steps": 2200,
+      "foot_type": "normal",
+      "mode": "private_tester"
+    },
+    {
+      "session_id": "ADAPT_002",
+      "pressure_balance": 1.8,
+      "roll_angle": 1.2,
+      "fatigue_signal": 9.5,
+      "steps": 4500,
+      "foot_type": "high_arch_geometric",
+      "mode": "private_tester"
+    },
+    {
+      "session_id": "ADAPT_003",
+      "pressure_balance": 0.45,
+      "roll_angle": 12.0,
+      "fatigue_signal": 18.0,
+      "steps": 1800,
+      "foot_type": "low_arch_geometric",
+      "mode": "private_tester"
+    },
+    {
+      "session_id": "ADAPT_004",
+      "pressure_balance": 1.05,
+      "roll_angle": 0.8,
+      "fatigue_signal": 1.0,
+      "steps": 800,
+      "foot_type": "normal",
+      "mode": "private_tester"
+    },
+    {
+      "session_id": "ADAPT_005",
+      "pressure_balance": 2.4,
+      "roll_angle": -7.0,
+      "fatigue_signal": 22.0,
+      "steps": 5200,
+      "foot_type": "high_arch_geometric",
+      "mode": "doctor_override",
+      "doctor_overrides": {
+        "heel_cushion_override": 2,
+        "arch_support_override": 5,
+        "medial_bias_override": 30,
+        "lateral_bias_override": 70,
+        "flexibility_override": 4,
+        "doctor_notes": "Patient reports lateral instability. Increase lateral support and reduce medial. Arch feels undertsupported — push to level 5."
+      }
+    }
+  ]
+}

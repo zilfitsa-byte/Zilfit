@@ -1,0 +1,117 @@
+{
+  "demo_title": "ZILFIT Adaptive Geometry Engine \u2014 Demo Report",
+  "session_count": 5,
+  "generated_utc": "2026-05-27T06:13:43.014986Z",
+  "sessions": [
+    {
+      "session_id": "ADAPT_001",
+      "inputs": {
+        "pressure_balance": 0.62,
+        "roll_angle": 4.5,
+        "fatigue_signal": 3.2,
+        "steps": 2200,
+        "foot_type": "normal",
+        "mode": "private_tester"
+      },
+      "geometry_outputs": {
+        "heel_cushion_level": 3,
+        "arch_support_level": 3,
+        "medial_support_bias": 77,
+        "lateral_support_bias": 23,
+        "flexibility_score": 3,
+        "fatigue_adjustment": 3.8,
+        "next_revision_notes": "Heel-dominant pressure pattern \u2014 increased heel cushioning; Significant roll toward medial side (4.5\u00b0) \u2014 medial bias applied; Next: validate heel=3 arch=3 medial=77 lateral=23 flex=3 fadj=3.8 with coupon test before production",
+        "mode": "private_tester",
+        "non_clinical_disclaimer": "All geometry parameters are engineering design values. They do not constitute medical advice, treatment prescription, or diagnostic recommendation. For engineering evaluation only."
+      }
+    },
+    {
+      "session_id": "ADAPT_002",
+      "inputs": {
+        "pressure_balance": 1.8,
+        "roll_angle": 1.2,
+        "fatigue_signal": 9.5,
+        "steps": 4500,
+        "foot_type": "high_arch_geometric",
+        "mode": "private_tester"
+      },
+      "geometry_outputs": {
+        "heel_cushion_level": 2,
+        "arch_support_level": 4,
+        "medial_support_bias": 50,
+        "lateral_support_bias": 50,
+        "flexibility_score": 2,
+        "fatigue_adjustment": 11.4,
+        "next_revision_notes": "Forefoot-dominant pressure pattern \u2014 reduced heel cushioning, increased forefoot cushioning; High geometric arch \u2014 increased arch support density; Fatigue signal 9.5% \u2014 softened density and added arch support; Long session \u2014 increased forefoot flexibility; Next: validate heel=2 arch=4 medial=50 lateral=50 flex=2 fadj=11.4 with coupon test before production",
+        "mode": "private_tester",
+        "non_clinical_disclaimer": "All geometry parameters are engineering design values. They do not constitute medical advice, treatment prescription, or diagnostic recommendation. For engineering evaluation only."
+      }
+    },
+    {
+      "session_id": "ADAPT_003",
+      "inputs": {
+        "pressure_balance": 0.45,
+        "roll_angle": 12.0,
+        "fatigue_signal": 18.0,
+        "steps": 1800,
+        "foot_type": "low_arch_geometric",
+        "mode": "private_tester"
+      },
+      "geometry_outputs": {
+        "heel_cushion_level": 4,
+        "arch_support_level": 3,
+        "medial_support_bias": 100,
+        "lateral_support_bias": 0,
+        "flexibility_score": 4,
+        "fatigue_adjustment": 21.6,
+        "next_revision_notes": "Heel-dominant pressure pattern \u2014 increased heel cushioning; Low geometric arch \u2014 reduced arch support density; Significant roll toward medial side (12.0\u00b0) \u2014 medial bias applied; Fatigue signal 18.0% \u2014 softened density and added arch support; Next: validate heel=4 arch=3 medial=100 lateral=0 flex=4 fadj=21.6 with coupon test before production",
+        "mode": "private_tester",
+        "non_clinical_disclaimer": "All geometry parameters are engineering design values. They do not constitute medical advice, treatment prescription, or diagnostic recommendation. For engineering evaluation only."
+      }
+    },
+    {
+      "session_id": "ADAPT_004",
+      "inputs": {
+        "pressure_balance": 1.05,
+        "roll_angle": 0.8,
+        "fatigue_signal": 1.0,
+        "steps": 800,
+        "foot_type": "normal",
+        "mode": "private_tester"
+      },
+      "geometry_outputs": {
+        "heel_cushion_level": 2,
+        "arch_support_level": 3,
+        "medial_support_bias": 50,
+        "lateral_support_bias": 50,
+        "flexibility_score": 3,
+        "fatigue_adjustment": 1.2,
+        "next_revision_notes": "Balanced pressure distribution; Next: validate heel=2 arch=3 medial=50 lateral=50 flex=3 fadj=1.2 with coupon test before production",
+        "mode": "private_tester",
+        "non_clinical_disclaimer": "All geometry parameters are engineering design values. They do not constitute medical advice, treatment prescription, or diagnostic recommendation. For engineering evaluation only."
+      }
+    },
+    {
+      "session_id": "ADAPT_005",
+      "inputs": {
+        "pressure_balance": 2.4,
+        "roll_angle": -7.0,
+        "fatigue_signal": 22.0,
+        "steps": 5200,
+        "foot_type": "high_arch_geometric",
+        "mode": "doctor_override"
+      },
+      "geometry_outputs": {
+        "heel_cushion_level": 2,
+        "arch_support_level": 5,
+        "medial_support_bias": 30,
+        "lateral_support_bias": 70,
+        "flexibility_score": 4,
+        "fatigue_adjustment": 26.4,
+        "next_revision_notes": "Patient reports lateral instability. Increase lateral support and reduce medial. Arch feels undertsupported \u2014 push to level 5.",
+        "mode": "doctor_override",
+        "non_clinical_disclaimer": "All geometry parameters are engineering design values. They do not constitute medical advice, treatment prescription, or diagnostic recommendation. For engineering evaluation only."
+      }
+    }
+  ]
+}
