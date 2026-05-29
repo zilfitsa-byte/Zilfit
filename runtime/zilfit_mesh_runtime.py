@@ -24,6 +24,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
 
+import numpy as np
+
 # ---------------------------------------------------------------------------
 # Paths
 # ---------------------------------------------------------------------------
@@ -626,12 +628,36 @@ def validate_mesh_topology(
         else:
             vertex_positions[key] = i
 
-    # Self-intersection check (simplified: bounding box overlap test)
-    # Full self-intersection would need spatial partitioning — skip for now
-    self_intersections = 0
-
+    # Self-intersection check (placeholder — see self_intersection check below)
     is_watertight = len(boundary_edges) == 0
     is_manifold = is_watertight and len(non_manifold_edges) == 0
+
+    # Self-intersection detection via ray-casting
+    # Cast rays from surface points inward. Each ray should hit exactly
+    # 2 surfaces (entry + exit) on a non-self-intersecting watertight mesh.
+    # > 2 hits per ray indicates self-intersecting geometry.
+    self_intersections = 0
+    if is_watertight and len(vertices) > 0 and len(triangles) >= 4:
+        try:
+            import trimesh
+            mesh_obj = trimesh.Trimesh(
+                vertices=np.array(vertices, dtype=np.float64),
+                faces=np.array(triangles, dtype=np.int64),
+            )
+            n_samples = min(500, len(triangles) * 3)
+            pts, face_idx = trimesh.sample.sample_surface(mesh_obj, n_samples)
+            norms = mesh_obj.face_normals[face_idx]
+            eps = 1e-4 * max(mesh_obj.scale, 1.0)
+            locs, ray_idx, tri_idx = mesh_obj.ray.intersects_location(
+                pts + norms * eps, -norms, multiple_hits=True,
+            )
+            if len(locs) > 0:
+                hits_per_ray = np.bincount(ray_idx, minlength=n_samples)
+                anomalous = int(np.sum(hits_per_ray > 2))
+                self_intersections = anomalous
+            del mesh_obj
+        except Exception:
+            self_intersections = -1  # evaluation failed, do not block
 
     # Build summary
     summary_parts = []

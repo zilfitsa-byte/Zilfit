@@ -71,7 +71,7 @@ def _check_watertight(mesh: trimesh.Trimesh) -> Dict[str, Any]:
     return {
         "check": "watertight",
         "passed": passed,
-        "detail": "mesh is closed, winding consistent, Euler number = 2" if passed else "; ".join(failures),
+        "detail": "mesh is closed with consistent topology, Euler number = 2" if passed else "; ".join(failures),
         "boundary_edges": boundary_edge_count,
     }
 
@@ -105,9 +105,12 @@ def _check_non_manifold_edges(mesh: trimesh.Trimesh) -> Dict[str, Any]:
 
 
 def _check_winding_consistent(mesh: trimesh.Trimesh) -> Dict[str, Any]:
-    """Check that face normals are consistently oriented (no inverted normals).
+    """Check that edge traversals are consistently oriented.
 
-    Inverted normals cause slicing errors and surface defects in printed parts.
+    Inconsistent edge winding causes non-manifold topology. Note: this
+    checks edge-traversal consistency (trimesh.is_winding_consistent),
+    not face-normal direction. Face-normal outwardness is checked
+    separately by _check_face_normals_outward().
     """
     try:
         winding_ok = bool(mesh.is_winding_consistent)
@@ -118,7 +121,76 @@ def _check_winding_consistent(mesh: trimesh.Trimesh) -> Dict[str, Any]:
     return {
         "check": "winding_consistent",
         "passed": winding_ok,
-        "detail": "face normals consistently oriented" if winding_ok else "inverted normals detected (or winding check failed)",
+        "detail": "edge traversals consistently oriented" if winding_ok else "inconsistent edge traversals detected (or winding check failed)",
+    }
+
+
+def _check_face_normals_outward(mesh: trimesh.Trimesh) -> Dict[str, Any]:
+    """Check that face normals point outward from the mesh centroid.
+
+    Edge-based winding consistency (trimesh.is_winding_consistent) does
+    NOT detect uniformly inverted normals — all edges can be consistently
+    traversed while every face normal points inward. Slicers process face
+    normals directionally, so uniformly inverted meshes produce slicing
+    errors despite passing the edge-winding check.
+
+    For a closed, watertight mesh, normals should point away from the
+    centroid. We compute dot(face_normal, face_center - centroid) and
+    require > 95% of faces to agree with the dominant direction.
+    """
+    normals = mesh.face_normals
+    centroid = mesh.centroid
+    face_centers = mesh.triangles_center
+
+    outward_vecs = face_centers - centroid
+    outward_mags = np.linalg.norm(outward_vecs, axis=1, keepdims=True)
+    if np.any(outward_mags[:, 0] == 0.0):
+        return {
+            "check": "face_normals_outward",
+            "passed": False,
+            "detail": "one or more faces coincide with mesh centroid — cannot determine normal direction",
+            "inverted_count": 0,
+            "total_faces": len(normals),
+        }
+    outward_vecs = outward_vecs / outward_mags
+
+    dots = np.sum(normals * outward_vecs, axis=1)
+    outward_faces = int(np.sum(dots > 0.0))
+    inward_faces = int(np.sum(dots < 0.0))
+
+    consensus = max(outward_faces, inward_faces) / len(normals)
+    passed = consensus >= 0.95 and outward_faces > inward_faces
+
+    if passed:
+        return {
+            "check": "face_normals_outward",
+            "passed": True,
+            "detail": f"all {len(normals)} face normals point outward from centroid",
+            "inverted_count": 0,
+            "total_faces": len(normals),
+        }
+
+    if inward_faces > outward_faces:
+        return {
+            "check": "face_normals_outward",
+            "passed": False,
+            "detail": (
+                f"{inward_faces}/{len(normals)} face normals point inward — "
+                "mesh appears uniformly inverted; slicers will misinterpret surfaces"
+            ),
+            "inverted_count": inward_faces,
+            "total_faces": len(normals),
+        }
+
+    return {
+        "check": "face_normals_outward",
+        "passed": False,
+        "detail": (
+            f"{inward_faces}/{len(normals)} face normals point inward — "
+            "mixed normal direction, likely topology error"
+        ),
+        "inverted_count": inward_faces,
+        "total_faces": len(normals),
     }
 
 
@@ -163,7 +235,7 @@ def _build_report(
 
     report: Dict[str, Any] = {
         "gate": "mesh_validation",
-        "gate_version": "1.0",
+        "gate_version": "1.1",
         "stl_path": stl_path,
         "passed": all_passed,
         "summary": f"{passed_count}/{total_count} checks passed",
@@ -234,6 +306,7 @@ def validate_stl(stl_path: str) -> Dict[str, Any]:
         _check_watertight(mesh),
         _check_non_manifold_edges(mesh),
         _check_winding_consistent(mesh),
+        _check_face_normals_outward(mesh),
         _check_finite_vertices(mesh),
     ]
 

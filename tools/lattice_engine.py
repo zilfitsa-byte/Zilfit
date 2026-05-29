@@ -1,20 +1,23 @@
 #!/usr/bin/env python3
-"""Lattice Engine V2 — adaptive 5-zone lattice map from geometry profile.
+"""Lattice Engine V3 — edition-aware, topology-differentiated 7-zone lattice map.
 
 Produces lattice_outputs/LATTICE_PROFILE_NNN.json containing:
-  - Per-zone density, cell_size, stiffness, flex, energy_return
+  - Per-zone topology, density, cell_size, stiffness, damping, energy_return
+  - Edition mechanical fingerprint via topology library
   - Support mode presets (comfort, balanced, sport, recovery)
   - Pressure distribution map
   - Smart Capsule sensor cavity coordinates
-  - Density transition protocol
+  - Density transition protocol with topology-aware blending
 """
 
 import json
 from datetime import datetime, timezone
 from typing import Dict, List, Optional, Tuple
 
-ZONE_NAMES = ["heel_impact", "arch_bridge", "midfoot_stabilisation",
-              "forefoot_propulsion", "toe_release"]
+ZONE_NAMES_5 = ["heel_impact", "arch_bridge", "midfoot_stabilisation",
+                "forefoot_propulsion", "toe_release"]
+
+ZONE_NAMES_7 = ["heel", "midfoot", "forefoot", "toe", "arch", "medial_edge", "lateral_edge"]
 
 # Map from lattice zone names to geometry profile zone keys
 ZONE_TO_PROFILE_KEY = {
@@ -100,18 +103,30 @@ def _clamp(v: float, lo: float, hi: float) -> float:
     return float(max(lo, min(hi, v)))
 
 
-def generate_lattice_profile(geometry_profile: dict, preset: str = "balanced") -> dict:
+def generate_lattice_profile(geometry_profile: dict, preset: str = "balanced",
+                             edition: Optional[str] = None) -> dict:
     """Generate a complete lattice map from a geometry profile.
 
     Args:
         geometry_profile: Dict from geometry_outputs/GEOMETRY_PROFILE_*.json.
         preset: One of "comfort", "balanced", "sport", "recovery".
+        edition: Optional edition name (CALM, VITAL, FOCUS, BALANCE).
+                 Enables per-zone topology resolution.
 
     Returns:
-        Lattice profile dict ready for JSON export.
+        Lattice profile dict ready for JSON export with topology metadata.
     """
     if preset not in SUPPORT_PRESETS:
         raise ValueError(f"Unknown preset '{preset}'. Choose from: {list(SUPPORT_PRESETS)}")
+
+    # Resolve edition topology map
+    zone_topology_map: Dict[str, Dict[str, str]] = {}
+    try:
+        from runtime.zilfit_zone_topologies import EDITION_ZONE_TOPOLOGIES
+        if edition:
+            zone_topology_map = EDITION_ZONE_TOPOLOGIES.get(edition.upper(), {})
+    except ImportError:
+        pass
 
     ps = SUPPORT_PRESETS[preset]
     density_map = geometry_profile.get("lattice_density_map", {})
@@ -121,12 +136,10 @@ def generate_lattice_profile(geometry_profile: dict, preset: str = "balanced") -
 
     zones_out = {}
 
-    for zone in ZONE_NAMES:
-        # Base density from geometry profile (use mapped key)
+    for zone in ZONE_NAMES_5:
         profile_key = ZONE_TO_PROFILE_KEY.get(zone, zone)
         base_density = density_map.get(profile_key, 0.28)
 
-        # Apply comfort/support shift
         comfort = priority.get("comfort_priority", 50)
         support = priority.get("support_priority", 50)
 
@@ -135,26 +148,31 @@ def generate_lattice_profile(geometry_profile: dict, preset: str = "balanced") -
         elif support > 60:
             base_density += 0.02
 
-        # Apply preset shift
         density = _clamp(base_density + ps["density_shift"], 0.10, 0.50)
-
-        # Cell size: inverse of density
         cell = _clamp(10.5 - density * 15.0, 3.0, 12.0)
-
-        # Stiffness
         stiffness = int(_clamp(round(density * 20.0), 1, 10))
-
-        # Flex: inverse of stiffness, bonus for forefoot/toes
         flex = 11 - stiffness
         if zone in ("forefoot_propulsion", "toe_release"):
             flex += 1
         flex = int(_clamp(flex, 1, 10))
-
-        # Energy return: density-dependent with zone bonus
         zone_bonus = 2 if zone in ("heel_impact", "forefoot_propulsion") else (
             1 if zone == "arch_bridge" else 0
         )
         energy = int(_clamp(round(density * 18.0 + zone_bonus), 1, 10))
+
+        # Topology resolution per zone
+        zone_topo = zone_topology_map.get(profile_key, {})
+        topology = zone_topo.get("topology", "gyroid")
+        try:
+            from runtime.zilfit_topology_library import get_topology
+            tspec = get_topology(topology)
+            topo_stiff = tspec.stiffness_factor
+            topo_damp = tspec.damping_amplification
+            topo_er = tspec.energy_return_factor
+        except ImportError:
+            topo_stiff = 1.0
+            topo_damp = 1.2
+            topo_er = 1.0
 
         y_lo, y_hi = ZONE_Y_BOUNDS[zone]
 
@@ -164,6 +182,10 @@ def generate_lattice_profile(geometry_profile: dict, preset: str = "balanced") -
             "stiffness_score": stiffness,
             "flex_score": flex,
             "energy_return_score": energy,
+            "topology": topology,
+            "topology_stiffness_factor": round(topo_stiff, 2),
+            "topology_damping_factor": round(topo_damp, 2),
+            "topology_energy_return_factor": round(topo_er, 2),
             "y_fraction_range": [y_lo, y_hi],
         }
 

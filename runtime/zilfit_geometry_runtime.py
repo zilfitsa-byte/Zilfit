@@ -80,6 +80,9 @@ class ZoneSpec:
     wall_thickness_mm: float
     stimulation_type: str  # "static", "graded", "zoned_firm", etc.
     structural_role: str   # "shock_absorption", "support", "proprioceptive"
+    topology: str = "gyroid"               # lattice topology name
+    anisotropy_direction: str = "aligned"  # "aligned", "vertical", "longitudinal"
+    behaviour_tags: List[str] = field(default_factory=list)
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
@@ -454,6 +457,14 @@ class ZilfitGeometryRuntime:
         stim_pattern = props.get("stimulation_pattern", "static")
         zone_stims = STIMULATION_PATTERNS.get(stim_pattern, STIMULATION_PATTERNS["static_soft"])
 
+        # Resolve per-zone topology from zone_topologies map
+        zone_topology_map: Dict[str, Dict[str, str]] = {}
+        try:
+            from runtime.zilfit_zone_topologies import EDITION_ZONE_TOPOLOGIES
+            zone_topology_map = EDITION_ZONE_TOPOLOGIES.get(edition, {})
+        except ImportError:
+            pass
+
         # Build zones
         zones: List[ZoneSpec] = []
         density_by_zone: Dict[str, float] = {}
@@ -472,6 +483,19 @@ class ZilfitGeometryRuntime:
 
             stim_type = zone_stims.get(zone_name, "static")
 
+            # Topology + anisotropy from edition zone map
+            zone_topo = zone_topology_map.get(zone_name, {})
+            topology = zone_topo.get("topology", "gyroid")
+            anisotropy_dir = zone_topo.get("orientation", "aligned")
+
+            # Behaviour tags from topology library
+            try:
+                from runtime.zilfit_topology_library import get_topology
+                tspec = get_topology(topology)
+                behaviour_tags = list(tspec.behaviour_tags)
+            except (ImportError, ValueError):
+                behaviour_tags = []
+
             zone_spec = ZoneSpec(
                 zone_name=zone_name,
                 density_pct=round(density * 100, 1),
@@ -480,6 +504,9 @@ class ZilfitGeometryRuntime:
                 wall_thickness_mm=wall_thickness,
                 stimulation_type=stim_type,
                 structural_role=profile["structural_role"],
+                topology=topology,
+                anisotropy_direction=anisotropy_dir,
+                behaviour_tags=behaviour_tags,
             )
             zones.append(zone_spec)
             density_by_zone[zone_name] = round(density, 4)

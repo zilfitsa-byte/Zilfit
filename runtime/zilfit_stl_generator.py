@@ -142,10 +142,10 @@ class ZoneMeshConfig:
     mesh_resolution_mm: float
     stimulation_type: str
     structural_role: str
-    # Marching cubes settings
-    mc_surface_value: float        # iso-surface threshold
-    mc_gradient_steps: int         # numerical gradient approximation steps
-    mc_smooth_iterations: int      # Laplacian smoothing passes
+    # Isosurface extraction settings
+    iso_value: float               # iso-surface threshold
+    gradient_steps: int            # numerical gradient approximation steps
+    smooth_iterations: int         # Laplacian smoothing passes
 
     def to_dict(self) -> Dict[str, Any]:
         d = asdict(self)
@@ -523,10 +523,10 @@ def build_mesh_config(
         )
         gyroid_fields.append(field_params)
 
-        # Marching cubes settings per zone
-        mc_surface = field_params.threshold
-        mc_steps = 2 if zone_density > 0.30 else 1
-        mc_smooth = 1 if zone_density < 0.25 else 2
+        # Isosurface extraction settings per zone
+        iso_surface = field_params.threshold
+        grad_steps = 2 if zone_density > 0.30 else 1
+        smooth_passes = 1 if zone_density < 0.25 else 2
 
         mesh_cfg = ZoneMeshConfig(
             zone_name=zone.zone_name,
@@ -537,9 +537,9 @@ def build_mesh_config(
             mesh_resolution_mm=resolution_mm,
             stimulation_type=zone.stimulation_type,
             structural_role=zone.structural_role,
-            mc_surface_value=mc_surface,
-            mc_gradient_steps=mc_steps,
-            mc_smooth_iterations=mc_smooth,
+            iso_value=iso_surface,
+            gradient_steps=grad_steps,
+            smooth_iterations=smooth_passes,
         )
         zone_meshes.append(mesh_cfg)
 
@@ -705,7 +705,7 @@ def validate_config_against_schema(config: STLGenerationConfig) -> List[str]:
     meshes = cfg_dict.get("zone_meshes", [])
     for i, m in enumerate(meshes):
         m_required = ["zone_name", "density_target", "wall_thickness_mm",
-                      "cell_size_mm", "mc_surface_value"]
+                      "cell_size_mm", "iso_value"]
         for req in m_required:
             if req not in m:
                 errors.append(f"zone_meshes[{i}] missing {req}")

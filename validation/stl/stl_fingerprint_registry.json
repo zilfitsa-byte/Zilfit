@@ -4,14 +4,38 @@
   "description": "Authority registry for locked STL fingerprints. Every STL submitted for print must have a registered hash. Fingerprint mismatch or absence blocks the print gate.",
   "manifest_reference": "manufacturing/MANIFEST_PREPRINT_V1.json",
   "gate": "gate_0_stl_fingerprint",
-  "status": "PENDING",
+  "status": "populated",
   "validator_version": "1.0",
-  "registry": [],
+  "registry": [
+    {
+      "edition": "test_cube",
+      "sha256": "e15e1c6c3db4063c716b9feabe895a4a19999b9e5820439971ef55dfe09ebdff",
+      "validated_at": "2026-05-26T13:23:20.160919+00:00",
+      "validator_version": "1.0"
+    },
+    {
+      "edition": "BALANCE",
+      "sha256": "fea3aa0b7c1adf8495ef65f9490386ee4c1ce47af95af9f482fe33d0ff3dc6a0",
+      "validated_at": "2026-05-26T17:50:31.639433+00:00",
+      "validator_version": "1.0"
+    },
+    {
+      "edition": "BALANCE",
+      "sha256": "b7a73e81b81b87fcfac67c419751f1dd3016d261df83234dcda5d692fc34b9f0",
+      "validated_at": "2026-05-26T17:51:29.697672+00:00",
+      "validator_version": "1.0"
+    }
+  ],
   "schema": {
     "type": "array",
     "items": {
       "type": "object",
-      "required": ["edition", "sha256", "validated_at", "validator_version"],
+      "required": [
+        "edition",
+        "sha256",
+        "validated_at",
+        "validator_version"
+      ],
       "properties": {
         "edition": {
           "type": "string",

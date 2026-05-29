@@ -159,7 +159,7 @@
           "wall_thickness_mm",
           "cell_size_mm",
           "mesh_resolution_mm",
-          "mc_surface_value"
+          "iso_value"
         ],
         "properties": {
           "zone_name": {
@@ -187,14 +187,14 @@
             "type": "string",
             "enum": ["shock_absorption", "support", "proprioceptive", "stability"]
           },
-          "mc_surface_value": {
+          "iso_value": {
             "type": "number",
             "minimum": -1.0,
             "maximum": 1.0,
-            "description": "Marching cubes iso-surface value"
+            "description": "Isosurface extraction threshold"
           },
-          "mc_gradient_steps": {"type": "integer", "minimum": 1, "maximum": 4},
-          "mc_smooth_iterations": {"type": "integer", "minimum": 0, "maximum": 10},
+          "gradient_steps": {"type": "integer", "minimum": 1, "maximum": 4},
+          "smooth_iterations": {"type": "integer", "minimum": 0, "maximum": 10},
           "field_params": {
             "type": "object",
             "description": "Embedded gyroid field parameters"

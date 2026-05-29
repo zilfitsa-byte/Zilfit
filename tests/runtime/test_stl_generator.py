@@ -725,9 +725,9 @@ class TestDataclassSerialization:
             mesh_resolution_mm=0.25,
             stimulation_type="graded",
             structural_role="support",
-            mc_surface_value=field.threshold,
-            mc_gradient_steps=1,
-            mc_smooth_iterations=1,
+            iso_value=field.threshold,
+            gradient_steps=1,
+            smooth_iterations=1,
         )
         d = mesh.to_dict()
         assert d["zone_name"] == "arch"
