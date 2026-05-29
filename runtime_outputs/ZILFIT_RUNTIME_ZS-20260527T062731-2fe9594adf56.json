@@ -1,0 +1,94 @@
+{
+  "session_id": "ZS-20260527T062731-2fe9594adf56",
+  "pipeline_version": "1.0.0",
+  "generated_utc": "2026-05-27T06:27:31Z",
+  "scan_input": {
+    "scan_file": "sample_scans/foot_001.ply",
+    "scan_format": "json",
+    "vertex_count": 7,
+    "landmark_count": 7,
+    "coordinate_unit": "mm"
+  },
+  "geometric_features": {
+    "foot_length_mm": 265.88,
+    "foot_width_mm": 80.62,
+    "forefoot_width_mm": 80.62,
+    "heel_width_mm": 58.0,
+    "arch_height_geometric_mm": 15.21,
+    "alignment_offset_deg": 4.15,
+    "arch_contact_ratio": 0.507
+  },
+  "classification": {
+    "predicted_class": "low_arch_geometric",
+    "confidence": 0.98,
+    "probabilities": {
+      "low_arch_geometric": 0.98,
+      "high_arch_geometric": 0.02,
+      "normal": 0.0
+    }
+  },
+  "capsule_analysis": {
+    "steps_estimate": 220,
+    "pressure_balance": 1.2,
+    "roll_angle_deg": 3.0,
+    "fatigue_signal_pct": 0.0,
+    "heel_strike_count": 220,
+    "toe_off_count": 220,
+    "duration_s": 120,
+    "cadence_spm": 110
+  },
+  "adaptive_geometry": {
+    "heel_cushion_level": 2,
+    "arch_support_level": 2,
+    "medial_support_bias": 68,
+    "lateral_support_bias": 32,
+    "flexibility_score": 3,
+    "fatigue_adjustment": 0,
+    "next_revision_notes": "Balanced pressure distribution; Low geometric arch \u2014 reduced arch support density; Significant roll toward medial side (3.0\u00b0) \u2014 medial bias applied; Next: validate heel=2 arch=2 medial=68 lateral=32 flex=3 fadj=0 with coupon test before production",
+    "mode": "private_tester",
+    "non_clinical_disclaimer": "All geometry parameters are engineering design values. They do not constitute medical advice, treatment prescription, or diagnostic recommendation. For engineering evaluation only."
+  },
+  "print_profile": {
+    "process": "MJF",
+    "material": "TPU_75A_80A",
+    "layer_height_mm": 0.11,
+    "infill_pattern": "gyroid",
+    "cell_size_mm": 6.0,
+    "shell_thickness_mm": 0.8,
+    "density_zones": {
+      "heel": 0.33,
+      "arch": 0.32,
+      "midfoot": 0.28,
+      "forefoot": 0.32,
+      "toes": 0.26
+    },
+    "medial_bias_pct": 68,
+    "lateral_bias_pct": 32,
+    "fatigue_adjustment_pct": 0
+  },
+  "doctor_evaluation": {
+    "sample_id": "SAMPLE_001",
+    "pack_generated": true,
+    "status": "CONDITIONAL_GO",
+    "material": "TPU_75A_80A",
+    "pack_output_dir": "/root/hermes/zilfit-ip-core/sample_packs/ZILFIT_SAMPLE_001"
+  },
+  "artifact_hashes": {
+    "session_json": "581bf18cd40fac8b3ac098877649b6b0296d37c616f453fc6748038e9fc9642e"
+  },
+  "revision_history": [
+    {
+      "timestamp_utc": "2026-05-27T06:27:31Z",
+      "geometry": {
+        "heel_cushion_level": 2,
+        "arch_support_level": 2,
+        "medial_support_bias": 68,
+        "lateral_support_bias": 32,
+        "flexibility_score": 3,
+        "fatigue_adjustment": 0
+      },
+      "change_reason": "Initial pipeline run"
+    }
+  ],
+  "non_clinical_disclaimer": "This session record is an engineering artifact produced by the ZILFIT adaptive footwear platform. It does not constitute a medical diagnosis, treatment plan, or therapeutic recommendation. All outputs are provided for engineering evaluation and doctor review only."
+}

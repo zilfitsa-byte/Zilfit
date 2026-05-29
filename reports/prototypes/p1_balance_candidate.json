@@ -1,0 +1,294 @@
+{
+  "generated_at": "2026-05-19T16:04:57Z",
+  "edition": "BALANCE",
+  "material": {
+    "tpu_shore_a": 78,
+    "gyroid_wall_thickness_mm": 0.6,
+    "gyroid_cell_size_mm": 6.0,
+    "compressive_strength_mpa": 35.0
+  },
+  "density_map": {
+    "heel": 0.5,
+    "midfoot": 0.5,
+    "forefoot": 0.5,
+    "toe": 0.5
+  },
+  "stiffness_modifier": 1.0,
+  "baseline_weight_kg": 80,
+  "stress_check_weights_kg": [
+    95,
+    110,
+    125
+  ],
+  "total_scenarios": 32,
+  "pass": 9,
+  "needs_revision": 23,
+  "blocked": 0,
+  "avg_comfort_confidence": 95.2,
+  "avg_prototype_readiness": 83.5,
+  "overall_verdict": "needs_revision",
+  "per_weight": {
+    "80": {
+      "total": 8,
+      "pass": 4,
+      "needs_revision": 4,
+      "blocked": 0,
+      "pass_rate": 50.0,
+      "avg_comfort_confidence": 96.2,
+      "avg_prototype_readiness": 86.8,
+      "zone_risk_summary": {
+        "heel": {
+          "safe": 8,
+          "warning": 0,
+          "critical": 0
+        },
+        "midfoot": {
+          "safe": 7,
+          "warning": 1,
+          "critical": 0
+        },
+        "forefoot": {
+          "safe": 8,
+          "warning": 0,
+          "critical": 0
+        },
+        "toe": {
+          "safe": 5,
+          "warning": 3,
+          "critical": 0
+        }
+      },
+      "max_stress_zone": "toe@toe_off+daily_walking",
+      "max_stress_mpa": 0.7194,
+      "max_fatigue_zone": "heel@heel_strike+daily_walking",
+      "max_fatigue_probability": 0.001
+    },
+    "95": {
+      "total": 8,
+      "pass": 3,
+      "needs_revision": 5,
+      "blocked": 0,
+      "pass_rate": 37.5,
+      "avg_comfort_confidence": 95.9,
+      "avg_prototype_readiness": 84.6,
+      "zone_risk_summary": {
+        "heel": {
+          "safe": 8,
+          "warning": 0,
+          "critical": 0
+        },
+        "midfoot": {
+          "safe": 7,
+          "warning": 1,
+          "critical": 0
+        },
+        "forefoot": {
+          "safe": 8,
+          "warning": 0,
+          "critical": 0
+        },
+        "toe": {
+          "safe": 4,
+          "warning": 4,
+          "critical": 0
+        }
+      },
+      "max_stress_zone": "toe@toe_off+daily_walking",
+      "max_stress_mpa": 0.8543,
+      "max_fatigue_zone": "heel@heel_strike+daily_walking",
+      "max_fatigue_probability": 0.001
+    },
+    "110": {
+      "total": 8,
+      "pass": 1,
+      "needs_revision": 7,
+      "blocked": 0,
+      "pass_rate": 12.5,
+      "avg_comfort_confidence": 95.1,
+      "avg_prototype_readiness": 81.9,
+      "zone_risk_summary": {
+        "heel": {
+          "safe": 7,
+          "warning": 1,
+          "critical": 0
+        },
+        "midfoot": {
+          "safe": 6,
+          "warning": 2,
+          "critical": 0
+        },
+        "forefoot": {
+          "safe": 8,
+          "warning": 0,
+          "critical": 0
+        },
+        "toe": {
+          "safe": 4,
+          "warning": 4,
+          "critical": 0
+        }
+      },
+      "max_stress_zone": "toe@toe_off+daily_walking",
+      "max_stress_mpa": 0.9892,
+      "max_fatigue_zone": "heel@heel_strike+daily_walking",
+      "max_fatigue_probability": 0.001
+    },
+    "125": {
+      "total": 8,
+      "pass": 1,
+      "needs_revision": 7,
+      "blocked": 0,
+      "pass_rate": 12.5,
+      "avg_comfort_confidence": 93.8,
+      "avg_prototype_readiness": 80.7,
+      "zone_risk_summary": {
+        "heel": {
+          "safe": 7,
+          "warning": 1,
+          "critical": 0
+        },
+        "midfoot": {
+          "safe": 6,
+          "warning": 2,
+          "critical": 0
+        },
+        "forefoot": {
+          "safe": 8,
+          "warning": 0,
+          "critical": 0
+        },
+        "toe": {
+          "safe": 4,
+          "warning": 4,
+          "critical": 0
+        }
+      },
+      "max_stress_zone": "toe@toe_off+daily_walking",
+      "max_stress_mpa": 1.1241,
+      "max_fatigue_zone": "heel@heel_strike+daily_walking",
+      "max_fatigue_probability": 0.001
+    }
+  },
+  "per_gait_phase": {
+    "heel_strike": {
+      "avg_comfort": 98.5,
+      "avg_readiness": 88.0,
+      "critical_zones": 0
+    },
+    "midfoot_transition": {
+      "avg_comfort": 99.2,
+      "avg_readiness": 86.4,
+      "critical_zones": 0
+    },
+    "forefoot_push_off": {
+      "avg_comfort": 98.2,
+      "avg_readiness": 86.5,
+      "critical_zones": 0
+    },
+    "toe_off": {
+      "avg_comfort": 85.0,
+      "avg_readiness": 73.3,
+      "critical_zones": 0
+    }
+  },
+  "per_usage_mode": {
+    "daily_walking": {
+      "avg_comfort": 94.4,
+      "avg_readiness": 81.2,
+      "blocked_count": 0
+    },
+    "standing_long": {
+      "avg_comfort": 96.1,
+      "avg_readiness": 85.9,
+      "blocked_count": 0
+    }
+  },
+  "density_adjustments": {
+    "heel": {
+      "current": 0.5,
+      "recommended": 0.53,
+      "change": 0.03,
+      "worst_stress_mpa": 0.488,
+      "worst_weight_kg": 125,
+      "problem_scenario_count": 2
+    },
+    "midfoot": {
+      "current": 0.5,
+      "recommended": 0.53,
+      "change": 0.03,
+      "worst_stress_mpa": 0.4282,
+      "worst_weight_kg": 125,
+      "problem_scenario_count": 6
+    },
+    "toe": {
+      "current": 0.5,
+      "recommended": 0.53,
+      "change": 0.03,
+      "worst_stress_mpa": 1.1241,
+      "worst_weight_kg": 125,
+      "problem_scenario_count": 15
+    }
+  },
+  "top_risks": [
+    {
+      "scenario": "midfoot_warning_daily_walking_midfoot_transition",
+      "occurrences": 4
+    },
+    {
+      "scenario": "toe_warning_daily_walking_forefoot_push_off",
+      "occurrences": 4
+    },
+    {
+      "scenario": "toe_warning_daily_walking_toe_off",
+      "occurrences": 4
+    },
+    {
+      "scenario": "toe_warning_standing_long_toe_off",
+      "occurrences": 4
+    },
+    {
+      "scenario": "toe_warning_standing_long_forefoot_push_off",
+      "occurrences": 3
+    },
+    {
+      "scenario": "heel_warning_daily_walking_heel_strike",
+      "occurrences": 2
+    },
+    {
+      "scenario": "midfoot_warning_standing_long_midfoot_transition",
+      "occurrences": 2
+    }
+  ],
+  "hard_blocks": [],
+  "measurement_instructions": {
+    "physical_dimensions": [
+      "Overall insole length and width (compare to target size)",
+      "Lattice wall thickness at 5+ points (target: 0.6 mm ± 0.1 mm)",
+      "Cell size at 5+ points (target: 6.0 mm ± 0.5 mm)",
+      "Total thickness at heel / midfoot / forefoot / toe zones"
+    ],
+    "mechanical_tests": [
+      "Compression test at each zone: apply known force, measure displacement",
+      "Compare measured displacement to simulation toe_displacement_mm",
+      "Hardness test: Shore A durometer at heel and forefoot",
+      "Repeated compression (1000 cycles): check for permanent set"
+    ],
+    "comfort_validation": [
+      "Subjective comfort rating on 1-10 scale (engineering survey only)",
+      "Pressure mapping under foot with in-shoe pressure sensor mat",
+      "Compare measured pressure distribution to effective_pressures_kpa",
+      "Note any zone where measured pressure differs > 30% from simulated"
+    ],
+    "fatigue_observation": [
+      "Inspect for visible deformation after 1000 load cycles",
+      "Check for crack initiation at strut junctions under magnification",
+      "Record any permanent set height loss at each zone"
+    ],
+    "comparison_to_simulation": [
+      "Compare measured zone pressures vs effective_pressures_kpa table",
+      "Compare measured compressive displacement vs toe_displacement_mm",
+      "Note which zones deviate most from simulation predictions",
+      "Document environmental conditions (temperature, humidity) during test"
+    ]
+  }
+}

@@ -1,0 +1,231 @@
+{
+  "_comment": "ZILFIT Print Repeatability Test — Engineering validation template",
+  "_schema_version": "1.0",
+  "_test_type": "print_repeatability",
+
+  "batch": {
+    "batch_id": "REP-001",
+    "edition": "CALM",
+    "target_size_eu": 38,
+    "quantity": 5,
+    "design_session_id": "TBD"
+  },
+
+  "material": {
+    "name": "TPU",
+    "shore_hardness": "75A",
+    "batch_id": "TPU-75A-2025-001",
+    "supplier": "TBD",
+    "filament_diameter_mm": 1.75,
+    "density_g_cm3": 1.21
+  },
+
+  "printer": {
+    "make_model": "TBD",
+    "type": "FDM",
+    "nozzle_diameter_mm": 0.4,
+    "serial_number": "TBD"
+  },
+
+  "settings": {
+    "layer_height_mm": 0.15,
+    "print_temperature_c": 230,
+    "bed_temperature_c": 60,
+    "print_speed_mm_s": 25,
+    "print_orientation": "flat",
+    "supports_used": false,
+    "slicer": "PrusaSlicer",
+    "slicer_version": "2.6.0",
+    "infill_type": "none",
+    "infill_note": "Geometry is explicit gyroid mesh — no slicer infill"
+  },
+
+  "units": [
+    {
+      "unit_number": 1,
+      "print_status": null,
+      "print_duration_hours": null,
+      "print_weight_g": null,
+      "post_cooling_weight_g": null,
+      "failures": [],
+      "dimensions_mm": {
+        "length": null,
+        "width": null,
+        "thickness_heel": null,
+        "thickness_arch": null,
+        "thickness_forefoot": null
+      },
+      "visual_inspection": {
+        "surface_quality": null,
+        "layer_consistency": null,
+        "stringing_level": null,
+        "lattice_integrity": null,
+        "support_removal_needed": null,
+        "support_removal_damage": null,
+        "notes": ""
+      },
+      "flex_test": {
+        "bend_angle_deg": 30,
+        "cracks_observed": false,
+        "delamination_observed": false,
+        "notes": ""
+      }
+    },
+    {
+      "unit_number": 2,
+      "print_status": null,
+      "print_duration_hours": null,
+      "print_weight_g": null,
+      "post_cooling_weight_g": null,
+      "failures": [],
+      "dimensions_mm": {
+        "length": null,
+        "width": null,
+        "thickness_heel": null,
+        "thickness_arch": null,
+        "thickness_forefoot": null
+      },
+      "visual_inspection": {
+        "surface_quality": null,
+        "layer_consistency": null,
+        "stringing_level": null,
+        "lattice_integrity": null,
+        "support_removal_needed": null,
+        "support_removal_damage": null,
+        "notes": ""
+      },
+      "flex_test": {
+        "bend_angle_deg": 30,
+        "cracks_observed": false,
+        "delamination_observed": false,
+        "notes": ""
+      }
+    },
+    {
+      "unit_number": 3,
+      "print_status": null,
+      "print_duration_hours": null,
+      "print_weight_g": null,
+      "post_cooling_weight_g": null,
+      "failures": [],
+      "dimensions_mm": {
+        "length": null,
+        "width": null,
+        "thickness_heel": null,
+        "thickness_arch": null,
+        "thickness_forefoot": null
+      },
+      "visual_inspection": {
+        "surface_quality": null,
+        "layer_consistency": null,
+        "stringing_level": null,
+        "lattice_integrity": null,
+        "support_removal_needed": null,
+        "support_removal_damage": null,
+        "notes": ""
+      },
+      "flex_test": {
+        "bend_angle_deg": 30,
+        "cracks_observed": false,
+        "delamination_observed": false,
+        "notes": ""
+      }
+    },
+    {
+      "unit_number": 4,
+      "print_status": null,
+      "print_duration_hours": null,
+      "print_weight_g": null,
+      "post_cooling_weight_g": null,
+      "failures": [],
+      "dimensions_mm": {
+        "length": null,
+        "width": null,
+        "thickness_heel": null,
+        "thickness_arch": null,
+        "thickness_forefoot": null
+      },
+      "visual_inspection": {
+        "surface_quality": null,
+        "layer_consistency": null,
+        "stringing_level": null,
+        "lattice_integrity": null,
+        "support_removal_needed": null,
+        "support_removal_damage": null,
+        "notes": ""
+      },
+      "flex_test": {
+        "bend_angle_deg": 30,
+        "cracks_observed": false,
+        "delamination_observed": false,
+        "notes": ""
+      }
+    },
+    {
+      "unit_number": 5,
+      "print_status": null,
+      "print_duration_hours": null,
+      "print_weight_g": null,
+      "post_cooling_weight_g": null,
+      "failures": [],
+      "dimensions_mm": {
+        "length": null,
+        "width": null,
+        "thickness_heel": null,
+        "thickness_arch": null,
+        "thickness_forefoot": null
+      },
+      "visual_inspection": {
+        "surface_quality": null,
+        "layer_consistency": null,
+        "stringing_level": null,
+        "lattice_integrity": null,
+        "support_removal_needed": null,
+        "support_removal_damage": null,
+        "notes": ""
+      },
+      "flex_test": {
+        "bend_angle_deg": 30,
+        "cracks_observed": false,
+        "delamination_observed": false,
+        "notes": ""
+      }
+    }
+  ],
+
+  "dimensional_analysis": {
+    "target_dimensions_mm": {
+      "length": 250.0,
+      "width": 85.0,
+      "thickness_heel": 6.0,
+      "thickness_arch": 4.5,
+      "thickness_forefoot": 4.0
+    },
+    "tolerance_pct": 2.0,
+    "measured_variance": {
+      "length_mean_mm": null,
+      "length_std_mm": null,
+      "width_mean_mm": null,
+      "width_std_mm": null,
+      "thickness_heel_mean_mm": null,
+      "thickness_heel_std_mm": null
+    }
+  },
+
+  "result": {
+    "batch_pass_fail": null,
+    "units_successfully_printed": null,
+    "units_failed": null,
+    "pass_criteria": {
+      "all_5_print_successfully": true,
+      "dimensional_variance_within_2_pct": true,
+      "no_cracks_in_flex_test": true,
+      "no_collapsed_lattice_cells": true
+    }
+  },
+
+  "notes": "",
+  "operator": "",
+  "date_start": "",
+  "date_end": ""
+}

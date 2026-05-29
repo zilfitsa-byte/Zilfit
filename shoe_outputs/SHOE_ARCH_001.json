@@ -1,0 +1,370 @@
+{
+  "architecture_id": "SA-001",
+  "generated_utc": "2026-05-27T14:35:51Z",
+  "source_geometry_profile": "GP-2fe9594adf56",
+  "source_lattice_profile": "LP-2fe9594adf56",
+  "preset": "balanced",
+  "foot_reference": {
+    "length_mm": 200,
+    "width_mm": 69.6,
+    "size_approx": "EU42"
+  },
+  "shell_zones": {
+    "heel_counter": {
+      "y_fraction_range": [
+        0.0,
+        0.2
+      ],
+      "thickness_mm": 2.0,
+      "material": "PA11 (MJF)",
+      "features": [
+        "heel_cup_integration",
+        "achilles_relief",
+        "outsole_bonding_surface"
+      ]
+    },
+    "midfoot_chassis": {
+      "y_fraction_range": [
+        0.2,
+        0.55
+      ],
+      "thickness_mm": 2.0,
+      "material": "PA11 (MJF)",
+      "features": [
+        "capsule_access_door_medial",
+        "locating_ribs",
+        "vent_windows"
+      ]
+    },
+    "forefoot_cage": {
+      "y_fraction_range": [
+        0.55,
+        0.8
+      ],
+      "thickness_mm": 1.5,
+      "material": "PA11 (MJF)",
+      "features": [
+        "flex_segmentation_lines",
+        "upper_bonding_flange"
+      ]
+    },
+    "toe_cap": {
+      "y_fraction_range": [
+        0.8,
+        1.0
+      ],
+      "thickness_mm": 1.5,
+      "material": "PA11 (MJF)",
+      "features": [
+        "reinforced_perforated",
+        "bumper_ridge"
+      ]
+    }
+  },
+  "outsole_segmentation": {
+    "pads": [
+      {
+        "id": "heel_strike",
+        "y_fraction_range": [
+          0.0,
+          0.18
+        ],
+        "width_mm": 55.0,
+        "length_mm": 36.0,
+        "thickness_mm": 3.0,
+        "material": "TPU rubber Shore 60A",
+        "tread_pattern": "wave"
+      },
+      {
+        "id": "lateral_midfoot",
+        "y_fraction_range": [
+          0.35,
+          0.5
+        ],
+        "width_mm": 25.0,
+        "length_mm": 30.0,
+        "thickness_mm": 3.0,
+        "material": "TPU rubber Shore 60A",
+        "tread_pattern": "wave"
+      },
+      {
+        "id": "met_heads",
+        "y_fraction_range": [
+          0.6,
+          0.78
+        ],
+        "width_mm": 65.0,
+        "length_mm": 36.0,
+        "thickness_mm": 3.0,
+        "material": "TPU rubber Shore 60A",
+        "tread_pattern": "wave"
+      },
+      {
+        "id": "hallux",
+        "y_fraction_range": [
+          0.82,
+          0.98
+        ],
+        "width_mm": 30.0,
+        "length_mm": 32.0,
+        "thickness_mm": 3.0,
+        "material": "TPU rubber Shore 60A",
+        "tread_pattern": "wave"
+      }
+    ],
+    "flex_gaps": [
+      {
+        "id": "midfoot_gap",
+        "y_fraction": 0.5,
+        "gap_mm": 5.0
+      },
+      {
+        "id": "metatarsal_gap",
+        "y_fraction": 0.78,
+        "gap_mm": 4.0
+      }
+    ]
+  },
+  "capsule_cavity": {
+    "dimensions_mm": {
+      "length": 45.0,
+      "width": 25.0,
+      "height": 12.0
+    },
+    "volume_cm3": 13.5,
+    "position": {
+      "y_fraction_start": 0.3,
+      "y_fraction_end": 0.45,
+      "x_offset_mm": 15.0,
+      "x_description": "medial from centreline"
+    },
+    "clearance_gap_mm": 2.0,
+    "access": {
+      "type": "slide_open_door",
+      "location": "medial_midfoot_outer_shell",
+      "tool_required": false
+    },
+    "electronics": {
+      "mcu": "ESP32-C3-MINI-1 (preferred) or nRF52840",
+      "ble_version": "5.0",
+      "battery": "Li-Po 180 mAh, 3.7V",
+      "battery_capacity_mah": 180,
+      "charge_connector": "USB-C",
+      "charge_in_shoe": false,
+      "runtime_hours_1hz": 36
+    }
+  },
+  "layer_stack": {
+    "layers": [
+      {
+        "layer": "L1",
+        "name": "Removable Liner",
+        "thickness_mm": 5.0,
+        "material": "EVA foam (Shore 35C) + TPU lattice backing",
+        "printable": false
+      },
+      {
+        "layer": "L2",
+        "name": "Sensor Plane",
+        "thickness_mm": 2.5,
+        "material": "PA12 housings + coin-cell BLE nodes",
+        "printable": "housings_only"
+      },
+      {
+        "layer": "L3",
+        "name": "Skin Top",
+        "thickness_mm": 1.5,
+        "material": "PA11",
+        "printable": true
+      },
+      {
+        "layer": "L4",
+        "name": "Lattice Core",
+        "thickness_mm": 24.0,
+        "material": "PA11 (MJF), gyroid TPMS",
+        "printable": true,
+        "zone_thicknesses_mm": {
+          "heel_impact": 24.0,
+          "arch_bridge": 22.0,
+          "midfoot_stab": 20.0,
+          "forefoot_prop": 22.0,
+          "toe_release": 17.0
+        }
+      },
+      {
+        "layer": "L5",
+        "name": "Skin Bottom",
+        "thickness_mm": 1.5,
+        "material": "PA11",
+        "printable": true
+      },
+      {
+        "layer": "L6",
+        "name": "Outsole Pads",
+        "thickness_mm": 3.0,
+        "material": "TPU rubber Shore 60A",
+        "printable": false
+      }
+    ],
+    "zone_thickness_summary_mm": {
+      "heel_impact": 24.0,
+      "arch_bridge": 22.0,
+      "midfoot_stab": 20.0,
+      "forefoot_prop": 22.0,
+      "toe_release": 17.0
+    },
+    "heel_stack_mm": 37.5,
+    "forefoot_stack_mm": 35.5,
+    "heel_to_toe_drop_mm": 2.0
+  },
+  "total_stack_thickness_mm": 37.5,
+  "heel_to_toe_drop_mm": 2.0,
+  "preset_variants": {
+    "comfort": {
+      "heel_stack_mm": 41.5,
+      "forefoot_stack_mm": 37.5,
+      "heel_to_toe_drop_mm": 4.0,
+      "liner_thickness_mm": 5.0,
+      "lattice_heel_thickness_mm": 28.0
+    },
+    "sport": {
+      "heel_stack_mm": 34.5,
+      "forefoot_stack_mm": 32.5,
+      "heel_to_toe_drop_mm": 2.0,
+      "liner_thickness_mm": 4.0,
+      "lattice_heel_thickness_mm": 22.0
+    },
+    "recovery": {
+      "heel_stack_mm": 42.5,
+      "forefoot_stack_mm": 38.5,
+      "heel_to_toe_drop_mm": 4.0,
+      "liner_thickness_mm": 6.0,
+      "lattice_heel_thickness_mm": 28.0
+    },
+    "balanced": {
+      "heel_stack_mm": 37.5,
+      "forefoot_stack_mm": 35.5,
+      "heel_to_toe_drop_mm": 2.0,
+      "liner_thickness_mm": 5.0,
+      "lattice_heel_thickness_mm": 24.0
+    }
+  },
+  "weight_model": {
+    "shell_g": 52.5,
+    "lattice_core_g": 73.5,
+    "smart_capsule_g": 28.0,
+    "outsole_pads_g": 22.6,
+    "removable_liner_g": 32.0,
+    "total_g": 208.6,
+    "reference_size": "EU42",
+    "tolerance_pct": 15
+  },
+  "flexibility_map": [
+    {
+      "zone": "midfoot_hinge",
+      "y_fraction_range": [
+        0.4,
+        0.55
+      ],
+      "mechanism": "lower density lattice + thinner core",
+      "flex_score": 7
+    },
+    {
+      "zone": "metatarsal_flex",
+      "y_fraction_range": [
+        0.65,
+        0.75
+      ],
+      "mechanism": "flex channels in liner + lattice groove",
+      "flex_score": 8
+    },
+    {
+      "zone": "toe_roll",
+      "y_fraction_range": [
+        0.8,
+        1.0
+      ],
+      "mechanism": "natural toe spring + thin lattice",
+      "flex_score": 9
+    }
+  ],
+  "manufacturing_modes": {
+    "production": {
+      "mjf": {
+        "process": "HP Multi Jet Fusion",
+        "material": "PA11",
+        "min_wall_mm": 0.6,
+        "min_cell_mm": 3.0,
+        "batch_size": "100\u20131000 pairs",
+        "status": "production_ready"
+      }
+    },
+    "low_volume": {
+      "sls": {
+        "process": "Selective Laser Sintering",
+        "material": "PA12",
+        "min_wall_mm": 0.3,
+        "min_cell_mm": 2.5,
+        "batch_size": "10\u2013100 pairs",
+        "status": "prototype_ready"
+      }
+    },
+    "future": {
+      "hybrid_molded_shell": {
+        "process": "Injection-moulded TPU chassis",
+        "material": "TPU + textile overmould",
+        "target_volume": ">10,000 pairs/year",
+        "status": "planned_v2"
+      },
+      "textile_upper_integration": {
+        "process": "Knit-to-shape + heat-stake bonding",
+        "material": "TPU-coated polyester mesh",
+        "target_volume": ">10,000 pairs/year",
+        "status": "planned_v2"
+      }
+    }
+  },
+  "assembly_sequence": [
+    {
+      "station": 1,
+      "name": "Shell arrival",
+      "action": "Outer shell arrives pre-assembled (textile upper + PA11 chassis + door)"
+    },
+    {
+      "station": 2,
+      "name": "Lattice core QC",
+      "action": "Lattice core arrives from printer; check density map and cell integrity"
+    },
+    {
+      "station": 3,
+      "name": "Capsule insertion",
+      "action": "Snap-fit smart capsule into medial cavity; BLE pairing test with sensor nodes"
+    },
+    {
+      "station": 4,
+      "name": "Sensor node placement",
+      "action": "Place pressure/IMU/temp nodes into heel, arch, forefoot cavities; activation check via BLE scan"
+    },
+    {
+      "station": 5,
+      "name": "Core + shell assembly",
+      "action": "Drop lattice core into outer shell; verify locating ribs seated"
+    },
+    {
+      "station": 6,
+      "name": "Liner snap",
+      "action": "3-pin alignment, press liner to seat"
+    },
+    {
+      "station": 7,
+      "name": "Outsole bonding",
+      "action": "Heat-press TPU pads onto lattice bottom; peel test 1 per batch"
+    },
+    {
+      "station": 8,
+      "name": "Final QC",
+      "action": "Weight check, visual inspection, BLE comm test, manual flex test"
+    }
+  ],
+  "non_clinical_disclaimer": "This shoe architecture specification contains engineering design parameters for prototype manufacturing evaluation. No medical, therapeutic, diagnostic, or corrective function is claimed. For engineering assessment only."
+}

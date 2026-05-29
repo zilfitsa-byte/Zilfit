@@ -1,0 +1,56 @@
+{
+  "version": "1.0.0",
+  "schema_name": "ZILFIT Learning Feedback Schema",
+  "feedback_windows": {
+    "immediate": {
+      "trigger": "20_minutes_post_wear",
+      "fields": {
+        "comfort_score": {"type": "integer", "range": [0, 10]},
+        "fatigue_score": {"type": "integer", "range": [0, 10]},
+        "pain_score": {"type": "integer", "range": [0, 10]},
+        "mood_score": {"type": "integer", "range": [0, 10]},
+        "discomfort_location": {"type": "string", "enum": ["none", "heel", "midfoot", "forefoot", "toes", "arch", "multiple"]},
+        "free_text": {"type": "string", "max_length": 500}
+      }
+    },
+    "short_term": {
+      "trigger": "7_days_post_purchase",
+      "fields": {
+        "comfort_score": {"type": "integer", "range": [0, 10]},
+        "fatigue_score": {"type": "integer", "range": [0, 10]},
+        "pain_score": {"type": "integer", "range": [0, 10]},
+        "mood_score": {"type": "integer", "range": [0, 10]},
+        "sleep_quality": {"type": "integer", "range": [0, 10]},
+        "continued_use": {"type": "boolean"},
+        "average_daily_hours": {"type": "float"},
+        "free_text": {"type": "string", "max_length": 500}
+      }
+    },
+    "outcome_events": {
+      "returned": {"type": "boolean"},
+      "refund_reason": {"type": "string", "enum": ["discomfort", "no_perceived_benefit", "sizing_issue", "other", "null"]},
+      "adverse_event_reported": {"type": "boolean"},
+      "adverse_event_description": {"type": "string"},
+      "doctor_note": {"type": "string"}
+    }
+  },
+  "learning_rules": {
+    "positive_outcome_definition": {
+      "comfort_score_7day": ">= 7",
+      "pain_score_7day": "<= 3",
+      "continued_use": "true"
+    },
+    "negative_outcome_definition": {
+      "comfort_score_immediate": "<= 4",
+      "pain_score_immediate": ">= 6",
+      "returned": "true"
+    },
+    "weight_update_policy": {
+      "minimum_samples_per_edition": 50,
+      "correlation_threshold": 0.30,
+      "human_review_required": true,
+      "auto_apply": false,
+      "audit_log_required": true
+    }
+  }
+}

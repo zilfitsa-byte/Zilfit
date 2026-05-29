@@ -1,0 +1,6 @@
+session_id,duration_s,cadence_spm,foot_type,asymmetry_pct,roll_angle_deg
+CAP_001,120,110,normal,5.0,3.0
+CAP_002,90,105,low_arch_geometric,8.0,6.0
+CAP_003,150,115,high_arch_geometric,4.0,2.0
+CAP_004,60,100,normal,12.0,7.0
+CAP_005,180,108,normal,6.0,4.0

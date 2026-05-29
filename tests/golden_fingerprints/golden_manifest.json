@@ -1,0 +1,55 @@
+{
+  "_comment": "ZILFIT Golden Fingerprints \u2014 regression anchors for cross-platform determinism",
+  "schema_version": "zilfit-mesh-v1",
+  "generated_by": "zilfit_fingerprint_contract.py",
+  "samples": [
+    {
+      "name": "tetrahedron_strict",
+      "mode": "strict",
+      "schema_version": "zilfit-mesh-v1",
+      "expected_hash": "7e3df3fcc409b5fe4e32a35f44edee3e32cb24e8c7b562b9f74000f94ea46afc",
+      "purpose": "Baseline: 4-vertex tetrahedron with strict winding",
+      "locked_reason": "Basic mesh topology \u2014 must be stable across all runs"
+    },
+    {
+      "name": "tetrahedron_geometric",
+      "mode": "geometric",
+      "schema_version": "zilfit-mesh-v1",
+      "expected_hash": "c83c15e621d1c9942bdc2df1d0c9f7797a0df5c1e43220b8263054212dad9e07",
+      "purpose": "Same tetrahedron but geometric mode (winding ignored)",
+      "locked_reason": "Verifies geometric mode canonicalization works"
+    },
+    {
+      "name": "cube_simple",
+      "mode": "strict",
+      "schema_version": "zilfit-mesh-v1",
+      "expected_hash": "7fb23909bba8ac76120d704e4f8ba8bc4e8430c2072782ed2238139c6c15ff10",
+      "purpose": "8-vertex cube (12 triangles) with strict winding",
+      "locked_reason": "Standard polyhedron baseline"
+    },
+    {
+      "name": "gyroid_reference_low",
+      "mode": "strict",
+      "schema_version": "zilfit-mesh-v1",
+      "expected_hash": "4e55ad9105b9630033cda6efa2b19b2ded1ec34db50e3b40d28fa937b1a6f9a8",
+      "purpose": "Low-density gyroid reference (12 vertices, 12 triangles)",
+      "locked_reason": "Low-density ZILFIT gyroid baseline"
+    },
+    {
+      "name": "gyroid_reference_mid",
+      "mode": "strict",
+      "schema_version": "zilfit-mesh-v1",
+      "expected_hash": "9377d6fc6740c838fde260e9de849e4e12b8021f1ec34911c0f90f6a1a059afc",
+      "purpose": "Mid-density gyroid reference (larger domain)",
+      "locked_reason": "Mid-density ZILFIT gyroid baseline"
+    },
+    {
+      "name": "gyroid_reference_high",
+      "mode": "strict",
+      "schema_version": "zilfit-mesh-v1",
+      "expected_hash": "afcec73d17ae1c9abe1b203211e63fc2094539f7a5aef0e7297592910c7e2902",
+      "purpose": "High-density gyroid reference (largest domain)",
+      "locked_reason": "High-density ZILFIT gyroid baseline"
+    }
+  ]
+}

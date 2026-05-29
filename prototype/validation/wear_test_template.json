@@ -1,0 +1,112 @@
+{
+  "_comment": "ZILFIT Wear Test Template — Engineering evaluation (not medical)",
+  "_schema_version": "1.0",
+  "_test_type": "wear_test",
+
+  "protocol": {
+    "adaptation_schedule": {
+      "day_1_hours": "1-2",
+      "day_2_hours": "2-4",
+      "day_3_hours": "4-8",
+      "extended_days_optional": "4-7"
+    },
+    "minimum_days_for_valid_data": 3,
+    "scoring_scale": "1-10 integer"
+  },
+
+  "tester": {
+    "tester_id": "anon-001",
+    "shoe_size_eu": null,
+    "shoe_type": null,
+    "baseline_insole_comfort": null,
+    "notes": ""
+  },
+
+  "product": {
+    "edition_tested": "CALM",
+    "size_eu": null,
+    "stl_session_id": "TBD",
+    "print_batch_id": "TBD",
+    "material": "TPU 75A"
+  },
+
+  "daily_scores": [
+    {
+      "day": 1,
+      "duration_minutes": null,
+      "comfort_score": null,
+      "comfort_after_1h": null,
+      "residual_sensation_score": null,
+      "stability_level_ground": null,
+      "stability_stairs": null,
+      "stability_uneven": null,
+      "slip_or_twist": false,
+      "fatigue_after_1h": null,
+      "fatigue_vs_usual": null,
+      "pressure_point_description": "",
+      "would_wear_again": null,
+      "additional_notes": ""
+    },
+    {
+      "day": 2,
+      "duration_minutes": null,
+      "comfort_score": null,
+      "comfort_after_1h": null,
+      "residual_sensation_score": null,
+      "stability_level_ground": null,
+      "stability_stairs": null,
+      "stability_uneven": null,
+      "slip_or_twist": false,
+      "fatigue_after_1h": null,
+      "fatigue_vs_usual": null,
+      "pressure_point_description": "",
+      "would_wear_again": null,
+      "additional_notes": ""
+    },
+    {
+      "day": 3,
+      "duration_minutes": null,
+      "comfort_score": null,
+      "comfort_after_1h": null,
+      "residual_sensation_score": null,
+      "stability_level_ground": null,
+      "stability_stairs": null,
+      "stability_uneven": null,
+      "slip_or_twist": false,
+      "fatigue_after_1h": null,
+      "fatigue_vs_usual": null,
+      "pressure_point_description": "",
+      "would_wear_again": null,
+      "additional_notes": ""
+    }
+  ],
+
+  "summary": {
+    "mean_comfort_score": null,
+    "mean_stability_score": null,
+    "mean_fatigue_score": null,
+    "comfort_day3_minus_day1": null,
+    "any_slip_or_twist": false,
+    "would_wear_again": null,
+    "pressure_points_reported": [],
+    "normalized_delta_from_baseline": null
+  },
+
+  "pass_criteria": {
+    "mean_comfort_min": 7.0,
+    "mean_stability_min": 7.0,
+    "zero_slip_twist": true,
+    "comfort_delta_min": -1.0
+  },
+
+  "result": {
+    "pass_fail": null,
+    "data_valid": null,
+    "engineer_notes": ""
+  },
+
+  "notes": "",
+  "operator": "",
+  "date_start": "",
+  "date_end": ""
+}

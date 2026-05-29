@@ -1,0 +1,184 @@
+{
+  "_comment": "ZILFIT Fatigue Cycle Test — Engineering validation template",
+  "_schema_version": "1.0",
+  "_test_type": "fatigue_cycle",
+
+  "sample": {
+    "sample_id": "FAT-001",
+    "sample_name": "Gyroid Fatigue Sample",
+    "geometry": {
+      "type": "heel_zone_extract",
+      "dimensions_mm": {
+        "length": 60.0,
+        "width": 50.0,
+        "height": 8.0
+      },
+      "lattice_type": "gyroid",
+      "wall_thickness_mm": 0.6,
+      "cell_size_mm": 6.0
+    },
+    "edition": "BALANCE",
+    "density_target_heel": 0.7,
+    "density_target_arch": 0.5
+  },
+
+  "material": {
+    "name": "TPU",
+    "shore_hardness": "75A",
+    "batch_id": "TPU-75A-2025-001",
+    "supplier": "TBD",
+    "filament_diameter_mm": 1.75,
+    "density_g_cm3": 1.21
+  },
+
+  "printer": {
+    "make_model": "TBD",
+    "type": "FDM",
+    "nozzle_diameter_mm": 0.4,
+    "serial_number": "TBD"
+  },
+
+  "settings": {
+    "layer_height_mm": 0.15,
+    "print_temperature_c": 230,
+    "bed_temperature_c": 60,
+    "print_speed_mm_s": 25,
+    "print_orientation": "flat",
+    "supports_used": false,
+    "slicer": "PrusaSlicer",
+    "slicer_version": "2.6.0"
+  },
+
+  "test_setup": {
+    "equipment": "Servo-Hydraulic Fatigue Tester",
+    "model": "TBD",
+    "load_cell_n": 5000,
+    "cycle_frequency_hz": 1.0,
+    "waveform": "sinusoidal",
+    "min_force_n": 50,
+    "max_force_n": 500,
+    "environment_temperature_c": 23,
+    "environment_humidity_pct": 50,
+    "conditioning_hours": 24
+  },
+
+  "test_phases": [
+    {
+      "phase": "initial_check",
+      "cycles": 100,
+      "measure_interval_cycles": 50,
+      "measurements": [
+        {
+          "at_cycle": 100,
+          "stiffness_n_mm": null,
+          "hysteresis_area_j": null,
+          "permanent_set_mm": null,
+          "crack_detected": false,
+          "visual_notes": ""
+        }
+      ]
+    },
+    {
+      "phase": "intermediate",
+      "cycles": 1000,
+      "measure_interval_cycles": 250,
+      "measurements": [
+        {
+          "at_cycle": 250,
+          "stiffness_n_mm": null,
+          "hysteresis_area_j": null,
+          "permanent_set_mm": null,
+          "crack_detected": false,
+          "visual_notes": ""
+        },
+        {
+          "at_cycle": 500,
+          "stiffness_n_mm": null,
+          "hysteresis_area_j": null,
+          "permanent_set_mm": null,
+          "crack_detected": false,
+          "visual_notes": ""
+        },
+        {
+          "at_cycle": 750,
+          "stiffness_n_mm": null,
+          "hysteresis_area_j": null,
+          "permanent_set_mm": null,
+          "crack_detected": false,
+          "visual_notes": ""
+        },
+        {
+          "at_cycle": 1000,
+          "stiffness_n_mm": null,
+          "hysteresis_area_j": null,
+          "permanent_set_mm": null,
+          "crack_detected": false,
+          "visual_notes": ""
+        }
+      ]
+    },
+    {
+      "phase": "extended",
+      "cycles": 10000,
+      "measure_interval_cycles": 2000,
+      "measurements": [
+        {
+          "at_cycle": 2000,
+          "stiffness_n_mm": null,
+          "hysteresis_area_j": null,
+          "permanent_set_mm": null,
+          "crack_detected": false,
+          "visual_notes": ""
+        },
+        {
+          "at_cycle": 4000,
+          "stiffness_n_mm": null,
+          "hysteresis_area_j": null,
+          "permanent_set_mm": null,
+          "crack_detected": false,
+          "visual_notes": ""
+        },
+        {
+          "at_cycle": 6000,
+          "stiffness_n_mm": null,
+          "hysteresis_area_j": null,
+          "permanent_set_mm": null,
+          "crack_detected": false,
+          "visual_notes": ""
+        },
+        {
+          "at_cycle": 8000,
+          "stiffness_n_mm": null,
+          "hysteresis_area_j": null,
+          "permanent_set_mm": null,
+          "crack_detected": false,
+          "visual_notes": ""
+        },
+        {
+          "at_cycle": 10000,
+          "stiffness_n_mm": null,
+          "hysteresis_area_j": null,
+          "permanent_set_mm": null,
+          "crack_detected": false,
+          "visual_notes": ""
+        }
+      ]
+    }
+  ],
+
+  "result": {
+    "final_status": null,
+    "cycles_completed": null,
+    "cycles_to_failure": null,
+    "pass_criteria": {
+      "max_permanent_deformation_at_1000_cycles_pct": 3.0,
+      "max_permanent_deformation_at_10000_cycles_pct": 5.0,
+      "max_stiffness_degradation_pct": 10.0,
+      "zero_fractures": true
+    }
+  },
+
+  "notes": "",
+  "operator": "",
+  "date": ""
+}

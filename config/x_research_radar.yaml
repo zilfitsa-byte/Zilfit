@@ -1,0 +1,148 @@
+# ZILFIT X Research Radar — Local Config
+# =========================================
+# Purpose: Planning layer for future Hermes v0.14 x_search integration.
+# Currently READ-ONLY. No X connection, no auth, no posting, no automated actions.
+# Queries are engineering-research only. All outputs are engineering-only unless Z-Claims reviewed.
+#
+# Future integration: Hermes v0.14 x_search (read-only research lookup).
+#
+# ─── Global Rules ────────────────────────────────────────────────────
+radar:
+  name: "X Research Radar"
+  version: "0.1.0"
+  mode: "local_planning_only"               # Do NOT switch to active until human approval
+  integration_target: "hermes_v0.14_x_search"
+
+  # What this radar must NEVER do
+  blocked_actions:
+    - post
+    - reply
+    - like
+    - retweet
+    - follow
+    - dm
+    - scrape_private_content
+    - auto_execute
+    - auto_merge
+    - auto_deploy
+
+  # What the radar IS allowed to do
+  allowed_actions:
+    - plan_queries
+    - log_query_history
+    - render_reports
+    - print_plan
+
+  # Medical / clinical constraint
+  # All outputs are engineering/technical research only.
+  # No medical, diagnostic, therapeutic, clinical efficacy, or pain relief claims.
+  constraint: "engineering_research_only"
+
+  # Report schedule (planned, not active yet)
+  report_schedule: "on_demand"
+
+# ─── Query Groups ────────────────────────────────────────────────────
+query_groups:
+  - id: ai_product_design_tools
+    name: "AI Product Design Tools"
+    description: "AI-powered tools for product design, ideation, and prototyping workflows."
+    sample_queries:
+      - "AI product design tools for physical products"
+      - "generative AI for industrial design"
+      - "AI-assisted parametric design software"
+    tags: [ai, design, product, prototyping]
+    priority: high
+
+  - id: ai_cad_parametric_design
+    name: "AI CAD / Parametric Design"
+    description: "AI-enhanced CAD systems, parametric modeling, and algorithmic geometry for manufacturing."
+    sample_queries:
+      - "AI CAD software parametric design"
+      - "generative design for additive manufacturing"
+      - "algorithmic geometry tools for 3D printing"
+    tags: [ai, cad, parametric, manufacturing]
+    priority: high
+
+  - id: footwear_customization
+    name: "Footwear Customization"
+    description: "Mass customization, size adaptation, and personalization in footwear — technical and consumer angles."
+    sample_queries:
+      - "footwear customization technology 3D scan"
+      - "custom insole scanning app"
+      - "personalized shoe manufacturing process"
+    tags: [footwear, customization, personalization, scan]
+    priority: high
+
+  - id: three_d_printed_shoes_materials
+    name: "3D Printed Shoes & Printable Materials"
+    description: "Additive manufacturing for footwear: materials (TPU, elastomers), printers, and sample workflows."
+    sample_queries:
+      - "3D printed shoes TPU material"
+      - "TPU filament for footwear additive manufacturing"
+      - "gyroid lattice structure 3D printed shoes"
+    tags: [3d-printing, footwear, materials, TPU]
+    priority: high
+
+  - id: sports_shoe_biomechanics
+    name: "Sports Shoe Biomechanics"
+    description: "Engineering research on biomechanics, pressure distribution, and comfort metrics in sports footwear."
+    sample_queries:
+      - "sports shoe pressure distribution research"
+      - "foot biomechanics plantar pressure analysis"
+      - "running shoe cushioning engineering study"
+    tags: [biomechanics, sports, engineering, pressure]
+    priority: medium
+    note: "Engineering/technical research only — not medical or clinical."
+
+  - id: mobile_measurement_cv_ux
+    name: "Mobile Measurement / Computer Vision Measurement UX"
+    description: "Mobile phone-based measurement workflows: foot scanning, camera-based sizing, AR measurement tools."
+    sample_queries:
+      - "mobile phone foot measurement computer vision"
+      - "AR measurement app accuracy"
+      - "camera-based body scan for footwear sizing"
+    tags: [mobile, computer-vision, measurement, UX]
+    priority: medium
+
+  - id: competitors_adjacent_products
+    name: "Competitors & Adjacent Products"
+    description: "Market signals on competitors in customized/3D-printed footwear, orthopedic tech, and adjacent categories."
+    sample_queries:
+      - "3D printed custom shoe startup"
+      - "custom insole company technology"
+      - "additive manufacturing footwear brands"
+    tags: [competitors, market, footwear, startup]
+    priority: high
+
+  - id: manufacturing_sample_readiness
+    name: "Manufacturing & Sample-Readiness Workflows"
+    description: "Path from digital design to physical sample: DFM, prototyping, manufacturing readiness, and quality gates."
+    sample_queries:
+      - "digital design to physical sample workflow footwear"
+      - "TPU manufacturing process quality control"
+      - "3D printed footwear production readiness"
+    tags: [manufacturing, DFM, quality, production]
+    priority: high
+
+# ─── Report Template ─────────────────────────────────────────────────
+report_template:
+  title: "X Research Radar Report"
+  sections:
+    - id: summary
+      name: "Executive Summary"
+      description: "High-level findings per query group, signal-to-noise ratio"
+    - id: query_log
+      name: "Query Log"
+      description: "What was queried, when, and what was returned"
+    - id: findings
+      name: "Findings by Category"
+      description: "Grouped findings per query group with source attribution"
+    - id: signals
+      name: "Actionable Signals"
+      description: "Patterns, trends, or insights relevant to ZILFIT product decisions"
+    - id: claims_review
+      name: "Z-Claims Review Needed"
+      description: "Any findings that may touch medical/clinical boundaries and need review"
+    - id: next_queries
+      name: "Recommended Next Queries"
+      description: "Follow-up queries based on gaps or promising leads"

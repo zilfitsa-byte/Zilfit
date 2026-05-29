@@ -1,0 +1,101 @@
+{
+  "_comment": "ZILFIT Coupon Compression Test — Engineering validation template",
+  "_schema_version": "1.0",
+  "_test_type": "coupon_compression",
+
+  "sample": {
+    "sample_id": "COMP-001",
+    "sample_name": "Gyroid Compression Coupon",
+    "geometry": {
+      "type": "rectangular_prism",
+      "dimensions_mm": {
+        "length": 50.0,
+        "width": 20.0,
+        "height": 10.0
+      },
+      "lattice_type": "gyroid",
+      "wall_thickness_mm": 0.6,
+      "cell_size_mm": 6.0
+    },
+    "edition": "CALM",
+    "density_target": 0.5
+  },
+
+  "material": {
+    "name": "TPU",
+    "shore_hardness": "75A",
+    "batch_id": "TPU-75A-2025-001",
+    "supplier": "TBD",
+    "filament_diameter_mm": 1.75,
+    "density_g_cm3": 1.21
+  },
+
+  "printer": {
+    "make_model": "TBD",
+    "type": "FDM",
+    "nozzle_diameter_mm": 0.4,
+    "serial_number": "TBD"
+  },
+
+  "settings": {
+    "layer_height_mm": 0.15,
+    "print_temperature_c": 230,
+    "bed_temperature_c": 60,
+    "print_speed_mm_s": 25,
+    "print_orientation": "flat",
+    "supports_used": false,
+    "slicer": "PrusaSlicer",
+    "slicer_version": "2.6.0"
+  },
+
+  "test_setup": {
+    "equipment": "Universal Testing Machine",
+    "model": "TBD",
+    "load_cell_n": 5000,
+    "test_speed_mm_min": 50,
+    "compression_platen_type": "flat",
+    "environment_temperature_c": 23,
+    "environment_humidity_pct": 50,
+    "conditioning_hours": 24
+  },
+
+  "measurements": {
+    "pre_test": {
+      "height_mm": null,
+      "width_mm": null,
+      "length_mm": null,
+      "weight_g": null,
+      "visual_notes": ""
+    },
+    "compression_data": [
+      {
+        "cycle_number": 1,
+        "peak_force_n": null,
+        "peak_displacement_mm": null,
+        "compression_ratio_pct": null,
+        "rebound_time_s": null,
+        "permanent_set_mm": null
+      }
+    ],
+    "post_test": {
+      "height_mm": null,
+      "permanent_deformation_pct": null,
+      "cracks_visible": false,
+      "crack_locations": [],
+      "visual_notes": ""
+    }
+  },
+
+  "result": {
+    "pass_fail": null,
+    "pass_criteria": {
+      "max_permanent_deformation_pct": 5.0,
+      "max_rebound_time_s": 2.0,
+      "zero_cracks": true
+    }
+  },
+
+  "notes": "",
+  "operator": "",
+  "date": ""
+}

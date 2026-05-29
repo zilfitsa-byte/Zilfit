@@ -1,3 +1,4 @@
+# Sensitive files
 .env
 .env.*
 *.key
@@ -7,39 +8,101 @@ config.yaml
 config.yml
 /home/
 root/
+
+# Python virtual environments
+.venv
+.venv*
+.venv*/
+.venv-*
+
+# Python cache
 __pycache__/
 *.pyc
+.pytest_cache/
+*_cache*
+
+# Local Aider session/cache files
+.aider.chat.history.md
+.aider.input.history
+.aider.tags.cache.v4/
+
+# Logs
 .hermes/
 *.log
+logs/
 
-# Local/generated autopull reports
+# Databases
+*.db
+
+# Local/generated agent run reports
 reports/autopull_report_*.json
 research/autopull/*_autopull_raw.json
 research/daily/*_autopull.md
 reports/nightly/
-
-# Local agent run outputs
-reports/agent_runs/
-
-# Local agent run outputs
 reports/agent_runs/
 reports/opportunities/
-
-# Generated quality gate artifacts
 reports/quality/
 logs/quality_gate_tests_*.log
-
-# Generated runtime logs and readiness reports
-logs/
 reports/readiness/
-reports/quality/
-reports/nightly/
-
-# Generated preproduction simulation artifacts
 reports/preproduction/*.json
 reports/preproduction/*.md
-
-# Generated sample readiness artifacts
 reports/samples/*.json
 reports/samples/*.md
 logs/sample_readiness_*.log*
+
+# Local backups
+_local_backups/
+
+# Worktrees
+.worktrees/
+
+# Telegram inbox local polling state
+inbox/.last_offset
+
+# Export archives
+exports/*.zip
+
+# Production scan/batch data
+production_inputs/scan_zip/
+production_inputs/batch/
+
+# macOS
+.DS_Store
+
+# Deployment artifacts
+deployments/ZILFIT_*/
+deployments/current
+deployments/previous
+runtime_sessions/DEPLOY-*.json
+runtime_logs/deploy_*.log
+
+# Orchestration state files (generated at runtime)
+runtime/orchestration/system_state.json
+runtime/orchestration/runtime_registry.json
+runtime/orchestration/deployment_registry.json
+runtime_logs/orchestrator_*.log
+logs/api_runtime.log
+
+# AI Runtime Agent generated reports
+runtime/incidents/*.json
+runtime/recommendations/*.json
+
+# Snapshot and recovery generated files
+runtime/snapshots/SNAP-*.json
+runtime/snapshots/SNAP-*.sha256
+runtime/recovery/*.json
+runtime/checkpoints/CHECK-*.json
+
+# Security artifacts (generated at runtime)
+security/token_registry.json
+security/audit/security_audit.log
+security/keys/*.key
+
+# Telemetry generated files
+monitoring/metrics/*.json
+monitoring/traces/*.json
+monitoring/dashboards/*.json
+monitoring/history/*.jsonl
+
+# Temporary files
+tmp/

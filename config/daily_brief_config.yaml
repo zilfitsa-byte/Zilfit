@@ -1,0 +1,158 @@
+# ZILFIT Daily Brief Template Configuration
+#
+# Defines the sections, structure, and validation rules for the Telegram
+# daily brief. This config turns the brief from a one-off ad-hoc message
+# into a repeatable ZILFIT/Hermes workflow.
+#
+# Usage reference: tools/send_daily_brief.py reads this config to validate
+# and format briefs before sending.
+#
+# Location: config/daily_brief_config.yaml
+# Version: 1.0
+# Date: 2026-05-16
+# Phase: P0 — ZILFIT IP/Core
+
+---
+brief:
+  name: "ZILFIT Daily Brief"
+  version: "1.0"
+  locale: "ar-SA"
+  max_length_chars: 4000
+  footer_brand: "ZILFIT Cloud 🇸🇦 — هندسة فقط"
+
+sections:
+  # P0 section — always required
+  - id: header
+    title_en: "ZILFIT Daily Brief"
+    title_ar: "📋 ZILFIT — نبضة يومية"
+    required: true
+    fields:
+      - date          # YYYY-MM-DD
+      - branch        # git branch name
+
+  # P0 section — always required
+  - id: project_status
+    title_en: "Project Status"
+    title_ar: "📊 حالة المشروع"
+    required: true
+    fields:
+      - status_icon   # ✅ ❌ ⚠️
+      - status_text   # e.g. "مكتمل", "نجح", "تنبيه"
+      - branch        # current git branch
+      - clean_tree    # true/false
+
+  # P0 section — always required
+  - id: commits
+    title_en: "Commits"
+    title_ar: "📝 العمليات"
+    required: true
+    fields:
+      - count         # number of commits today
+      - latest_sha    # short SHA
+      - latest_msg    # commit message (truncate to 80)
+
+  # P0 section — always required
+  - id: tests
+    title_en: "Tests"
+    title_ar: "🧪 الاختبارات"
+    required: true
+    fields:
+      - executed      # number of tests run
+      - passed        # number passed
+      - failed        # number failed
+      - status_text   # e.g. "PASS", "FAIL"
+
+  # P0 section — required even if empty ("No blockers")
+  - id: blockers
+    title_en: "Blockers"
+    title_ar: "🚧 العوائق"
+    required: true
+    fields:
+      - has_blockers  # true/false
+      - details       # short list or "لا توجد عوائق"
+
+  # P0 section — always required
+  - id: next_action
+    title_en: "Next Action"
+    title_ar: "🟢 الخطوة التالية"
+    required: true
+    fields:
+      - action_text   # recommended next task
+
+  # P0 section — always required
+  - id: claims_safety
+    title_en: "Claims Safety"
+    title_ar: "🛡️ سلامة المطالبات"
+    required: true
+    fields:
+      - clean         # true/false (no medical/clinical/treatment claims)
+      - disclaimer    # "engineering-only"
+
+  # P0 section — always required
+  - id: production_readiness
+    title_en: "Production Readiness"
+    title_ar: "🔒 الجاهزية للإنتاج"
+    required: true
+    fields:
+      - ready         # true/false
+      - gate_status   # PASS/FAIL
+      - notes         # brief notes
+
+  # Optional section
+  - id: files_touched
+    title_en: "Files Modified"
+    title_ar: "📂 الملفات المعدّلة"
+    required: false
+    fields:
+      - count
+      - file_list     # list of file paths (truncated to 10 in brief)
+
+  # Optional section
+  - id: risks
+    title_en: "Risks"
+    title_ar: "🚨 المخاطر"
+    required: false
+    fields:
+      - has_risks     # true/false
+      - details       # short list or "لا توجد مخاطر"
+
+# Validation rules
+validation:
+  required_sections:
+    - header
+    - project_status
+    - commits
+    - tests
+    - blockers
+    - next_action
+    - claims_safety
+    - production_readiness
+  rules:
+    - date must match YYYY-MM-DD
+    - max_length_chars must not exceed brief.max_length_chars
+    - claims_safety.clean must be true for safe briefs
+    - blocker details must be present (or explicitly "لا توجد عوائق")
+    - next_action must not be empty
+
+# Telegram message template (positional, filled by send_daily_brief.py)
+telegram_template: |
+  📋 *ZILFIT — نبضة يومية* | {date}
+
+  📊 *حالة المشروع:* {status_text}
+  🇸🇦 الفرع: {branch}
+
+  📝 *العمليات:* {commit_count} عملية | آخر: {latest_msg}
+
+  🧪 *الاختبارات:* {test_status} ({passed}/{executed})
+
+  🚧 *العوائق:* {blockers}
+
+  🟢 *الخطوة التالية:* {next_action}
+
+  🛡️ *سلامة المطالبات:* {claims_status}
+
+  🔒 *الجاهزية للإنتاج:* {prod_readiness}
+
+  📂 *الملفات:* {files_count}
+
+  _{footer_brand}_

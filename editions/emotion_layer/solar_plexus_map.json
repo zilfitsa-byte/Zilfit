@@ -1,0 +1,402 @@
+{
+  "meta": {
+    "name": "ZILFIT Solar Plexus Map — Reflexology-Inspired Foot-to-Emotion Mapping",
+    "version": "1.0",
+    "date": "2026-05-20",
+    "owner": "ZILFIT Cloud — Sultan (CTO)",
+    "status": "engineering_draft",
+    "boundary": "Reflexology used as sensory design inspiration only. No diagnostic, therapeutic, treatment, or medical claims. All language follows z_claims_scanner.py safe-wording policy."
+  },
+  "mapping_concept": {
+    "description": "Maps foot contact zones to reflexology-inspired sensory targets and emotional comfort states. Each zone corresponds to a pressure/stimulation profile in the Gyroid TPU lattice. Z-CAD uses zone names to generate geometry. Z-Bio uses zone pressure targets to score comfort.",
+    "coordinate_system": "foot_regions + relative_depth",
+    "total_zones": 18,
+    "coverage": "full_plantar_surface"
+  },
+  "editions": {
+    "calm": {
+      "active_zones": [
+        "midfoot_solar_plexus_point",
+        "heel_grounding_contact",
+        "arch_soft_contour",
+        "lateral_relief_edge"
+      ],
+      "primary_emotion_target": "grounding",
+      "zone_intensity": {
+        "midfoot_solar_plexus_point": 0.4,
+        "heel_grounding_contact": 0.5,
+        "arch_soft_contour": 0.3,
+        "lateral_relief_edge": 0.3
+      },
+      "zone_geometry_hints": {
+        "midfoot_solar_plexus_point": {
+          "shape": "shallow_bowl",
+          "depth_mm": 1.2,
+          "diameter_mm": 14,
+          "wall_thickness_mm": 0.6,
+          "cad_direction": "gentle concave at midfoot center — no sharp edges"
+        },
+        "heel_grounding_contact": {
+          "shape": "flat_wide_base",
+          "depth_mm": 0.8,
+          "cad_direction": "broad, stable contact surface — maximal area"
+        },
+        "arch_soft_contour": {
+          "shape": "low_amplitude_wave",
+          "wavelength_mm": 20,
+          "amplitude_mm": 0.6,
+          "cad_direction": "gentle repeating ridge along arch line"
+        },
+        "lateral_relief_edge": {
+          "shape": "tapered_ramp",
+          "height_mm": 0.5,
+          "cad_direction": "gradual slope from lateral edge inward — no hard boundary"
+        }
+      }
+    },
+    "vital": {
+      "active_zones": [
+        "heel_recovery_basin",
+        "arch_recovery_bridge",
+        "forefoot_release_grid",
+        "toe_decompression_field",
+        "calf_reflex_zone"
+      ],
+      "primary_emotion_target": "release",
+      "zone_intensity": {
+        "heel_recovery_basin": 0.7,
+        "arch_recovery_bridge": 0.6,
+        "forefoot_release_grid": 0.65,
+        "toe_decompression_field": 0.5,
+        "calf_reflex_zone": 0.4
+      },
+      "zone_geometry_hints": {
+        "heel_recovery_basin": {
+          "shape": "concave_bowl",
+          "depth_mm": 2.0,
+          "diameter_mm": 22,
+          "wall_thickness_mm": 0.6,
+          "cad_direction": "deep, smooth concave at heel — gradual walls, flat bottom"
+        },
+        "arch_recovery_bridge": {
+          "shape": "ascending_arc",
+          "height_mm": 2.5,
+          "length_mm": 40,
+          "cad_direction": "supportive arc under arch — peaks at midfoot, tapers forward and back"
+        },
+        "forefoot_release_grid": {
+          "shape": "parallel_channels",
+          "channel_width_mm": 4,
+          "channel_depth_mm": 1.0,
+          "cad_direction": "linear forefoot grooves aligned with metatarsal heads"
+        },
+        "toe_decompression_field": {
+          "shape": "individual_toe_cups",
+          "depth_mm": 1.0,
+          "cad_direction": "shallow cups per toe zone — not full separation"
+        },
+        "calf_reflex_zone": {
+          "shape": "posterior_edge_ridge",
+          "height_mm": 1.5,
+          "cad_direction": "subtle ridge at rear heel edge — stimulation on dorsiflexion"
+        }
+      }
+    },
+    "focus": {
+      "active_zones": [
+        "hallux_clarity_point",
+        "forefoot_awakening_ridge",
+        "toe_freedom_grid",
+        "metatarsal_stimulation_line"
+      ],
+      "primary_emotion_target": "alertness",
+      "zone_intensity": {
+        "hallux_clarity_point": 0.8,
+        "forefoot_awakening_ridge": 0.65,
+        "toe_freedom_grid": 0.55,
+        "metatarsal_stimulation_line": 0.5
+      },
+      "zone_geometry_hints": {
+        "hallux_clarity_point": {
+          "shape": "targeted_nodule",
+          "height_mm": 2.0,
+          "diameter_mm": 10,
+          "wall_thickness_mm": 0.6,
+          "cad_direction": "firm, discrete contact point at hallux pad — sharp boundary acceptable"
+        },
+        "forefoot_awakening_ridge": {
+          "shape": "transverse_ridge",
+          "height_mm": 1.5,
+          "width_mm": 6,
+          "cad_direction": "transverse ridge across forefoot — creates directional pressure on weight shift"
+        },
+        "toe_freedom_grid": {
+          "shape": "wide_toe_spread_platform",
+          "cad_direction": "contoured platform encouraging toe spread — no separation walls"
+        },
+        "metatarsal_stimulation_line": {
+          "shape": "five_point_stars",
+          "spacing_mm": 12,
+          "height_mm": 1.2,
+          "cad_direction": "five discrete stimulation points aligned with metatarsal heads"
+        }
+      }
+    },
+    "balance": {
+      "active_zones": [
+        "medial_stability_rail",
+        "lateral_stability_rail",
+        "heel_centering_bowl",
+        "midfoot_pressure_plateau",
+        "forefoot_even_spread"
+      ],
+      "primary_emotion_target": "stability",
+      "zone_intensity": {
+        "medial_stability_rail": 0.5,
+        "lateral_stability_rail": 0.5,
+        "heel_centering_bowl": 0.6,
+        "midfoot_pressure_plateau": 0.7,
+        "forefoot_even_spread": 0.5
+      },
+      "zone_geometry_hints": {
+        "medial_stability_rail": {
+          "shape": "continuous_ridge_inner",
+          "height_mm": 1.8,
+          "cad_direction": "continuous inner edge ridge — runs from heel to midfoot"
+        },
+        "lateral_stability_rail": {
+          "shape": "continuous_ridge_outer",
+          "height_mm": 1.8,
+          "cad_direction": "continuous outer edge ridge — mirrors medial rail"
+        },
+        "heel_centering_bowl": {
+          "shape": "shallow_centering_dish",
+          "depth_mm": 1.5,
+          "diameter_mm": 24,
+          "cad_direction": "shallow dish guiding heel to center — symmetrical"
+        },
+        "midfoot_pressure_plateau": {
+          "shape": "flat_wide_platform",
+          "height_mm": 1.0,
+          "cad_direction": "uniform plateau under entire midfoot — no peaks or valleys"
+        },
+        "forefoot_even_spread": {
+          "shape": "even_grid",
+          "cell_size_mm": 6,
+          "cad_direction": "uniform gyroid grid — no variation across forefoot"
+        }
+      }
+    },
+    "femme": {
+      "active_zones": [
+        "heel_containment_soft_edge",
+        "forefoot_freedom_zone",
+        "arch_soothing_bridge",
+        "pelvis_alignment_reflex",
+        "medial_comfort_pad",
+        "q_angle_compensation_rail"
+      ],
+      "primary_emotion_target": "soothing",
+      "zone_intensity": {
+        "heel_containment_soft_edge": 0.5,
+        "forefoot_freedom_zone": 0.45,
+        "arch_soothing_bridge": 0.55,
+        "pelvis_alignment_reflex": 0.4,
+        "medial_comfort_pad": 0.5,
+        "q_angle_compensation_rail": 0.45
+      },
+      "zone_geometry_hints": {
+        "heel_containment_soft_edge": {
+          "shape": "narrow_soft_walls",
+          "wall_height_mm": 2.0,
+          "wall_angle_deg": 75,
+          "cad_direction": "narrower heel cup than unisex — walls rounded, no sharp edges"
+        },
+        "forefoot_freedom_zone": {
+          "shape": "wide_flat_platform",
+          "width_increase_percent": 8,
+          "cad_direction": "8% wider than unisex forefoot — flat surface, low stimulation"
+        },
+        "arch_soothing_bridge": {
+          "shape": "gentle_soothing_arc",
+          "height_mm": 2.0,
+          "amplitude_mm": 0.8,
+          "cad_direction": "softer, lower arch bridge than VITAL — designed for daily comfort, not recovery"
+        },
+        "pelvis_alignment_reflex": {
+          "shape": "lateral_bias_contour",
+          "offset_mm": 1.5,
+          "cad_direction": "subtle lateral thickening under midfoot — maps to Q-angle compensation"
+        },
+        "medial_comfort_pad": {
+          "shape": "soft_inner_pad",
+          "height_mm": 1.2,
+          "cad_direction": "plush inner arch pad — wider medial contact zone"
+        },
+        "q_angle_compensation_rail": {
+          "shape": "angled_support_strip",
+          "angle_deg": 12,
+          "width_mm": 8,
+          "cad_direction": "angled rail from heel center to medial forefoot — compensates inward knee angle"
+        }
+      }
+    }
+  },
+  "zone_catalog": {
+    "description": "Complete zone catalog with foot regions. Each zone ID is referenced by emotional_recipe.json and edition decision engine.",
+    "zones": [
+      {
+        "zone_id": "heel_grounding_contact",
+        "foot_region": "heel_posterior",
+        "rel reflexology_inspiration": "grounding / kidney zone",
+        "emotional_association": "stability, rootedness, calm",
+        "max_pressure_kpa": 180
+      },
+      {
+        "zone_id": "heel_recovery_basin",
+        "foot_region": "heel_center",
+        "rel reflexology_inspiration": "deep heel cushion / lower back zone",
+        "emotional_association": "release, decompression, relief",
+        "max_pressure_kpa": 200
+      },
+      {
+        "zone_id": "heel_containment_soft_edge",
+        "foot_region": "heel_perimeter",
+        "rel reflexology_inspiration": "support boundary / pelvic base",
+        "emotional_association": "containment, security, feminine comfort",
+        "max_pressure_kpa": 170
+      },
+      {
+        "zone_id": "heel_centering_bowl",
+        "foot_region": "heel_center",
+        "rel reflexology_inspiration": "spinal alignment zone",
+        "emotional_association": "alignment, confidence, balance",
+        "max_pressure_kpa": 180
+      },
+      {
+        "zone_id": "arch_soft_contour",
+        "foot_region": "medial_arch",
+        "rel reflexology_inspiration": "digestive zone / solar plexus",
+        "emotional_association": "gentle comfort, digestion of stress",
+        "max_pressure_kpa": 150
+      },
+      {
+        "zone_id": "arch_recovery_bridge",
+        "foot_region": "full_medial_arch",
+        "rel reflexology_inspiration": "support column / adrenal zone",
+        "emotional_association": "structural relief, energy recovery",
+        "max_pressure_kpa": 170
+      },
+      {
+        "zone_id": "arch_soothing_bridge",
+        "foot_region": "medial_arch",
+        "rel reflexology_inspiration": "fertility zone / pelvic comfort",
+        "emotional_association": "soothing, gentle support, feminine alignment",
+        "max_pressure_kpa": 160
+      },
+      {
+        "zone_id": "midfoot_solar_plexus_point",
+        "foot_region": "midfoot_center",
+        "rel reflexology_inspiration": "solar plexus / emotional center",
+        "emotional_association": "emotional release, calm centering, stress decompression",
+        "max_pressure_kpa": 140
+      },
+      {
+        "zone_id": "midfoot_pressure_plateau",
+        "foot_region": "full_midfoot",
+        "rel reflexology_inspiration": "spinal support / core alignment",
+        "emotional_association": "even distribution, no focal stress",
+        "max_pressure_kpa": 190
+      },
+      {
+        "zone_id": "forefoot_release_grid",
+        "foot_region": "metatarsal_pad",
+        "rel reflexology_inspiration": "nerve endings / lung zone",
+        "emotional_association": "expansive release, breath sensation",
+        "max_pressure_kpa": 160
+      },
+      {
+        "zone_id": "forefoot_awakening_ridge",
+        "foot_region": "ball_of_foot",
+        "rel reflexology_inspiration": "sensory awakening / pituitary reflex",
+        "emotional_association": "alertness, clarity, sensory sharpness",
+        "max_pressure_kpa": 200
+      },
+      {
+        "zone_id": "forefoot_freedom_zone",
+        "foot_region": "wide_forefoot",
+        "rel reflexology_inspiration": "freedom zone / hip reflex",
+        "emotional_association": "liberation, no-constriction comfort",
+        "max_pressure_kpa": 150
+      },
+      {
+        "zone_id": "forefoot_even_spread",
+        "foot_region": "metatarsal_grid",
+        "rel reflexology_inspiration": "uniform contact / diaphragm line",
+        "emotional_association": "evenness, predictability, no surprises",
+        "max_pressure_kpa": 180
+      },
+      {
+        "zone_id": "hallux_clarity_point",
+        "foot_region": "hallux_pad",
+        "rel reflexology_inspiration": "brain / pituitary reflex",
+        "emotional_association": "mental clarity, focus, grounding awareness",
+        "max_pressure_kpa": 200
+      },
+      {
+        "zone_id": "toe_decompression_field",
+        "foot_region": "all_toes",
+        "rel reflexology_inspiration": "sinus / head tension release",
+        "emotional_association": "release, lightness",
+        "max_pressure_kpa": 120
+      },
+      {
+        "zone_id": "toe_freedom_grid",
+        "foot_region": "toe_forefoot",
+        "rel reflexology_inspiration": "toe freedom / neck tension",
+        "emotional_association": "freedom, no-constraint awareness",
+        "max_pressure_kpa": 140
+      },
+      {
+        "zone_id": "pelvis_alignment_reflex",
+        "foot_region": "lateral_midfoot",
+        "rel reflexology_inspiration": "pelvic reflex / reproductive zone",
+        "emotional_association": "alignment, feminine balance, comfort",
+        "max_pressure_kpa": 150
+      },
+      {
+        "zone_id": "q_angle_compensation_rail",
+        "foot_region": "lateral_to_medial_diagonal",
+        "rel reflexology_inspiration": "knee/hip line / structural compensation",
+        "emotional_association": "structural support, gait confidence",
+        "max_pressure_kpa": 170
+      }
+    ]
+  },
+  "usage_rules": {
+    "zone_activation": {
+      "description": "Not all zones are active in every edition. Each edition activates only its relevant zones. Inactive zones receive default neutral stimulation (density 0.30, smooth surface).",
+      "inactive_default_density": 0.30,
+      "inactive_default_shape": "smooth_surface"
+    },
+    "max_zone_count_per_edition": 6,
+    "overlapping_zones_rule": "If two editions share a zone (e.g., heel_recovery_basin + heel_containment_soft_edge both map to heel), density = weighted average based on primary/secondary weight from emotional_recipe.json.",
+    "cad_integration": {
+      "description": "Z-CAD reads zone_geometry_hints from this file and generates Gyroid 0.6mm lattice geometry matching the specified shapes, depths, and dimensions.",
+      "cad_input_fields": ["shape", "depth_mm", "diameter_mm", "height_mm", "wall_thickness_mm", "cad_direction"],
+      "cad_output_format": "STL or 3MF with zone-specific gyroid density modulation"
+    },
+    "bio_integration": {
+      "description": "Z-Bio reads max_pressure_kpa per zone and checks whether simulated plantar pressure exceeds safe thresholds for each scenario (weight, arch type, gait phase).",
+      "bio_check_fields": ["max_pressure_kpa", "heel_pressure_kpa", "zone_intensity"],
+      "bio_output": "comfort_score per zone + overall edition score + flag zones exceeding max_pressure_kpa"
+    }
+  },
+  "version_history": [
+    {
+      "version": "1.0",
+      "date": "2026-05-20",
+      "change": "Initial solar_plexus_map — 18 zones across 5 editions, reflexology-inspired sensory mapping, CAD and Bio integration specs."
+    }
+  ]
+}

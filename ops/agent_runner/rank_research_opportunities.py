@@ -214,13 +214,13 @@ def main() -> int:
     top10 = scored[:10]
     rejected = [s for s in scored if s["weighted_score"] < 5.0]
 
-    ts = dt.datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+    ts = dt.datetime.now(dt.timezone.utc).strftime("%Y%m%d_%H%M%S")
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     json_path = os.path.join(OUTPUT_DIR, f"opportunity_ranking_{ts}.json")
     md_path = os.path.join(OUTPUT_DIR, f"opportunity_ranking_{ts}.md")
 
     payload = {
-        "generated_at_utc": dt.datetime.utcnow().isoformat() + "Z",
+        "generated_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
         "top_10_ranked_opportunities": top10,
         "rejected_low_value_items": rejected,
         "recommended_next_engineering_task": _recommended_task(top10),

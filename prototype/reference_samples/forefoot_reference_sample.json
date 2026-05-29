@@ -1,0 +1,39 @@
+{
+  "_comment": "ZILFIT Forefoot Reference Sample — Low-Load / High-Flex Zone",
+  "_schema_version": "1.0",
+
+  "sample_id": "REF-FOREFOOT",
+  "geometry_type": "zone_extract",
+  "zone": "forefoot",
+  "dimensions_mm": {
+    "length": 70.0,
+    "width": 55.0,
+    "height": 4.5
+  },
+  "density": 0.40,
+  "density_range": [0.30, 0.45],
+  "cell_size_mm": 6.0,
+  "wall_thickness_mm": 0.6,
+
+  "material": "TPU 95A",
+  "process_preference": "MJF",
+
+  "target_measurements": {
+    "compressive_stiffness_n_mm": null,
+    "rebound_time_s": null,
+    "flex_angle_deg_at_comfort_threshold": null,
+    "permanent_set_after_1000_cycles_mm": null
+  },
+
+  "acceptance_criteria": {
+    "lattice_survives_print": true,
+    "no_collapsed_cells": true,
+    "max_permanent_set_1000_cycles_pct": 3.0,
+    "min_comfort_score": 7.0,
+    "allows_natural_toe_flexion": true,
+    "no_rigid_restriction": true
+  },
+
+  "related_tests": ["coupon_compression_test.json", "fatigue_cycle_test.json", "wear_test_template.json"],
+  "notes": "Lowest-load + highest-flex zone. FOCUS edition concentrates density here — validate that flexibility is not overly restricted at density 0.40. Thin section (4.5 mm) — watch for print quality degradation."
+}

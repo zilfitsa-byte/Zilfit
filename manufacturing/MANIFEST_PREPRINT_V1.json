@@ -1,0 +1,195 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "ZILFIT Pre-Print Manufacturing Manifest V1",
+  "description": "Engineering manufacturing authority document. Not a production release. Not a medical, therapeutic, or clinical specification.",
+  "manifest_version": "1.0",
+  "status": "pre_print",
+  "print_authorized": false,
+  "created": "2026-05-26",
+  "authority_source": "sultan_engineering_gate_0",
+
+  "locked_constants": {
+    "gyroid_wall_thickness_baseline_mm": 0.6,
+    "gyroid_cell_size_mm": 6.0,
+    "material_hardness_shore_a": "75A-80A",
+    "material_family": "TPU",
+    "infill_pattern": "gyroid",
+    "layer_height_mm": 0.11,
+    "estimated_print_time_hours": 4.5,
+    "post_processing_required": [
+      "bead_blasting",
+      "dyeing_vantablack",
+      "rose_gold_accents"
+    ],
+    "density_jump_cap_pct": 15
+  },
+
+  "wall_thresholds_mm": {
+    "heel_high_load": 0.8,
+    "midfoot": 0.7,
+    "forefoot": 0.6,
+    "toe": 0.6,
+    "boundary_transition": 0.8
+  },
+  "wall_thresholds_notes": [
+    "Pre-print engineering target values only — NOT runtime-enforced guarantees.",
+    "Runtime density-to-wall coordination is deferred to future pipeline integration work and is not implemented in the current codebase.",
+    "Wall thresholds are verified during coupon validation (CT-02 Wall Thickness Effect), not guaranteed by current runtime geometry generation.",
+    "Current simulation and compression evidence is calibrated for TPU 75A-80A. Any material hardness change invalidates existing simulation evidence."
+  ],
+
+  "editions": {
+    "CALM": { "status": "not_started", "density_map_range": "0.25–0.30", "emotional_target": "grounding" },
+    "VITAL": { "status": "not_started", "density_map_range": "0.28–0.38", "emotional_target": "recovery" },
+    "FOCUS": { "status": "not_started", "density_map_range": "0.26–0.35", "emotional_target": "alertness" },
+    "BALANCE": { "status": "not_started", "density_map_range": "0.26–0.32", "emotional_target": "stability" },
+    "FEMME": { "status": "not_started", "density_map_range": "0.24–0.34", "emotional_target": "soothing" }
+  },
+
+  "manufacturing_partner": "AMFuture",
+  "partner_engagement_status": "placeholder",
+  "partner_notes": "Contact established per reports/ZILFIT_AMFUTURE_HANDOFF.md. No production file pack delivered. No printability confirmation received.",
+
+  "primary_process": {
+    "method": "MJF",
+    "full_name": "Multi Jet Fusion",
+    "rationale": "MJF is the only process validated in pipeline. MJF min wall 0.6 mm confirmed per P01_BALANCE_READINESS_REPORT.md. Printability score 92%.",
+    "status": "preferred_and_active"
+  },
+
+  "deferred_processes": {
+    "SLS": {
+      "full_name": "Selective Laser Sintering",
+      "deferred": true,
+      "deferral_rationale": "SLS min wall 0.7 mm exceeds several zone thresholds (toe 0.6 mm, forefoot 0.6 mm). No SLS-specific material profile exists. SLS process capability not validated in pipeline. Must be explicitly re-evaluated and approved via separate engineering gate before authorizing."
+    }
+  },
+
+  "scanned_foot_pipeline": {
+    "scan_to_print": {
+      "status": "BLOCKED",
+      "rationale": "Current pipeline operates entirely in validation_status: simulation. No physical print evidence, no fabrication partner printability confirmation, no full 15-zone density map submitted for fabrication review, no as-built dimensional inspection exists. Per docs/SCAN_FOOT_PREPRODUCTION_READINESS_SUMMARY_V1.md, pipeline is Not Coupon-Ready, Not Physical Prototype-Ready, Not Manufacturing-Ready. Scan-to-print automation requires completion of COUPON-PRINT, COUPON-TEST, COUPON-VALIDATE, PRINT-REVIEW, EXT-REVIEW, and PROTO-AUTH gates."
+    },
+    "sensor_housing": {
+      "status": "BLOCKED",
+      "rationale": "No sensor housing geometry exists in current CAD pipeline. No embedded electronics design. No IPX rating requirement defined. Must be separately scoped and gated."
+    },
+    "livefit_camera_ux": {
+      "status": "PRE_PRINT",
+      "rationale": "LiveFit camera UX is a scan input UX — not a manufacturing pipeline component. Its outputs are engineering handoff JSONs that feed into the density pipeline. The scan UX itself does not produce print-ready geometry and is not blocked."
+    }
+  },
+
+  "preprint_gates": {
+    "gate_0_stl_fingerprint": {
+      "name": "STL Fingerprint Verification",
+      "status": "PENDING",
+      "description": "Every STL submitted for print must carry a computed fingerprint (hash) registered in manifest. Fingerprint mismatch or absence → HOLD.",
+      "required": true,
+      "approval": "automated"
+    },
+    "gate_1_mesh_validation": {
+      "name": "Mesh Validation",
+      "status": "PENDING",
+      "description": "Every mesh must pass manifold check, closed-shell check, no degenerate triangles, no non-manifold edges, no inverted normals, and within printability constraints per runtime mesh contract.",
+      "required": true,
+      "approval": "automated"
+    },
+    "gate_2_density_jump_cap": {
+      "name": "Adjacent Zone Density Jump Cap",
+      "status": "PENDING",
+      "description": "No adjacent zone density jump may exceed 15 pct. If exceeded, density smoothing must intervene before wall thickness assignment. No zone output record may proceed with unresolved jump violation.",
+      "required": true,
+      "approval": "automated"
+    },
+    "gate_3_pressure_coupon": {
+      "name": "Pressure/Compression Coupon Test",
+      "status": "PENDING",
+      "description": "CT-01 Compression stiffness pass, CT-02 Wall thickness effect pass, CT-04 Compression set pass per docs/COUPON_TEST_READINESS_PLAN_V1.md.",
+      "required": true,
+      "approval": "engineering_review"
+    },
+    "gate_4_flex_coupon": {
+      "name": "Flexural Coupon Test",
+      "status": "PENDING",
+      "description": "CT-03 Rebound pass, CT-05 Inter-zone transition pass. Gyroid flexural behavior validated per reports/ZILFIT_MECHANICAL_VALIDATION_PLAN.md.",
+      "required": true,
+      "approval": "engineering_review"
+    },
+    "gate_5_fatigue_coupon": {
+      "name": "Fatigue Coupon Test",
+      "status": "PENDING",
+      "description": "CT-04 Extended fatigue cycling pass (10,000 cycles, no fracture, < 5% permanent deformation). S-N curve approximation validated against physical TPU 75A-80A coupon data.",
+      "required": true,
+      "approval": "engineering_review"
+    },
+    "gate_6_c7_human_comfort": {
+      "name": "C7 Human Comfort Validation",
+      "status": "NOT_STARTED",
+      "description": "Multi-wearer comfort assessment with documented pressure point, instability, and discomfort data. Wear trial protocol per Phase 3 of reports/ZILFIT_AMFUTURE_HANDOFF.md.",
+      "required": false,
+      "required_before_first_print": false,
+      "not_before": "after_gate_5_passed",
+      "approval": "engineering_review"
+    }
+  },
+
+  "holds": [
+    {
+      "gate": "full_sole_print",
+      "status": "HOLD",
+      "description": "Full sole print not authorized. Only coupon-scale prints (per coupon_test_matrix_v1.json) permitted until coupon gates 3–5 are passed AND STL fingerprint + mesh validation are verified.",
+      "unblock_condition": "gates 0, 1, 2, 3, 4, 5 passed"
+    },
+    {
+      "gate": "multi_edition_batch",
+      "status": "HOLD",
+      "description": "Batch printing multiple editions in a single production run not authorized. Single-edition, single-unit pilot required first. Process capability for edition-specific geometry variance not yet established.",
+      "unblock_condition": "single edition pilot print passed and reviewed"
+    },
+    {
+      "gate": "scan_to_print",
+      "status": "BLOCKED",
+      "description": "Fully automated scan-to-print pipeline is BLOCKED at pre-print gate. Individual STL generation and manual print handoff may proceed after all preprint gates pass, but automated pipeline release requires additional governance approval.",
+      "unblock_condition": "explicit governance approval after full gate chain cleared"
+    },
+    {
+      "gate": "sensor_housing",
+      "status": "BLOCKED",
+      "description": "No sensor housing CAD, electronics design, or IPX rating exists. Not scoped for P0/P1.",
+      "unblock_condition": "separate product scope definition and engineering gate"
+    },
+    {
+      "gate": "outsole_bonding",
+      "status": "HOLD",
+      "description": "Outsole-to-insole bonding process not defined. No adhesive or mechanical bonding specification exists. No peel test data. Not scoped for first-print pilot.",
+      "unblock_condition": "bonding process specified and tested"
+    },
+    {
+      "gate": "amfuture_production_file_pack",
+      "status": "HOLD",
+      "description": "Complete AMFuture production file pack (STL + manufacturing metadata JSON + print sheet + material spec) not yet assembled. Per reports/ZILFIT_AMFUTURE_HANDOFF.md, digital verification (Phase 1) not yet complete.",
+      "unblock_condition": "full file pack assembled and reviewed per AMFuture handoff checklist"
+    }
+  ],
+
+  "contract_references": [
+    "docs/ZILFIT_DENSITY_TO_PRINT_SPEC_CONTRACT_V1.md",
+    "docs/COUPON_TEST_READINESS_PLAN_V1.md",
+    "docs/SCAN_FOOT_PREPRODUCTION_READINESS_SUMMARY_V1.md",
+    "reports/ZILFIT_MECHANICAL_VALIDATION_PLAN.md",
+    "reports/ZILFIT_AMFUTURE_HANDOFF.md",
+    "reports/P01_BALANCE_READINESS_REPORT.md",
+    "simulation_reports/coupon_test_matrix_v1.json",
+    "prototype/P01_BALANCE_PROTOTYPE.json"
+  ],
+
+  "governing_constraints": {
+    "non_medical_boundary": true,
+    "engineering_only": true,
+    "no_diagnostic_claims": true,
+    "no_therapeutic_claims": true,
+    "no_clinical_claims": true,
+    "validation_status_maximum": "simulation"
+  }
+}

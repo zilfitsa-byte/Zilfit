@@ -1,0 +1,66 @@
+{
+  "version": "1.0.0",
+  "model_type": "weighted_linear_scoring",
+  "last_calibration": "2025-01-01",
+  "calibration_sample_size": 0,
+  "recalibration_threshold": 50,
+  "hybrid_threshold": 0.08,
+  "editions": {
+    "CALM": {
+      "weights": {
+        "stress": 0.35,
+        "sleep_disruption": 0.25,
+        "sensory_overload": 0.20,
+        "user_goal_match": 0.12,
+        "temperature_safety_bonus": 0.08
+      },
+      "temperature_safety_bonus_formula": "1 - temperature_risk"
+    },
+    "VITAL": {
+      "weights": {
+        "fatigue_score": 0.40,
+        "focus_deficit": 0.20,
+        "heel_pressure_ratio": 0.15,
+        "user_goal_match": 0.15,
+        "sleep_disruption": 0.10
+      },
+      "focus_deficit_formula": "1 - focus_score"
+    },
+    "FOCUS": {
+      "weights": {
+        "focus_deficit": 0.40,
+        "fatigue_score": 0.20,
+        "sensory_overload": 0.15,
+        "user_goal_match": 0.15,
+        "postural_instability": 0.10
+      },
+      "focus_deficit_formula": "1 - focus_score"
+    },
+    "BALANCE": {
+      "weights": {
+        "postural_instability": 0.35,
+        "stress": 0.20,
+        "pain_or_discomfort": 0.20,
+        "user_goal_match": 0.15,
+        "heel_pressure_ratio": 0.10
+      }
+    },
+    "FEMME": {
+      "weights": {
+        "cycle_phase_flag": 0.30,
+        "pain_or_discomfort": 0.25,
+        "sleep_disruption": 0.20,
+        "user_goal_match": 0.15,
+        "fatigue_score": 0.10
+      }
+    }
+  },
+  "selection_logic": {
+    "method": "argmax",
+    "hybrid_mode": {
+      "enabled": true,
+      "trigger_condition": "top2_score_difference < hybrid_threshold",
+      "blend_ratio": [0.60, 0.40]
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "mesh": {
+    "vertices": [
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        2,
+        0,
+        0
+      ],
+      [
+        0,
+        3,
+        0
+      ]
+    ],
+    "triangles": [
+      [
+        0,
+        1,
+        2
+      ]
+    ],
+    "bounds": {
+      "min": [
+        0,
+        0,
+        0
+      ],
+      "max": [
+        2,
+        3,
+        0
+      ]
+    },
+    "manifold_flags": {
+      "is_closed": false,
+      "is_open_surface": true
+    }
+  }
+}

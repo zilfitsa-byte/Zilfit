@@ -1,0 +1,454 @@
+{
+  "config_id": "fb3ee841-a7a9-458a-a8cf-57baf96860d2",
+  "timestamp": "2026-05-27T17:13:13.845289+00:00",
+  "source_plan_id": "ca72c84c-eddd-4cb8-a000-1c71cd39fb75",
+  "edition": "BALANCE",
+  "is_hybrid": false,
+  "readiness": {
+    "score": 1.0,
+    "is_ready": true,
+    "checks": [
+      {
+        "name": "ready_for_stl_flag",
+        "passed": true,
+        "detail": "Plan must have ready_for_stl=True"
+      },
+      {
+        "name": "manufacturability_passed",
+        "passed": true,
+        "detail": "Manufacturability checks must pass"
+      },
+      {
+        "name": "wall_thickness_min",
+        "passed": true,
+        "detail": "Min wall = 0.6mm, required >= 0.6mm"
+      },
+      {
+        "name": "density_range",
+        "passed": true,
+        "detail": "Density range [0.252, 0.300], required [0.15, 0.45]"
+      },
+      {
+        "name": "cell_size_range",
+        "passed": true,
+        "detail": "Cell sizes [6.0, 6.0], required [5.0, 7.0]"
+      },
+      {
+        "name": "all_zones_present",
+        "passed": true,
+        "detail": "Found 7 zones, expected 7"
+      },
+      {
+        "name": "valid_edition",
+        "passed": true,
+        "detail": "Edition 'BALANCE' not in {'VITAL', 'FOCUS', 'CALM', 'FEMME', 'BALANCE'}"
+      }
+    ],
+    "blockers": [],
+    "warnings": []
+  },
+  "gyroid_fields": [
+    {
+      "cell_size_x_mm": 6.0,
+      "cell_size_y_mm": 6.0,
+      "cell_size_z_mm": 6.0,
+      "threshold": 0.0,
+      "coefficient_x": 0.523599,
+      "coefficient_y": 0.523599,
+      "coefficient_z": 0.523599,
+      "zone_name": "heel",
+      "edition": "BALANCE",
+      "is_hybrid": false,
+      "secondary_edition": null
+    },
+    {
+      "cell_size_x_mm": 6.0,
+      "cell_size_y_mm": 6.0,
+      "cell_size_z_mm": 6.0,
+      "threshold": 0.106667,
+      "coefficient_x": 0.523599,
+      "coefficient_y": 0.523599,
+      "coefficient_z": 0.523599,
+      "zone_name": "midfoot",
+      "edition": "BALANCE",
+      "is_hybrid": false,
+      "secondary_edition": null
+    },
+    {
+      "cell_size_x_mm": 6.0,
+      "cell_size_y_mm": 6.0,
+      "cell_size_z_mm": 6.0,
+      "threshold": 0.0,
+      "coefficient_x": 0.523599,
+      "coefficient_y": 0.523599,
+      "coefficient_z": 0.523599,
+      "zone_name": "forefoot",
+      "edition": "BALANCE",
+      "is_hybrid": false,
+      "secondary_edition": null
+    },
+    {
+      "cell_size_x_mm": 6.0,
+      "cell_size_y_mm": 6.0,
+      "cell_size_z_mm": 6.0,
+      "threshold": 0.106667,
+      "coefficient_x": 0.523599,
+      "coefficient_y": 0.523599,
+      "coefficient_z": 0.523599,
+      "zone_name": "toe",
+      "edition": "BALANCE",
+      "is_hybrid": false,
+      "secondary_edition": null
+    },
+    {
+      "cell_size_x_mm": 6.0,
+      "cell_size_y_mm": 6.0,
+      "cell_size_z_mm": 6.0,
+      "threshold": 0.256,
+      "coefficient_x": 0.523599,
+      "coefficient_y": 0.523599,
+      "coefficient_z": 0.523599,
+      "zone_name": "arch",
+      "edition": "BALANCE",
+      "is_hybrid": false,
+      "secondary_edition": null
+    },
+    {
+      "cell_size_x_mm": 6.0,
+      "cell_size_y_mm": 6.0,
+      "cell_size_z_mm": 6.0,
+      "threshold": 0.181333,
+      "coefficient_x": 0.523599,
+      "coefficient_y": 0.523599,
+      "coefficient_z": 0.523599,
+      "zone_name": "medial_edge",
+      "edition": "BALANCE",
+      "is_hybrid": false,
+      "secondary_edition": null
+    },
+    {
+      "cell_size_x_mm": 6.0,
+      "cell_size_y_mm": 6.0,
+      "cell_size_z_mm": 6.0,
+      "threshold": 0.181333,
+      "coefficient_x": 0.523599,
+      "coefficient_y": 0.523599,
+      "coefficient_z": 0.523599,
+      "zone_name": "lateral_edge",
+      "edition": "BALANCE",
+      "is_hybrid": false,
+      "secondary_edition": null
+    }
+  ],
+  "voxel_grid": {
+    "grid_size_x": 800,
+    "grid_size_y": 279,
+    "grid_size_z": 96,
+    "resolution_mm": 0.25,
+    "bounding_box": {
+      "x_min": -100.0,
+      "x_max": 100.0,
+      "y_min": -34.8,
+      "y_max": 34.8,
+      "z_min": 0.0,
+      "z_max": 24.0
+    },
+    "total_voxels": 21427200,
+    "memory_estimate_bytes": 85708800
+  },
+  "zone_meshes": [
+    {
+      "zone_name": "heel",
+      "field_params": {
+        "cell_size_x_mm": 6.0,
+        "cell_size_y_mm": 6.0,
+        "cell_size_z_mm": 6.0,
+        "threshold": 0.0,
+        "coefficient_x": 0.523599,
+        "coefficient_y": 0.523599,
+        "coefficient_z": 0.523599,
+        "zone_name": "heel",
+        "edition": "BALANCE",
+        "is_hybrid": false,
+        "secondary_edition": null
+      },
+      "density_target": 0.3,
+      "wall_thickness_mm": 0.6,
+      "cell_size_mm": 6.0,
+      "mesh_resolution_mm": 0.25,
+      "stimulation_type": "graded",
+      "structural_role": "shock_absorption",
+      "mc_surface_value": 0.0,
+      "mc_gradient_steps": 1,
+      "mc_smooth_iterations": 2
+    },
+    {
+      "zone_name": "midfoot",
+      "field_params": {
+        "cell_size_x_mm": 6.0,
+        "cell_size_y_mm": 6.0,
+        "cell_size_z_mm": 6.0,
+        "threshold": 0.106667,
+        "coefficient_x": 0.523599,
+        "coefficient_y": 0.523599,
+        "coefficient_z": 0.523599,
+        "zone_name": "midfoot",
+        "edition": "BALANCE",
+        "is_hybrid": false,
+        "secondary_edition": null
+      },
+      "density_target": 0.28,
+      "wall_thickness_mm": 0.6,
+      "cell_size_mm": 6.0,
+      "mesh_resolution_mm": 0.25,
+      "stimulation_type": "graded",
+      "structural_role": "support",
+      "mc_surface_value": 0.106667,
+      "mc_gradient_steps": 1,
+      "mc_smooth_iterations": 2
+    },
+    {
+      "zone_name": "forefoot",
+      "field_params": {
+        "cell_size_x_mm": 6.0,
+        "cell_size_y_mm": 6.0,
+        "cell_size_z_mm": 6.0,
+        "threshold": 0.0,
+        "coefficient_x": 0.523599,
+        "coefficient_y": 0.523599,
+        "coefficient_z": 0.523599,
+        "zone_name": "forefoot",
+        "edition": "BALANCE",
+        "is_hybrid": false,
+        "secondary_edition": null
+      },
+      "density_target": 0.3,
+      "wall_thickness_mm": 0.6,
+      "cell_size_mm": 6.0,
+      "mesh_resolution_mm": 0.25,
+      "stimulation_type": "graded",
+      "structural_role": "proprioceptive",
+      "mc_surface_value": 0.0,
+      "mc_gradient_steps": 1,
+      "mc_smooth_iterations": 2
+    },
+    {
+      "zone_name": "toe",
+      "field_params": {
+        "cell_size_x_mm": 6.0,
+        "cell_size_y_mm": 6.0,
+        "cell_size_z_mm": 6.0,
+        "threshold": 0.106667,
+        "coefficient_x": 0.523599,
+        "coefficient_y": 0.523599,
+        "coefficient_z": 0.523599,
+        "zone_name": "toe",
+        "edition": "BALANCE",
+        "is_hybrid": false,
+        "secondary_edition": null
+      },
+      "density_target": 0.28,
+      "wall_thickness_mm": 0.6,
+      "cell_size_mm": 6.0,
+      "mesh_resolution_mm": 0.25,
+      "stimulation_type": "graded",
+      "structural_role": "proprioceptive",
+      "mc_surface_value": 0.106667,
+      "mc_gradient_steps": 1,
+      "mc_smooth_iterations": 2
+    },
+    {
+      "zone_name": "arch",
+      "field_params": {
+        "cell_size_x_mm": 6.0,
+        "cell_size_y_mm": 6.0,
+        "cell_size_z_mm": 6.0,
+        "threshold": 0.256,
+        "coefficient_x": 0.523599,
+        "coefficient_y": 0.523599,
+        "coefficient_z": 0.523599,
+        "zone_name": "arch",
+        "edition": "BALANCE",
+        "is_hybrid": false,
+        "secondary_edition": null
+      },
+      "density_target": 0.252,
+      "wall_thickness_mm": 0.6,
+      "cell_size_mm": 6.0,
+      "mesh_resolution_mm": 0.25,
+      "stimulation_type": "graded",
+      "structural_role": "support",
+      "mc_surface_value": 0.256,
+      "mc_gradient_steps": 1,
+      "mc_smooth_iterations": 2
+    },
+    {
+      "zone_name": "medial_edge",
+      "field_params": {
+        "cell_size_x_mm": 6.0,
+        "cell_size_y_mm": 6.0,
+        "cell_size_z_mm": 6.0,
+        "threshold": 0.181333,
+        "coefficient_x": 0.523599,
+        "coefficient_y": 0.523599,
+        "coefficient_z": 0.523599,
+        "zone_name": "medial_edge",
+        "edition": "BALANCE",
+        "is_hybrid": false,
+        "secondary_edition": null
+      },
+      "density_target": 0.266,
+      "wall_thickness_mm": 0.6,
+      "cell_size_mm": 6.0,
+      "mesh_resolution_mm": 0.25,
+      "stimulation_type": "graded",
+      "structural_role": "stability",
+      "mc_surface_value": 0.181333,
+      "mc_gradient_steps": 1,
+      "mc_smooth_iterations": 2
+    },
+    {
+      "zone_name": "lateral_edge",
+      "field_params": {
+        "cell_size_x_mm": 6.0,
+        "cell_size_y_mm": 6.0,
+        "cell_size_z_mm": 6.0,
+        "threshold": 0.181333,
+        "coefficient_x": 0.523599,
+        "coefficient_y": 0.523599,
+        "coefficient_z": 0.523599,
+        "zone_name": "lateral_edge",
+        "edition": "BALANCE",
+        "is_hybrid": false,
+        "secondary_edition": null
+      },
+      "density_target": 0.266,
+      "wall_thickness_mm": 0.6,
+      "cell_size_mm": 6.0,
+      "mesh_resolution_mm": 0.25,
+      "stimulation_type": "graded",
+      "structural_role": "stability",
+      "mc_surface_value": 0.181333,
+      "mc_gradient_steps": 1,
+      "mc_smooth_iterations": 2
+    }
+  ],
+  "export_metadata": {
+    "plan_id": "ca72c84c-eddd-4cb8-a000-1c71cd39fb75",
+    "source_session_id": "GP-2fe9594adf56",
+    "edition": "BALANCE",
+    "is_hybrid": false,
+    "secondary_edition": null,
+    "blend_ratio": [
+      1.0,
+      0.0
+    ],
+    "timestamp": "2026-05-27T17:13:13.845258+00:00",
+    "total_zones": 7,
+    "total_voxels": 21427200,
+    "estimated_triangles": 2571264,
+    "estimated_filesize_mb": 122.61,
+    "format_hint": "stl_binary",
+    "units": "mm",
+    "coordinate_system": "right-handed Y-up"
+  },
+  "constraints_enforced": {
+    "wall_thickness_mm": {
+      "minimum": 0.6,
+      "enforced": true,
+      "actual_min": 0.6
+    },
+    "density_range": {
+      "minimum": 0.15,
+      "maximum": 0.45,
+      "enforced": true,
+      "actual_range": [
+        0.252,
+        0.3
+      ]
+    },
+    "cell_size_range": {
+      "minimum": 5.0,
+      "maximum": 7.0,
+      "enforced": true,
+      "actual_range": [
+        6.0,
+        6.0
+      ]
+    }
+  },
+  "zone_transition_config": {
+    "heel_midfoot": {
+      "density_delta": 0.02,
+      "transition_width_mm": 5.0,
+      "requires_smoothing": false,
+      "interpolation": "linear"
+    },
+    "heel_medial_edge": {
+      "density_delta": 0.034,
+      "transition_width_mm": 5.0,
+      "requires_smoothing": false,
+      "interpolation": "linear"
+    },
+    "heel_lateral_edge": {
+      "density_delta": 0.034,
+      "transition_width_mm": 5.0,
+      "requires_smoothing": false,
+      "interpolation": "linear"
+    },
+    "forefoot_midfoot": {
+      "density_delta": 0.02,
+      "transition_width_mm": 5.0,
+      "requires_smoothing": false,
+      "interpolation": "linear"
+    },
+    "arch_midfoot": {
+      "density_delta": 0.028,
+      "transition_width_mm": 5.0,
+      "requires_smoothing": false,
+      "interpolation": "linear"
+    },
+    "medial_edge_midfoot": {
+      "density_delta": 0.014,
+      "transition_width_mm": 5.0,
+      "requires_smoothing": false,
+      "interpolation": "linear"
+    },
+    "lateral_edge_midfoot": {
+      "density_delta": 0.014,
+      "transition_width_mm": 5.0,
+      "requires_smoothing": false,
+      "interpolation": "linear"
+    },
+    "forefoot_toe": {
+      "density_delta": 0.02,
+      "transition_width_mm": 5.0,
+      "requires_smoothing": false,
+      "interpolation": "linear"
+    },
+    "forefoot_medial_edge": {
+      "density_delta": 0.034,
+      "transition_width_mm": 5.0,
+      "requires_smoothing": false,
+      "interpolation": "linear"
+    },
+    "forefoot_lateral_edge": {
+      "density_delta": 0.034,
+      "transition_width_mm": 5.0,
+      "requires_smoothing": false,
+      "interpolation": "linear"
+    },
+    "arch_medial_edge": {
+      "density_delta": 0.014,
+      "transition_width_mm": 5.0,
+      "requires_smoothing": false,
+      "interpolation": "linear"
+    },
+    "arch_lateral_edge": {
+      "density_delta": 0.014,
+      "transition_width_mm": 5.0,
+      "requires_smoothing": false,
+      "interpolation": "linear"
+    }
+  }
+}

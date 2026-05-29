@@ -1,0 +1,137 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "P01 BALANCE Prototype",
+  "description": "ZILFIT P01 BALANCE edition prototype structure. All engineering constraints must pass before ready_for_print/ready_for_stl are true.",
+  "type": "object",
+  "required": [
+    "prototype_id",
+    "edition",
+    "timestamp",
+    "density_by_zone",
+    "wall_thickness_by_zone",
+    "transition_rules",
+    "manufacturing_plan",
+    "validation_results",
+    "accept_criteria",
+    "risk_register",
+    "ready_for_print",
+    "ready_for_stl"
+  ],
+  "properties": {
+    "prototype_id": {
+      "type": "string",
+      "pattern": "^P01-BALANCE-[A-F0-9]{8}$"
+    },
+    "edition": {
+      "type": "string",
+      "const": "BALANCE"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "density_by_zone": {
+      "type": "object",
+      "required": ["heel", "metatarsal", "midfoot", "arch", "forefoot", "toes"],
+      "additionalProperties": false,
+      "patternProperties": {
+        "^(heel|metatarsal|midfoot|arch|forefoot|toes)$": {
+          "type": "number",
+          "minimum": 0.26,
+          "maximum": 0.32
+        }
+      }
+    },
+    "wall_thickness_by_zone": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["body_mm", "shell_mm", "body_ok", "shell_ok"],
+        "properties": {
+          "body_mm": {"type": "number", "minimum": 0.6},
+          "shell_mm": {"type": "number", "minimum": 0.8},
+          "body_ok": {"type": "boolean"},
+          "shell_ok": {"type": "boolean"}
+        }
+      }
+    },
+    "transition_rules": {
+      "type": "object",
+      "required": ["type", "step_transition_allowed", "transitions"],
+      "properties": {
+        "type": {"type": "string", "const": "sigmoid_blend"},
+        "step_transition_allowed": {"type": "boolean", "const": false},
+        "max_adjacent_delta_lateral": {"type": "number", "maximum": 0.06},
+        "max_adjacent_delta_heel_arch": {"type": "number", "maximum": 0.08},
+        "transitions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["zone", "from_density", "to_density", "transition_points", "max_gradient", "violations"],
+            "properties": {
+              "zone": {"type": "string"},
+              "from_density": {"type": "number"},
+              "to_density": {"type": "number"},
+              "transition_points": {"type": "array", "items": {"type": "object"}},
+              "max_gradient": {"type": "number", "maximum": 0.06},
+              "violations": {"type": "array"}
+            }
+          }
+        }
+      }
+    },
+    "manufacturing_plan": {
+      "type": "object",
+      "required": ["primary_process", "cell_size_mm", "scale_compensation_pct"],
+      "properties": {
+        "primary_process": {"type": "string", "const": "MJF"},
+        "optional_process": {"type": "string", "const": "SLS"},
+        "cell_size_mm": {"type": "number", "const": 6.0},
+        "scale_compensation_pct": {"type": "number", "const": 1.5},
+        "infill_pattern": {"type": "string", "const": "gyroid"}
+      }
+    },
+    "validation_results": {
+      "type": "object",
+      "required": ["density_valid", "transition_valid", "wall_thickness_valid", "pressure_within_limit", "errors"],
+      "properties": {
+        "density_valid": {"type": "boolean"},
+        "transition_valid": {"type": "boolean"},
+        "wall_thickness_valid": {"type": "boolean"},
+        "pressure_within_limit": {"type": "boolean"},
+        "errors": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "accept_criteria": {
+      "type": "object",
+      "required": [
+        "density_range_min", "density_range_max",
+        "wall_thickness_body_mm", "wall_thickness_shell_mm",
+        "min_wall_thickness_mm", "pressure_max_kpa", "no_step_transition"
+      ],
+      "properties": {
+        "density_range_min": {"type": "number", "const": 0.26},
+        "density_range_max": {"type": "number", "const": 0.32},
+        "wall_thickness_body_mm": {"type": "number", "const": 0.65},
+        "wall_thickness_shell_mm": {"type": "number", "const": 0.80},
+        "min_wall_thickness_mm": {"type": "number", "const": 0.6},
+        "pressure_max_kpa": {"type": "number", "const": 55},
+        "no_step_transition": {"type": "boolean", "const": true}
+      }
+    },
+    "risk_register": {
+      "type": "object",
+      "required": ["transition_risk", "collapse_risk", "fatigue_estimate_pct", "blockers", "warnings"],
+      "properties": {
+        "transition_risk": {"type": "number", "minimum": 0, "maximum": 1},
+        "collapse_risk": {"type": "number", "minimum": 0, "maximum": 1},
+        "fatigue_estimate_pct": {"type": "number", "minimum": 0, "maximum": 100},
+        "blockers": {"type": "array", "items": {"type": "string"}},
+        "warnings": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "ready_for_print": {"type": "boolean"},
+    "ready_for_stl": {"type": "boolean"}
+  },
+  "additionalProperties": false
+}

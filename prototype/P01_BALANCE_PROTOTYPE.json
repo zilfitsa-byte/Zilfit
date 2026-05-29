@@ -1,0 +1,418 @@
+{
+  "pipeline_id": "P01-BALANCE-0D098B5A",
+  "timestamp": "2026-05-21T06:05:00.204362Z",
+  "edition": "BALANCE",
+  "density_zones": [
+    {
+      "zone": "heel",
+      "density": 0.3,
+      "position": {
+        "x": 0.1,
+        "y": 0.1
+      },
+      "target": "impact_absorption"
+    },
+    {
+      "zone": "metatarsal",
+      "density": 0.29,
+      "position": {
+        "x": 0.15,
+        "y": 0.5
+      },
+      "target": "ball_support"
+    },
+    {
+      "zone": "midfoot",
+      "density": 0.32,
+      "position": {
+        "x": 0.3,
+        "y": 0.5
+      },
+      "target": "arch_support_center"
+    },
+    {
+      "zone": "arch",
+      "density": 0.28,
+      "position": {
+        "x": 0.35,
+        "y": 0.7
+      },
+      "target": "natural_flex"
+    },
+    {
+      "zone": "forefoot",
+      "density": 0.31,
+      "position": {
+        "x": 0.55,
+        "y": 0.3
+      },
+      "target": "push_off_cushioning"
+    },
+    {
+      "zone": "toes",
+      "density": 0.26,
+      "position": {
+        "x": 0.75,
+        "y": 0.5
+      },
+      "target": "minimal_interference"
+    }
+  ],
+  "transitions": [
+    {
+      "zone": "heel→metatarsal",
+      "from_density": 0.3,
+      "to_density": 0.29,
+      "transition_points": [
+        {
+          "index": 0,
+          "t": -4.0,
+          "sigmoid_s": 0.0,
+          "rho": 0.3
+        },
+        {
+          "index": 1,
+          "t": -2.857,
+          "sigmoid_s": 0.0002,
+          "rho": 0.3
+        },
+        {
+          "index": 2,
+          "t": -1.714,
+          "sigmoid_s": 0.0058,
+          "rho": 0.2999
+        },
+        {
+          "index": 3,
+          "t": -0.571,
+          "sigmoid_s": 0.1526,
+          "rho": 0.2985
+        },
+        {
+          "index": 4,
+          "t": 0.571,
+          "sigmoid_s": 0.8474,
+          "rho": 0.2915
+        },
+        {
+          "index": 5,
+          "t": 1.714,
+          "sigmoid_s": 0.9942,
+          "rho": 0.2901
+        },
+        {
+          "index": 6,
+          "t": 2.857,
+          "sigmoid_s": 0.9998,
+          "rho": 0.29
+        },
+        {
+          "index": 7,
+          "t": 4.0,
+          "sigmoid_s": 1.0,
+          "rho": 0.29
+        }
+      ],
+      "max_gradient": 0.0069478267031474195,
+      "violations": []
+    },
+    {
+      "zone": "metatarsal→midfoot",
+      "from_density": 0.29,
+      "to_density": 0.32,
+      "transition_points": [
+        {
+          "index": 0,
+          "t": -4.0,
+          "sigmoid_s": 0.0,
+          "rho": 0.29
+        },
+        {
+          "index": 1,
+          "t": -2.857,
+          "sigmoid_s": 0.0002,
+          "rho": 0.29
+        },
+        {
+          "index": 2,
+          "t": -1.714,
+          "sigmoid_s": 0.0058,
+          "rho": 0.2902
+        },
+        {
+          "index": 3,
+          "t": -0.571,
+          "sigmoid_s": 0.1526,
+          "rho": 0.2946
+        },
+        {
+          "index": 4,
+          "t": 0.571,
+          "sigmoid_s": 0.8474,
+          "rho": 0.3154
+        },
+        {
+          "index": 5,
+          "t": 1.714,
+          "sigmoid_s": 0.9942,
+          "rho": 0.3198
+        },
+        {
+          "index": 6,
+          "t": 2.857,
+          "sigmoid_s": 0.9998,
+          "rho": 0.32
+        },
+        {
+          "index": 7,
+          "t": 4.0,
+          "sigmoid_s": 1.0,
+          "rho": 0.32
+        }
+      ],
+      "max_gradient": 0.020843480109442147,
+      "violations": []
+    },
+    {
+      "zone": "midfoot→arch",
+      "from_density": 0.32,
+      "to_density": 0.28,
+      "transition_points": [
+        {
+          "index": 0,
+          "t": -4.0,
+          "sigmoid_s": 0.0,
+          "rho": 0.32
+        },
+        {
+          "index": 1,
+          "t": -2.857,
+          "sigmoid_s": 0.0002,
+          "rho": 0.32
+        },
+        {
+          "index": 2,
+          "t": -1.714,
+          "sigmoid_s": 0.0058,
+          "rho": 0.3198
+        },
+        {
+          "index": 3,
+          "t": -0.571,
+          "sigmoid_s": 0.1526,
+          "rho": 0.3139
+        },
+        {
+          "index": 4,
+          "t": 0.571,
+          "sigmoid_s": 0.8474,
+          "rho": 0.2861
+        },
+        {
+          "index": 5,
+          "t": 1.714,
+          "sigmoid_s": 0.9942,
+          "rho": 0.2802
+        },
+        {
+          "index": 6,
+          "t": 2.857,
+          "sigmoid_s": 0.9998,
+          "rho": 0.28
+        },
+        {
+          "index": 7,
+          "t": 4.0,
+          "sigmoid_s": 1.0,
+          "rho": 0.28
+        }
+      ],
+      "max_gradient": 0.02779130681258951,
+      "violations": []
+    },
+    {
+      "zone": "arch→forefoot",
+      "from_density": 0.28,
+      "to_density": 0.31,
+      "transition_points": [
+        {
+          "index": 0,
+          "t": -4.0,
+          "sigmoid_s": 0.0,
+          "rho": 0.28
+        },
+        {
+          "index": 1,
+          "t": -2.857,
+          "sigmoid_s": 0.0002,
+          "rho": 0.28
+        },
+        {
+          "index": 2,
+          "t": -1.714,
+          "sigmoid_s": 0.0058,
+          "rho": 0.2802
+        },
+        {
+          "index": 3,
+          "t": -0.571,
+          "sigmoid_s": 0.1526,
+          "rho": 0.2846
+        },
+        {
+          "index": 4,
+          "t": 0.571,
+          "sigmoid_s": 0.8474,
+          "rho": 0.3054
+        },
+        {
+          "index": 5,
+          "t": 1.714,
+          "sigmoid_s": 0.9942,
+          "rho": 0.3098
+        },
+        {
+          "index": 6,
+          "t": 2.857,
+          "sigmoid_s": 0.9998,
+          "rho": 0.31
+        },
+        {
+          "index": 7,
+          "t": 4.0,
+          "sigmoid_s": 1.0,
+          "rho": 0.31
+        }
+      ],
+      "max_gradient": 0.020843480109442092,
+      "violations": []
+    },
+    {
+      "zone": "forefoot→toes",
+      "from_density": 0.31,
+      "to_density": 0.26,
+      "transition_points": [
+        {
+          "index": 0,
+          "t": -4.0,
+          "sigmoid_s": 0.0,
+          "rho": 0.31
+        },
+        {
+          "index": 1,
+          "t": -2.857,
+          "sigmoid_s": 0.0002,
+          "rho": 0.31
+        },
+        {
+          "index": 2,
+          "t": -1.714,
+          "sigmoid_s": 0.0058,
+          "rho": 0.3097
+        },
+        {
+          "index": 3,
+          "t": -0.571,
+          "sigmoid_s": 0.1526,
+          "rho": 0.3024
+        },
+        {
+          "index": 4,
+          "t": 0.571,
+          "sigmoid_s": 0.8474,
+          "rho": 0.2676
+        },
+        {
+          "index": 5,
+          "t": 1.714,
+          "sigmoid_s": 0.9942,
+          "rho": 0.2603
+        },
+        {
+          "index": 6,
+          "t": 2.857,
+          "sigmoid_s": 0.9998,
+          "rho": 0.26
+        },
+        {
+          "index": 7,
+          "t": 4.0,
+          "sigmoid_s": 1.0,
+          "rho": 0.26
+        }
+      ],
+      "max_gradient": 0.03473913351573693,
+      "violations": []
+    }
+  ],
+  "wall_thickness_map": [
+    {
+      "zone": "heel",
+      "outer_shell_mm": 0.8,
+      "internal_wall_mm": 0.65,
+      "outer_ok": true,
+      "internal_ok": true
+    },
+    {
+      "zone": "midfoot",
+      "outer_shell_mm": 0.8,
+      "internal_wall_mm": 0.65,
+      "outer_ok": true,
+      "internal_ok": true
+    },
+    {
+      "zone": "arch",
+      "outer_shell_mm": 0.8,
+      "internal_wall_mm": 0.65,
+      "outer_ok": true,
+      "internal_ok": true
+    },
+    {
+      "zone": "forefoot",
+      "outer_shell_mm": 0.8,
+      "internal_wall_mm": 0.65,
+      "outer_ok": true,
+      "internal_ok": true
+    },
+    {
+      "zone": "toes",
+      "outer_shell_mm": 0.8,
+      "internal_wall_mm": 0.65,
+      "outer_ok": true,
+      "internal_ok": true
+    },
+    {
+      "zone": "metatarsal",
+      "outer_shell_mm": 0.8,
+      "internal_wall_mm": 0.65,
+      "outer_ok": true,
+      "internal_ok": true
+    }
+  ],
+  "risk_assessment": {
+    "transition_risk": 0.8333,
+    "collapse_risk": 0.4,
+    "fatigue_estimate": 8.0,
+    "printability_score": 0.92,
+    "blockers": [],
+    "warnings": [
+      "Transition risk 0.8333: smooth gradients recommended"
+    ]
+  },
+  "print_parameters": {
+    "process": "MJF",
+    "material": "HP 3D High Reusability PA11",
+    "layer_height_mm": 0.11,
+    "infill_pattern": "gyroid",
+    "cell_size_mm": 6.0,
+    "estimated_print_time_hours": 4.5,
+    "support_required": false,
+    "post_processing": [
+      "bead_blasting",
+      "dyeing_vantablack",
+      "rose_gold_accents"
+    ]
+  },
+  "validation_passed": true,
+  "validation_errors": []
+}

@@ -1,0 +1,73 @@
+{
+  "_comment": "ZILFIT Reference Sample Manifest — master index of all validation specimens",
+  "_schema_version": "1.0",
+
+  "samples": [
+    {
+      "sample_id": "REF-COUPON-LOW",
+      "sample_type": "coupon",
+      "edition_target": "CALM",
+      "density_range": [0.25, 0.35],
+      "cell_size_mm": 6.0,
+      "wall_thickness_mm": 0.6,
+      "intended_test": ["compression", "fatigue", "rebound"],
+      "expected_failure_mode": ["GF-01 lattice collapse under low-density compression", "PF-02 strut buckling due to thin walls"],
+      "pass_fail_role": "low-density boundary validation — confirms lattice survives at designed minimum"
+    },
+    {
+      "sample_id": "REF-COUPON-MID",
+      "sample_type": "coupon",
+      "edition_target": "CALM",
+      "density_range": [0.40, 0.55],
+      "cell_size_mm": 6.0,
+      "wall_thickness_mm": 0.6,
+      "intended_test": ["compression", "fatigue", "rebound"],
+      "expected_failure_mode": ["GF-01 lattice collapse at extended cycles", "MFg-01 strut over-extrusion"],
+      "pass_fail_role": "baseline validation — represents typical CALM edition density"
+    },
+    {
+      "sample_id": "REF-COUPON-HIGH",
+      "sample_type": "coupon",
+      "edition_target": "BALANCE",
+      "density_range": [0.65, 0.80],
+      "cell_size_mm": 6.0,
+      "wall_thickness_mm": 0.6,
+      "intended_test": ["compression", "fatigue", "rebound"],
+      "expected_failure_mode": ["PF-01 infill bridging failure at high density", "MFg-02 material waste / over-extrusion"],
+      "pass_fail_role": "high-density boundary validation — confirms printability at designed maximum"
+    },
+    {
+      "sample_id": "REF-HEEL",
+      "sample_type": "zone_extract",
+      "edition_target": "BALANCE",
+      "density_range": [0.60, 0.75],
+      "cell_size_mm": 6.0,
+      "wall_thickness_mm": 0.6,
+      "intended_test": ["compression", "fatigue", "wear_comfort"],
+      "expected_failure_mode": ["HF-01 high-pressure discomfort", "MF-01 non-manifold at heel-arch transition", "GF-02 boundary edge leak at zone transition"],
+      "pass_fail_role": "highest-load zone — validates durability under concentrated pressure (120-180 kPa engineering range)"
+    },
+    {
+      "sample_id": "REF-ARCH",
+      "sample_type": "zone_extract",
+      "edition_target": "CALM",
+      "density_range": [0.40, 0.55],
+      "cell_size_mm": 6.0,
+      "wall_thickness_mm": 0.6,
+      "intended_test": ["compression", "rebound", "wear_comfort", "fatigue"],
+      "expected_failure_mode": ["HF-02 arch support too firm or too soft", "GF-03 density gradient discontinuity at zone boundary"],
+      "pass_fail_role": "medium-load zone — validates comfort and structural balance"
+    },
+    {
+      "sample_id": "REF-FOREFOOT",
+      "sample_type": "zone_extract",
+      "edition_target": "FOCUS",
+      "density_range": [0.30, 0.45],
+      "cell_size_mm": 6.0,
+      "wall_thickness_mm": 0.6,
+      "intended_test": ["compression", "rebound", "wear_comfort", "flexibility"],
+      "expected_failure_mode": ["HF-03 forefoot too rigid for toe flexion", "PF-03 thin-section print quality degradation"],
+      "pass_fail_role": "lowest-load + highest-flex zone — validates flexibility-to-comfort tradeoff"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "edition": "CALM",
+  "material": "TPU_75A_80A",
+  "zones": [
+    {
+      "id": "Z01",
+      "label": "heel_medial",
+      "density": 0.61,
+      "adjacent_to": ["Z02", "Z05"]
+    },
+    {
+      "id": "Z02",
+      "label": "heel_lateral",
+      "density": 0.39,
+      "adjacent_to": ["Z01", "Z03"]
+    },
+    {
+      "id": "Z03",
+      "label": "midfoot",
+      "density": 0.44,
+      "adjacent_to": ["Z02", "Z04"]
+    },
+    {
+      "id": "Z04",
+      "label": "forefoot",
+      "density": 0.49,
+      "adjacent_to": ["Z03", "Z05"]
+    },
+    {
+      "id": "Z05",
+      "label": "toe",
+      "density": 0.55,
+      "adjacent_to": ["Z01", "Z04"]
+    }
+  ]
+}

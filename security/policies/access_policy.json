@@ -1,0 +1,59 @@
+{
+  "policy": "access_policy",
+  "version": "1.0.0",
+  "description": "Defines role-based access control for ZILFIT API endpoints and runtime operations.",
+  "roles": {
+    "admin": {
+      "description": "Full access to all endpoints and management operations",
+      "permissions": [
+        "deployment:activate",
+        "deployment:rollback",
+        "runtime:state:read",
+        "runtime:logs:read",
+        "health:read",
+        "status:read",
+        "deployment:list",
+        "token:generate",
+        "token:revoke",
+        "audit:read",
+        "snapshot:create",
+        "snapshot:restore"
+      ]
+    },
+    "operator": {
+      "description": "Operational access — can manage deployments but not tokens or audit",
+      "permissions": [
+        "deployment:activate",
+        "deployment:rollback",
+        "runtime:state:read",
+        "runtime:logs:read",
+        "health:read",
+        "status:read",
+        "deployment:list",
+        "snapshot:create",
+        "snapshot:restore"
+      ]
+    },
+    "observer": {
+      "description": "Read-only access — can view status and health but not modify",
+      "permissions": [
+        "health:read",
+        "status:read",
+        "deployment:list",
+        "runtime:state:read"
+      ]
+    }
+  },
+  "endpoint_permissions": {
+    "GET /health": ["health:read"],
+    "GET /status": ["status:read"],
+    "GET /deployments": ["deployment:list"],
+    "POST /deployments/activate": ["deployment:activate"],
+    "POST /rollback": ["deployment:rollback"],
+    "GET /runtime/state": ["runtime:state:read"],
+    "GET /runtime/logs": ["runtime:logs:read"]
+  },
+  "token_default_expiry_hours": 720,
+  "token_max_expiry_hours": 8760,
+  "rate_limit_per_minute": 60
+}

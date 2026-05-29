@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://zilfit.ai/schemas/zilfit_session_schema_v1.json",
+  "title": "ZILFIT Session Schema V1",
+  "description": "Unified schema for a complete ZILFIT adaptive footwear session from scan to export.",
+  "type": "object",
+  "required": [
+    "session_id",
+    "pipeline_version",
+    "generated_utc",
+    "scan_input",
+    "geometric_features",
+    "classification",
+    "adaptive_geometry",
+    "print_profile",
+    "capsule_analysis",
+    "doctor_evaluation",
+    "tester_summary",
+    "artifact_hashes",
+    "revision_history",
+    "non_clinical_disclaimer"
+  ],
+  "properties": {
+    "session_id": {
+      "type": "string",
+      "description": "Deterministic session ID: timestamp + SHA-256 of input truncated to 12 chars."
+    },
+    "pipeline_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "generated_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "scan_input": {
+      "type": "object",
+      "description": "Metadata about the input scan.",
+      "properties": {
+        "scan_file": { "type": "string" },
+        "scan_format": { "type": "string", "enum": ["ply", "json", "stl"] },
+        "vertex_count": { "type": "integer" },
+        "landmark_count": { "type": "integer" },
+        "coordinate_unit": { "type": "string", "const": "mm" }
+      }
+    },
+    "geometric_features": {
+      "type": "object",
+      "description": "Output of zilfit_orthotics feature extraction.",
+      "properties": {
+        "foot_length_mm": { "type": "number" },
+        "foot_width_mm": { "type": "number" },
+        "forefoot_width_mm": { "type": "number" },
+        "heel_width_mm": { "type": "number" },
+        "arch_height_geometric_mm": { "type": "number" },
+        "alignment_offset_deg": { "type": "number" }
+      }
+    },
+    "classification": {
+      "type": "object",
+      "description": "ML foot geometry classification output.",
+      "properties": {
+        "predicted_class": { "type": "string" },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "probabilities": {
+          "type": "object",
+          "additionalProperties": { "type": "number" }
+        }
+      }
+    },
+    "adaptive_geometry": {
+      "type": "object",
+      "description": "Output of adaptive_geometry_rules.py",
+      "properties": {
+        "heel_cushion_level": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "arch_support_level": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "medial_support_bias": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "lateral_support_bias": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "flexibility_score": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "fatigue_adjustment": { "type": "number" },
+        "next_revision_notes": { "type": "string" },
+        "mode": { "type": "string", "enum": ["private_tester", "doctor_override"] }
+      }
+    },
+    "print_profile": {
+      "type": "object",
+      "description": "Sole density zone and print parameter map.",
+      "properties": {
+        "process": { "type": "string" },
+        "material": { "type": "string" },
+        "layer_height_mm": { "type": "number" },
+        "infill_pattern": { "type": "string" },
+        "cell_size_mm": { "type": "number" },
+        "density_zones": {
+          "type": "object",
+          "additionalProperties": { "type": "number" }
+        }
+      }
+    },
+    "capsule_analysis": {
+      "type": "object",
+      "description": "Smart Capsule gait metrics.",
+      "properties": {
+        "steps_estimate": { "type": "integer" },
+        "pressure_balance": { "type": "number" },
+        "roll_angle_deg": { "type": "number" },
+        "fatigue_signal_pct": { "type": "number" },
+        "heel_strike_count": { "type": "integer" },
+        "toe_off_count": { "type": "integer" }
+      }
+    },
+    "doctor_evaluation": {
+      "type": "object",
+      "description": "Doctor feedback or sample pack status.",
+      "properties": {
+        "sample_id": { "type": "string" },
+        "pack_generated": { "type": "boolean" },
+        "status": { "type": "string", "enum": ["GO", "CONDITIONAL_GO", "NOT_GO"] },
+        "material": { "type": "string" },
+        "pack_output_dir": { "type": "string" }
+      }
+    },
+    "tester_summary": {
+      "type": "object",
+      "description": "Aggregated session summary for private testers.",
+      "properties": {
+        "total_sessions": { "type": "integer" },
+        "total_steps": { "type": "integer" },
+        "avg_pressure_balance": { "type": "number" },
+        "avg_roll_angle_deg": { "type": "number" },
+        "avg_fatigue_signal_pct": { "type": "number" }
+      }
+    },
+    "artifact_hashes": {
+      "type": "object",
+      "description": "SHA-256 hashes of all generated artifacts.",
+      "additionalProperties": { "type": "string" }
+    },
+    "revision_history": {
+      "type": "array",
+      "description": "Append-only list of geometry revisions.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "timestamp_utc": { "type": "string", "format": "date-time" },
+          "previous_geometry": { "type": "object" },
+          "new_geometry": { "type": "object" },
+          "change_reason": { "type": "string" }
+        }
+      }
+    },
+    "non_clinical_disclaimer": {
+      "type": "string",
+      "const": "This session record is an engineering artifact produced by the ZILFIT adaptive footwear platform. It does not constitute a medical diagnosis, treatment plan, or therapeutic recommendation. All outputs are provided for engineering evaluation and doctor review only."
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "policy": "session_integrity_policy",
+  "version": "1.0.0",
+  "description": "Defines integrity checks and validation rules for runtime deployment sessions monitored by the AI runtime agent.",
+  "session_checks": {
+    "required_fields": [
+      "session_id",
+      "deployed_utc",
+      "release_name",
+      "version",
+      "integrity_sha256",
+      "modules_loaded",
+      "required_folders_present"
+    ],
+    "integrity_must_equal": "PASS",
+    "version_format": "^\\d+\\.\\d+\\.\\d+$",
+    "max_sessions_to_retain": 100,
+    "max_age_days": 90
+  },
+  "consistency_rules": {
+    "session_chain_ordered": {
+      "description": "Sessions must be ordered by deployed_utc descending",
+      "severity": "warning",
+      "action": "flag_for_review"
+    },
+    "duplicate_sessions": {
+      "description": "No two sessions should share the same session_id",
+      "severity": "error",
+      "action": "flag_and_remove_duplicate"
+    },
+    "version_downgrade": {
+      "description": "Newer deployments should not have lower version numbers",
+      "severity": "warning",
+      "action": "flag_for_review"
+    },
+    "missing_manifest_field": {
+      "description": "Manifest fields should match session metadata",
+      "severity": "warning",
+      "action": "flag_for_review"
+    }
+  },
+  "auto_purge_old_sessions": false,
+  "session_dir": "runtime_sessions",
+  "session_pattern": "DEPLOY-*.json"
+}

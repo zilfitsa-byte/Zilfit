@@ -1,0 +1,39 @@
+{
+  "policy": "deployment_policy",
+  "version": "1.0.0",
+  "description": "Defines security requirements for deployment activation, verification, and integrity.",
+  "verification_chain": {
+    "steps": [
+      "sha256_integrity",
+      "manifest_validation",
+      "folder_structure",
+      "python_compile",
+      "session_logging"
+    ],
+    "required_steps": [
+      "sha256_integrity",
+      "manifest_validation"
+    ],
+    "optional_steps": [
+      "folder_structure",
+      "python_compile"
+    ]
+  },
+  "signature": {
+    "enabled": false,
+    "algorithm": "sha256",
+    "key_path": "security/keys/deploy_signing.key",
+    "require_signature_for_activate": false
+  },
+  "rollback_constraints": {
+    "require_prior_deployment": true,
+    "minimum_deployment_age_minutes": 0,
+    "max_rollback_depth": 1
+  },
+  "activation_constraints": {
+    "require_manifest": true,
+    "require_sha256": true,
+    "minimum_modules": 50,
+    "minimum_folders": 20
+  }
+}

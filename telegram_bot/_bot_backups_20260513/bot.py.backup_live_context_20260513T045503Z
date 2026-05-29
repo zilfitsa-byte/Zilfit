@@ -1,0 +1,199 @@
+#!/usr/bin/env python3
+import json
+import os
+import time
+import traceback
+import urllib.request
+import urllib.error
+from pathlib import Path
+
+try:
+    import telebot
+except Exception as e:
+    raise SystemExit(f"Missing dependency telebot: {e}")
+
+
+def load_env(path=".env"):
+    p = os.path.abspath(path)
+    if not os.path.exists(p):
+        return
+    with open(p, "r", encoding="utf-8", errors="replace") as f:
+        for raw in f:
+            line = raw.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            k, v = line.split("=", 1)
+            k = k.strip()
+            v = v.strip()
+            if len(v) >= 2 and ((v[0] == v[-1] == '"') or (v[0] == v[-1] == "'")):
+                v = v[1:-1]
+            if k and k not in os.environ:
+                os.environ[k] = v
+
+
+load_env()
+
+BOT_TOKEN = (
+    os.environ.get("ZILFIT_TELEGRAM_BOT_TOKEN")
+    or os.environ.get("TELEGRAM_BOT_TOKEN")
+    or ""
+).strip()
+
+OPENROUTER_KEY = (
+    os.environ.get("HERMES_LLM_API_KEY")
+    or os.environ.get("OPENROUTER_API_KEY")
+    or ""
+).strip()
+
+OPENROUTER_URL = (
+    os.environ.get("HERMES_LLM_BASE_URL")
+    or "https://openrouter.ai/api/v1/chat/completions"
+).strip()
+
+OPENROUTER_MODEL = (
+    os.environ.get("HERMES_LLM_MODEL")
+    or "inclusionai/ring-2.6-1t:free"
+).strip()
+
+if not BOT_TOKEN:
+    raise SystemExit("Missing ZILFIT_TELEGRAM_BOT_TOKEN in .env")
+
+if not OPENROUTER_KEY:
+    raise SystemExit("Missing HERMES_LLM_API_KEY in .env")
+
+bot = telebot.TeleBot(BOT_TOKEN, parse_mode=None)
+
+
+SYSTEM_PROMPT = """أنت Hermes، مساعد ZILFIT التشغيلي عبر تيليجرام.
+أجب بالعربية بشكل مباشر وعملي.
+لا تستخدم أوامر محلية.
+لا تدعي أنك فحصت السيرفر أو الملفات إلا إذا أرسل المستخدم نتائج فعلية داخل المحادثة.
+إذا طلب المستخدم تنفيذ عمل تقني، أعطه أمر واحد آمن وواضح ثم اطلب منه النتيجة.
+ركّز على ZILFIT، Hermes، OpenRouter، وإدارة المشروع.
+"""
+
+
+def load_project_context() -> str:
+    files = [
+        "reports/daily/2026-05-13_hermes_supervised_run.md",
+        "reports/daily/2026-05-12_D20_hermes_next_execution_queue.md",
+        "reports/daily/2026-05-12_D19_hermes_daily_agent_operations_plan.md",
+        "reports/daily/2026-05-12_D18_hermes_daily_operation_readiness_check.md",
+        "reports/daily/2026-05-12_D16_full_project_inventory_readonly_report.md",
+    ]
+    parts = []
+    for name in files:
+        path = Path(name)
+        if path.exists():
+            txt = path.read_text(encoding="utf-8", errors="replace")
+            if len(txt) > 6000:
+                txt = txt[:6000]
+            parts.append(f"\n\n--- {name} ---\n{txt}")
+    return "\n".join(parts).strip()
+
+
+def ask_openrouter(user_text: str) -> str:
+    project_context = load_project_context()
+    user_payload = (
+        "سياق ZILFIT/Hermes الحالي من ملفات المشروع:\n"
+        + project_context
+        + "\n\nسؤال المستخدم في تيليجرام:\n"
+        + user_text
+    )
+
+    payload = {
+        "model": OPENROUTER_MODEL,
+        "messages": [
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": user_payload},
+        ],
+        "temperature": 0.2,
+    }
+
+    data = json.dumps(payload).encode("utf-8")
+
+    req = urllib.request.Request(
+        OPENROUTER_URL,
+        data=data,
+        method="POST",
+        headers={
+            "Authorization": "Bearer " + OPENROUTER_KEY,
+            "Content-Type": "application/json",
+            "HTTP-Referer": "https://zilfit.local",
+            "X-Title": "ZILFIT Hermes Telegram",
+        },
+    )
+
+    with urllib.request.urlopen(req, timeout=120) as r:
+        raw = r.read().decode("utf-8", errors="replace")
+
+    obj = json.loads(raw)
+
+    if "choices" not in obj or not obj["choices"]:
+        return "وصل رد من OpenRouter لكن بدون choices:\n" + raw[:1500]
+
+    msg = obj["choices"][0].get("message", {})
+    content = (msg.get("content") or "").strip()
+
+    return content or "OpenRouter رجع رداً فارغاً."
+
+
+def send_long(chat_id, text, reply_to_message_id=None):
+    text = text or ""
+    chunks = []
+    while len(text) > 3900:
+        cut = text.rfind("\n", 0, 3900)
+        if cut < 1000:
+            cut = 3900
+        chunks.append(text[:cut])
+        text = text[cut:].lstrip()
+    chunks.append(text)
+
+    for chunk in chunks:
+        bot.send_message(chat_id, chunk, reply_to_message_id=reply_to_message_id)
+        reply_to_message_id = None
+
+
+@bot.message_handler(content_types=["text"])
+def handle_text(message):
+    user_text = (message.text or "").strip()
+    if not user_text:
+        return
+
+    try:
+        reply = ask_openrouter(user_text)
+    except urllib.error.HTTPError as e:
+        try:
+            detail = e.read().decode("utf-8", errors="replace")
+        except Exception:
+            detail = str(e)
+        reply = "فشل طلب OpenRouter:\n" + detail[:2500]
+    except Exception as e:
+        reply = "حدث خطأ في Hermes proxy:\n" + str(e) + "\n\n" + traceback.format_exc(limit=2)
+
+    send_long(message.chat.id, reply, reply_to_message_id=message.message_id)
+
+
+@bot.message_handler(content_types=[
+    "photo", "document", "audio", "voice", "video", "sticker", "location", "contact"
+])
+def handle_other(message):
+    try:
+        send_long(
+            message.chat.id,
+            "حالياً Hermes يستقبل النص فقط. أرسل طلبك كتابة.",
+            reply_to_message_id=message.message_id,
+        )
+    except Exception:
+        pass
+
+
+if __name__ == "__main__":
+    print("Hermes OpenRouter-only Telegram proxy started")
+    print("Model:", OPENROUTER_MODEL)
+    while True:
+        try:
+            bot.infinity_polling(timeout=60, long_polling_timeout=60)
+        except Exception:
+            traceback.print_exc()
+            time.sleep(5)

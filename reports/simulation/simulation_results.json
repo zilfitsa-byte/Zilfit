@@ -1,0 +1,891 @@
+{
+  "simulation": [
+    {
+      "edition": "CALM",
+      "description": "Comfort-optimized, higher heel cushioning",
+      "density_map": {
+        "heel": 0.35,
+        "midfoot": 0.45,
+        "forefoot": 0.4,
+        "toe": 0.3
+      },
+      "stiffness_modifier": 0.92,
+      "weight_scenarios": [
+        {
+          "weight_kg": 95,
+          "zones": {
+            "heel": {
+              "density": 0.35,
+              "pressure_kpa": 104.01,
+              "compression_stress_mpa": 0.2126,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.4,
+              "contact_area_cm2": 28.0
+            },
+            "midfoot": {
+              "density": 0.45,
+              "pressure_kpa": 57.1,
+              "compression_stress_mpa": 0.0955,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.15,
+              "contact_area_cm2": 18.0
+            },
+            "forefoot": {
+              "density": 0.4,
+              "pressure_kpa": 60.52,
+              "compression_stress_mpa": 0.1114,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.3,
+              "contact_area_cm2": 35.0
+            },
+            "toe": {
+              "density": 0.3,
+              "pressure_kpa": 93.95,
+              "compression_stress_mpa": 0.2161,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.15,
+              "contact_area_cm2": 12.0
+            }
+          },
+          "worst_overload": "safe",
+          "worst_zone": null,
+          "max_fatigue_probability": 0.001,
+          "comfort_confidence": 100.0,
+          "prototype_status": "pass"
+        },
+        {
+          "weight_kg": 110,
+          "zones": {
+            "heel": {
+              "density": 0.35,
+              "pressure_kpa": 120.44,
+              "compression_stress_mpa": 0.2462,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.4,
+              "contact_area_cm2": 28.0
+            },
+            "midfoot": {
+              "density": 0.45,
+              "pressure_kpa": 66.12,
+              "compression_stress_mpa": 0.1106,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.15,
+              "contact_area_cm2": 18.0
+            },
+            "forefoot": {
+              "density": 0.4,
+              "pressure_kpa": 70.07,
+              "compression_stress_mpa": 0.1289,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.3,
+              "contact_area_cm2": 35.0
+            },
+            "toe": {
+              "density": 0.3,
+              "pressure_kpa": 108.78,
+              "compression_stress_mpa": 0.2502,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.15,
+              "contact_area_cm2": 12.0
+            }
+          },
+          "worst_overload": "safe",
+          "worst_zone": null,
+          "max_fatigue_probability": 0.001,
+          "comfort_confidence": 100.0,
+          "prototype_status": "pass"
+        },
+        {
+          "weight_kg": 125,
+          "zones": {
+            "heel": {
+              "density": 0.35,
+              "pressure_kpa": 136.86,
+              "compression_stress_mpa": 0.2798,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.4,
+              "contact_area_cm2": 28.0
+            },
+            "midfoot": {
+              "density": 0.45,
+              "pressure_kpa": 75.14,
+              "compression_stress_mpa": 0.1257,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.15,
+              "contact_area_cm2": 18.0
+            },
+            "forefoot": {
+              "density": 0.4,
+              "pressure_kpa": 79.63,
+              "compression_stress_mpa": 0.1465,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.3,
+              "contact_area_cm2": 35.0
+            },
+            "toe": {
+              "density": 0.3,
+              "pressure_kpa": 123.61,
+              "compression_stress_mpa": 0.2843,
+              "overload_risk": "warning",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.15,
+              "contact_area_cm2": 12.0
+            }
+          },
+          "worst_overload": "warning",
+          "worst_zone": "toe",
+          "max_fatigue_probability": 0.001,
+          "comfort_confidence": 90.0,
+          "prototype_status": "needs_revision"
+        }
+      ],
+      "avg_comfort_confidence": 96.7,
+      "overall_status": "needs_revision"
+    },
+    {
+      "edition": "VITAL",
+      "description": "Energy-return, responsive forefoot",
+      "density_map": {
+        "heel": 0.4,
+        "midfoot": 0.45,
+        "forefoot": 0.6,
+        "toe": 0.4
+      },
+      "stiffness_modifier": 1.08,
+      "weight_scenarios": [
+        {
+          "weight_kg": 95,
+          "zones": {
+            "heel": {
+              "density": 0.4,
+              "pressure_kpa": 100.86,
+              "compression_stress_mpa": 0.2179,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.4,
+              "contact_area_cm2": 28.0
+            },
+            "midfoot": {
+              "density": 0.45,
+              "pressure_kpa": 57.1,
+              "compression_stress_mpa": 0.1121,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.15,
+              "contact_area_cm2": 18.0
+            },
+            "forefoot": {
+              "density": 0.6,
+              "pressure_kpa": 53.97,
+              "compression_stress_mpa": 0.0833,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.3,
+              "contact_area_cm2": 35.0
+            },
+            "toe": {
+              "density": 0.4,
+              "pressure_kpa": 88.25,
+              "compression_stress_mpa": 0.1906,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.15,
+              "contact_area_cm2": 12.0
+            }
+          },
+          "worst_overload": "safe",
+          "worst_zone": null,
+          "max_fatigue_probability": 0.001,
+          "comfort_confidence": 100.0,
+          "prototype_status": "pass"
+        },
+        {
+          "weight_kg": 110,
+          "zones": {
+            "heel": {
+              "density": 0.4,
+              "pressure_kpa": 116.79,
+              "compression_stress_mpa": 0.2523,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.4,
+              "contact_area_cm2": 28.0
+            },
+            "midfoot": {
+              "density": 0.45,
+              "pressure_kpa": 66.12,
+              "compression_stress_mpa": 0.1298,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.15,
+              "contact_area_cm2": 18.0
+            },
+            "forefoot": {
+              "density": 0.6,
+              "pressure_kpa": 62.5,
+              "compression_stress_mpa": 0.0964,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.3,
+              "contact_area_cm2": 35.0
+            },
+            "toe": {
+              "density": 0.4,
+              "pressure_kpa": 102.19,
+              "compression_stress_mpa": 0.2207,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.15,
+              "contact_area_cm2": 12.0
+            }
+          },
+          "worst_overload": "safe",
+          "worst_zone": null,
+          "max_fatigue_probability": 0.001,
+          "comfort_confidence": 100.0,
+          "prototype_status": "pass"
+        },
+        {
+          "weight_kg": 125,
+          "zones": {
+            "heel": {
+              "density": 0.4,
+              "pressure_kpa": 132.71,
+              "compression_stress_mpa": 0.2867,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.4,
+              "contact_area_cm2": 28.0
+            },
+            "midfoot": {
+              "density": 0.45,
+              "pressure_kpa": 75.14,
+              "compression_stress_mpa": 0.1475,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.15,
+              "contact_area_cm2": 18.0
+            },
+            "forefoot": {
+              "density": 0.6,
+              "pressure_kpa": 71.02,
+              "compression_stress_mpa": 0.1096,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.3,
+              "contact_area_cm2": 35.0
+            },
+            "toe": {
+              "density": 0.4,
+              "pressure_kpa": 116.12,
+              "compression_stress_mpa": 0.2508,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.15,
+              "contact_area_cm2": 12.0
+            }
+          },
+          "worst_overload": "safe",
+          "worst_zone": null,
+          "max_fatigue_probability": 0.001,
+          "comfort_confidence": 100.0,
+          "prototype_status": "pass"
+        }
+      ],
+      "avg_comfort_confidence": 100.0,
+      "overall_status": "pass"
+    },
+    {
+      "edition": "FOCUS",
+      "description": "Stability-focused arch support",
+      "density_map": {
+        "heel": 0.45,
+        "midfoot": 0.7,
+        "forefoot": 0.5,
+        "toe": 0.4
+      },
+      "stiffness_modifier": 1.12,
+      "weight_scenarios": [
+        {
+          "weight_kg": 95,
+          "zones": {
+            "heel": {
+              "density": 0.45,
+              "pressure_kpa": 97.89,
+              "compression_stress_mpa": 0.1993,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.4,
+              "contact_area_cm2": 28.0
+            },
+            "midfoot": {
+              "density": 0.7,
+              "pressure_kpa": 49.78,
+              "compression_stress_mpa": 0.0697,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.15,
+              "contact_area_cm2": 18.0
+            },
+            "forefoot": {
+              "density": 0.5,
+              "pressure_kpa": 57.06,
+              "compression_stress_mpa": 0.1065,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.3,
+              "contact_area_cm2": 35.0
+            },
+            "toe": {
+              "density": 0.4,
+              "pressure_kpa": 88.25,
+              "compression_stress_mpa": 0.1977,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.15,
+              "contact_area_cm2": 12.0
+            }
+          },
+          "worst_overload": "safe",
+          "worst_zone": null,
+          "max_fatigue_probability": 0.001,
+          "comfort_confidence": 100.0,
+          "prototype_status": "pass"
+        },
+        {
+          "weight_kg": 110,
+          "zones": {
+            "heel": {
+              "density": 0.45,
+              "pressure_kpa": 113.35,
+              "compression_stress_mpa": 0.2308,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.4,
+              "contact_area_cm2": 28.0
+            },
+            "midfoot": {
+              "density": 0.7,
+              "pressure_kpa": 57.64,
+              "compression_stress_mpa": 0.0807,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.15,
+              "contact_area_cm2": 18.0
+            },
+            "forefoot": {
+              "density": 0.5,
+              "pressure_kpa": 66.07,
+              "compression_stress_mpa": 0.1233,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.3,
+              "contact_area_cm2": 35.0
+            },
+            "toe": {
+              "density": 0.4,
+              "pressure_kpa": 102.19,
+              "compression_stress_mpa": 0.2289,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.15,
+              "contact_area_cm2": 12.0
+            }
+          },
+          "worst_overload": "safe",
+          "worst_zone": null,
+          "max_fatigue_probability": 0.001,
+          "comfort_confidence": 100.0,
+          "prototype_status": "pass"
+        },
+        {
+          "weight_kg": 125,
+          "zones": {
+            "heel": {
+              "density": 0.45,
+              "pressure_kpa": 128.81,
+              "compression_stress_mpa": 0.2623,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.4,
+              "contact_area_cm2": 28.0
+            },
+            "midfoot": {
+              "density": 0.7,
+              "pressure_kpa": 65.5,
+              "compression_stress_mpa": 0.0917,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.15,
+              "contact_area_cm2": 18.0
+            },
+            "forefoot": {
+              "density": 0.5,
+              "pressure_kpa": 75.08,
+              "compression_stress_mpa": 0.1401,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.3,
+              "contact_area_cm2": 35.0
+            },
+            "toe": {
+              "density": 0.4,
+              "pressure_kpa": 116.12,
+              "compression_stress_mpa": 0.2601,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.15,
+              "contact_area_cm2": 12.0
+            }
+          },
+          "worst_overload": "safe",
+          "worst_zone": null,
+          "max_fatigue_probability": 0.001,
+          "comfort_confidence": 100.0,
+          "prototype_status": "pass"
+        }
+      ],
+      "avg_comfort_confidence": 100.0,
+      "overall_status": "pass"
+    },
+    {
+      "edition": "BALANCE",
+      "description": "Even distribution across all zones",
+      "density_map": {
+        "heel": 0.5,
+        "midfoot": 0.5,
+        "forefoot": 0.5,
+        "toe": 0.5
+      },
+      "stiffness_modifier": 1.0,
+      "weight_scenarios": [
+        {
+          "weight_kg": 95,
+          "zones": {
+            "heel": {
+              "density": 0.5,
+              "pressure_kpa": 95.1,
+              "compression_stress_mpa": 0.1585,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.4,
+              "contact_area_cm2": 28.0
+            },
+            "midfoot": {
+              "density": 0.5,
+              "pressure_kpa": 55.47,
+              "compression_stress_mpa": 0.0925,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.15,
+              "contact_area_cm2": 18.0
+            },
+            "forefoot": {
+              "density": 0.5,
+              "pressure_kpa": 57.06,
+              "compression_stress_mpa": 0.0951,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.3,
+              "contact_area_cm2": 35.0
+            },
+            "toe": {
+              "density": 0.5,
+              "pressure_kpa": 83.21,
+              "compression_stress_mpa": 0.1387,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.15,
+              "contact_area_cm2": 12.0
+            }
+          },
+          "worst_overload": "safe",
+          "worst_zone": null,
+          "max_fatigue_probability": 0.001,
+          "comfort_confidence": 100.0,
+          "prototype_status": "pass"
+        },
+        {
+          "weight_kg": 110,
+          "zones": {
+            "heel": {
+              "density": 0.5,
+              "pressure_kpa": 110.11,
+              "compression_stress_mpa": 0.1835,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.4,
+              "contact_area_cm2": 28.0
+            },
+            "midfoot": {
+              "density": 0.5,
+              "pressure_kpa": 64.23,
+              "compression_stress_mpa": 0.1071,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.15,
+              "contact_area_cm2": 18.0
+            },
+            "forefoot": {
+              "density": 0.5,
+              "pressure_kpa": 66.07,
+              "compression_stress_mpa": 0.1101,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.3,
+              "contact_area_cm2": 35.0
+            },
+            "toe": {
+              "density": 0.5,
+              "pressure_kpa": 96.35,
+              "compression_stress_mpa": 0.1606,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.15,
+              "contact_area_cm2": 12.0
+            }
+          },
+          "worst_overload": "safe",
+          "worst_zone": null,
+          "max_fatigue_probability": 0.001,
+          "comfort_confidence": 100.0,
+          "prototype_status": "pass"
+        },
+        {
+          "weight_kg": 125,
+          "zones": {
+            "heel": {
+              "density": 0.5,
+              "pressure_kpa": 125.13,
+              "compression_stress_mpa": 0.2085,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.4,
+              "contact_area_cm2": 28.0
+            },
+            "midfoot": {
+              "density": 0.5,
+              "pressure_kpa": 72.99,
+              "compression_stress_mpa": 0.1217,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.15,
+              "contact_area_cm2": 18.0
+            },
+            "forefoot": {
+              "density": 0.5,
+              "pressure_kpa": 75.08,
+              "compression_stress_mpa": 0.1251,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.3,
+              "contact_area_cm2": 35.0
+            },
+            "toe": {
+              "density": 0.5,
+              "pressure_kpa": 109.49,
+              "compression_stress_mpa": 0.1825,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.15,
+              "contact_area_cm2": 12.0
+            }
+          },
+          "worst_overload": "safe",
+          "worst_zone": null,
+          "max_fatigue_probability": 0.001,
+          "comfort_confidence": 100.0,
+          "prototype_status": "pass"
+        }
+      ],
+      "avg_comfort_confidence": 100.0,
+      "overall_status": "pass"
+    },
+    {
+      "edition": "FEMME",
+      "description": "Lightweight refined profile",
+      "density_map": {
+        "heel": 0.32,
+        "midfoot": 0.38,
+        "forefoot": 0.35,
+        "toe": 0.28
+      },
+      "stiffness_modifier": 0.88,
+      "weight_scenarios": [
+        {
+          "weight_kg": 95,
+          "zones": {
+            "heel": {
+              "density": 0.32,
+              "pressure_kpa": 106.0,
+              "compression_stress_mpa": 0.2221,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.4,
+              "contact_area_cm2": 28.0
+            },
+            "midfoot": {
+              "density": 0.38,
+              "pressure_kpa": 59.56,
+              "compression_stress_mpa": 0.1092,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.15,
+              "contact_area_cm2": 18.0
+            },
+            "forefoot": {
+              "density": 0.35,
+              "pressure_kpa": 62.41,
+              "compression_stress_mpa": 0.122,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.3,
+              "contact_area_cm2": 35.0
+            },
+            "toe": {
+              "density": 0.28,
+              "pressure_kpa": 95.17,
+              "compression_stress_mpa": 0.2204,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.15,
+              "contact_area_cm2": 12.0
+            }
+          },
+          "worst_overload": "safe",
+          "worst_zone": null,
+          "max_fatigue_probability": 0.001,
+          "comfort_confidence": 100.0,
+          "prototype_status": "pass"
+        },
+        {
+          "weight_kg": 110,
+          "zones": {
+            "heel": {
+              "density": 0.32,
+              "pressure_kpa": 122.74,
+              "compression_stress_mpa": 0.2572,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.4,
+              "contact_area_cm2": 28.0
+            },
+            "midfoot": {
+              "density": 0.38,
+              "pressure_kpa": 68.96,
+              "compression_stress_mpa": 0.1264,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.15,
+              "contact_area_cm2": 18.0
+            },
+            "forefoot": {
+              "density": 0.35,
+              "pressure_kpa": 72.26,
+              "compression_stress_mpa": 0.1413,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.3,
+              "contact_area_cm2": 35.0
+            },
+            "toe": {
+              "density": 0.28,
+              "pressure_kpa": 110.2,
+              "compression_stress_mpa": 0.2552,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.15,
+              "contact_area_cm2": 12.0
+            }
+          },
+          "worst_overload": "safe",
+          "worst_zone": null,
+          "max_fatigue_probability": 0.001,
+          "comfort_confidence": 100.0,
+          "prototype_status": "pass"
+        },
+        {
+          "weight_kg": 125,
+          "zones": {
+            "heel": {
+              "density": 0.32,
+              "pressure_kpa": 139.47,
+              "compression_stress_mpa": 0.2922,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.4,
+              "contact_area_cm2": 28.0
+            },
+            "midfoot": {
+              "density": 0.38,
+              "pressure_kpa": 78.36,
+              "compression_stress_mpa": 0.1437,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.15,
+              "contact_area_cm2": 18.0
+            },
+            "forefoot": {
+              "density": 0.35,
+              "pressure_kpa": 82.11,
+              "compression_stress_mpa": 0.1606,
+              "overload_risk": "safe",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.3,
+              "contact_area_cm2": 35.0
+            },
+            "toe": {
+              "density": 0.28,
+              "pressure_kpa": 125.23,
+              "compression_stress_mpa": 0.29,
+              "overload_risk": "warning",
+              "fatigue_probability": 0.001,
+              "load_fraction": 0.15,
+              "contact_area_cm2": 12.0
+            }
+          },
+          "worst_overload": "warning",
+          "worst_zone": "toe",
+          "max_fatigue_probability": 0.001,
+          "comfort_confidence": 90.0,
+          "prototype_status": "needs_revision"
+        }
+      ],
+      "avg_comfort_confidence": 96.7,
+      "overall_status": "needs_revision"
+    }
+  ],
+  "summary": {
+    "generated_at": "2026-05-19 15:28:39",
+    "editions_tested": [
+      "CALM",
+      "VITAL",
+      "FOCUS",
+      "BALANCE",
+      "FEMME"
+    ],
+    "weights_tested_kg": [
+      95,
+      110,
+      125
+    ],
+    "assumptions": {
+      "usage": "walking",
+      "cadence": "daily (~8000 steps)",
+      "arch_type": "normal arch",
+      "material": "TPU gyroid lattice 0.6mm wall / 6mm cell",
+      "shore_hardness": "75A-80A (midpoint: 78A)"
+    },
+    "edition_ranking": [
+      {
+        "rank": 1,
+        "edition": "VITAL",
+        "avg_comfort": 100.0,
+        "overall_status": "pass"
+      },
+      {
+        "rank": 2,
+        "edition": "FOCUS",
+        "avg_comfort": 100.0,
+        "overall_status": "pass"
+      },
+      {
+        "rank": 3,
+        "edition": "BALANCE",
+        "avg_comfort": 100.0,
+        "overall_status": "pass"
+      },
+      {
+        "rank": 4,
+        "edition": "CALM",
+        "avg_comfort": 96.7,
+        "overall_status": "needs_revision"
+      },
+      {
+        "rank": 5,
+        "edition": "FEMME",
+        "avg_comfort": 96.7,
+        "overall_status": "needs_revision"
+      }
+    ],
+    "best_edition": "VITAL",
+    "worst_edition": "FEMME",
+    "density_adjustments": {
+      "CALM": {
+        "edition": "CALM",
+        "recommendations": [
+          {
+            "weight_kg": 125,
+            "zone": "toe",
+            "current_density": 0.3,
+            "recommended_density": 0.35,
+            "reason": "Warning-level stress in toe at 125kg. Consider increasing lattice density from 0.3 to 0.35."
+          }
+        ]
+      },
+      "VITAL": {
+        "edition": "VITAL",
+        "recommendations": []
+      },
+      "FOCUS": {
+        "edition": "FOCUS",
+        "recommendations": []
+      },
+      "BALANCE": {
+        "edition": "BALANCE",
+        "recommendations": []
+      },
+      "FEMME": {
+        "edition": "FEMME",
+        "recommendations": [
+          {
+            "weight_kg": 125,
+            "zone": "toe",
+            "current_density": 0.28,
+            "recommended_density": 0.33,
+            "reason": "Warning-level stress in toe at 125kg. Consider increasing lattice density from 0.28 to 0.33."
+          }
+        ]
+      }
+    },
+    "prototype_readiness": {
+      "VITAL": "pass",
+      "FOCUS": "pass",
+      "BALANCE": "pass",
+      "CALM": "needs_revision",
+      "FEMME": "needs_revision"
+    },
+    "risks_detected": [
+      {
+        "edition": "CALM",
+        "weight_kg": 125,
+        "zone": "toe",
+        "risk": "warning",
+        "pressure_kpa": 123.61,
+        "stress_mpa": 0.2843,
+        "fatigue_probability": 0.001
+      },
+      {
+        "edition": "FEMME",
+        "weight_kg": 125,
+        "zone": "toe",
+        "risk": "warning",
+        "pressure_kpa": 125.23,
+        "stress_mpa": 0.29,
+        "fatigue_probability": 0.001
+      }
+    ],
+    "recommended_first_prototype": "VITAL"
+  }
+}

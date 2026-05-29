@@ -1,0 +1,12 @@
+{
+  "agent": "Z-Claims",
+  "status": "ready",
+  "current_task": "D17 readiness — review IP claims status from project inventory",
+  "last_run_utc": "2026-05-12T01:10:45Z",
+  "last_report_path": null,
+  "last_failure": null,
+  "next_sultan_action": "Validate claims coverage against D16 inventory findings",
+  "source_files": ["runtime/agent_health/Z-Claims.json"],
+  "confidence": "refreshed",
+  "updated_by": "Phase D17 agent health refresh"
+}

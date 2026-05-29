@@ -1,0 +1,66 @@
+{
+  "policy": "deployment_recovery_policy",
+  "version": "1.0.0",
+  "description": "Defines recovery actions and thresholds for deployment failures detected by the AI runtime agent.",
+  "failure_scenarios": {
+    "no_active_deployment": {
+      "severity": "critical",
+      "description": "No active deployment found — deployments/current symlink missing or dangling",
+      "recommended_action": "Activate an available deployment or deploy from a release package",
+      "automated_action": "none",
+      "requires_human_approval": true
+    },
+    "no_previous_deployment": {
+      "severity": "warning",
+      "description": "No previous deployment available for rollback — single point of failure",
+      "recommended_action": "Deploy a new version to establish rollback chain",
+      "automated_action": "none",
+      "requires_human_approval": false
+    },
+    "sha256_mismatch": {
+      "severity": "critical",
+      "description": "One or more files fail SHA256 integrity check",
+      "recommended_action": "Re-download or re-build release package, re-deploy",
+      "automated_action": "none",
+      "requires_human_approval": true
+    },
+    "manifest_missing": {
+      "severity": "high",
+      "description": "RELEASE_MANIFEST.json not found in active deployment",
+      "recommended_action": "Re-deploy from verified release package",
+      "automated_action": "none",
+      "requires_human_approval": true
+    },
+    "manifest_invalid": {
+      "severity": "high",
+      "description": "RELEASE_MANIFEST.json exists but is malformed JSON",
+      "recommended_action": "Re-deploy from verified release package",
+      "automated_action": "none",
+      "requires_human_approval": true
+    },
+    "folders_missing": {
+      "severity": "high",
+      "description": "One or more required source folders missing from deployment",
+      "recommended_action": "Verify deployment extraction, re-deploy if corrupted",
+      "automated_action": "none",
+      "requires_human_approval": true
+    },
+    "json_outputs_broken": {
+      "severity": "medium",
+      "description": "Required JSON output files missing or invalid",
+      "recommended_action": "Re-run geometry/lattice/shoe generators",
+      "automated_action": "none",
+      "requires_human_approval": false
+    },
+    "session_corruption": {
+      "severity": "medium",
+      "description": "Recent deployment sessions report integrity failures",
+      "recommended_action": "Audit session history, verify deployment integrity",
+      "automated_action": "none",
+      "requires_human_approval": false
+    }
+  },
+  "recovery_timeout_minutes": 30,
+  "max_retry_attempts": 3,
+  "escalation_contact": "Sultan — Telegram / direct"
+}

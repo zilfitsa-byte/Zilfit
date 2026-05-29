@@ -1,0 +1,42 @@
+{
+  "version": "1.0.0",
+  "schema_name": "ZILFIT Session Measurement Schema",
+  "input_signals": {
+    "scan_measurements": {
+      "foot_length_mm": {"type": "float", "range": [200, 320], "unit": "mm"},
+      "foot_width_mm": {"type": "float", "range": [70, 130], "unit": "mm"},
+      "arch_height_mm": {"type": "float", "range": [0, 50], "unit": "mm"},
+      "heel_width_mm": {"type": "float", "range": [50, 90], "unit": "mm"},
+      "toe_spread_mm": {"type": "float", "range": [60, 120], "unit": "mm"},
+      "scan_confidence_score": {"type": "float", "range": [0.0, 1.0]}
+    },
+    "user_self_report": {
+      "stress": {"type": "float", "range": [0.0, 1.0]},
+      "fatigue_score": {"type": "float", "range": [0.0, 1.0]},
+      "focus_score": {"type": "float", "range": [0.0, 1.0]},
+      "sleep_disruption": {"type": "float", "range": [0.0, 1.0]},
+      "sensory_overload": {"type": "float", "range": [0.0, 1.0]},
+      "pain_or_discomfort": {"type": "float", "range": [0.0, 1.0]},
+      "postural_instability": {"type": "float", "range": [0.0, 1.0]},
+      "cycle_phase_flag": {"type": "integer", "values": [0, 1]},
+      "user_goal_match": {"type": "float", "range": [0.0, 1.0]}
+    },
+    "medical_flags": {
+      "diabetes": {"type": "boolean"},
+      "neuropathy": {"type": "boolean"},
+      "pregnant": {"type": "boolean"},
+      "active_injury": {"type": "boolean"},
+      "vascular_disease": {"type": "boolean"}
+    },
+    "derived_signals": {
+      "heel_pressure_ratio": {
+        "formula": "heel_pressure_kpa / max_pressure_kpa",
+        "type": "float", "range": [0.0, 1.0]
+      },
+      "temperature_risk": {
+        "formula": "clamp((skin_temperature_c - 33) / 5, 0, 1)",
+        "type": "float", "range": [0.0, 1.0]
+      }
+    }
+  }
+}

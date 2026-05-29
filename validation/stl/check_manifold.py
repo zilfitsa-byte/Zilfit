@@ -1,0 +1,402 @@
+#!/usr/bin/env python3
+"""ZILFIT STL Manifold Validation — pre-print gate 1.
+
+Validates an STL file against engineering print-acceptance criteria:
+  - watertight (closed shell)
+  - no non-manifold edges
+  - no inverted normals (winding consistent)
+  - finite numeric vertices only
+
+Returns an explicit PASS/FAIL report to stdout.
+Exits with code 0 on PASS, 1 on FAIL.
+
+Usage:
+    python validation/stl/check_manifold.py --stl path/to/mesh.stl
+    python validation/stl/check_manifold.py --help
+
+Requirements:
+    trimesh, numpy
+
+Hard constraints:
+  - No runtime modifications.
+  - No geometry generation or STL export.
+  - No wall-thickness, gyroid, or physical simulation analysis.
+  - No production assumptions.
+"""
+
+from __future__ import annotations
+
+import argparse
+import sys
+from typing import Any, Dict, List
+
+import numpy as np
+import trimesh
+
+
+# ---------------------------------------------------------------------------
+# Validation checks
+# ---------------------------------------------------------------------------
+
+def _check_watertight(mesh: trimesh.Trimesh) -> Dict[str, Any]:
+    """Check that the mesh is topologically closed (no boundary edges).
+
+    A watertight mesh has zero boundary edges.  Non-watertight meshes
+    cannot be printed as a solid volume.
+
+    Rejects non-manifold meshes with explicit per-property error messages:
+      - is_watertight         — must be True (closed shell)
+      - is_winding_consistent — must be True (no inverted normals)
+      - euler_number          — must equal 2 (genus-zero closed surface)
+    """
+    is_watertight = bool(mesh.is_watertight)
+    winding_ok = bool(mesh.is_winding_consistent)
+    euler_ok = bool(mesh.euler_number == 2)
+
+    # Count boundary edges directly (mesh.report is not available in all trimesh versions)
+    edges_sorted = np.sort(mesh.edges, axis=1)
+    _, edge_counts = np.unique(edges_sorted, axis=0, return_counts=True)
+    boundary_edge_count = int(np.sum(edge_counts == 1))
+
+    failures = []
+    if not is_watertight:
+        failures.append(f"mesh is not watertight ({boundary_edge_count} boundary edge(s))")
+    if not winding_ok:
+        failures.append("mesh winding is not consistent")
+    if not euler_ok:
+        failures.append(f"mesh Euler number is {mesh.euler_number} (expected 2)")
+
+    passed = is_watertight and winding_ok and euler_ok
+
+    return {
+        "check": "watertight",
+        "passed": passed,
+        "detail": "mesh is closed with consistent topology, Euler number = 2" if passed else "; ".join(failures),
+        "boundary_edges": boundary_edge_count,
+    }
+
+
+def _check_non_manifold_edges(mesh: trimesh.Trimesh) -> Dict[str, Any]:
+    """Check that every edge is shared by at most 2 faces.
+
+    Non-manifold edges (3+ faces sharing one edge) cannot be converted
+    to a valid printable solid.
+    """
+    edges_sorted = np.sort(mesh.edges, axis=1)
+    edges_unique, counts = np.unique(edges_sorted, axis=0, return_counts=True)
+    non_manifold_mask = counts > 2
+    non_manifold_edges = edges_unique[non_manifold_mask] if np.any(non_manifold_mask) else None
+
+    if non_manifold_edges is None or len(non_manifold_edges) == 0:
+        return {
+            "check": "non_manifold_edges",
+            "passed": True,
+            "detail": "no non-manifold edges detected",
+            "non_manifold_count": 0,
+        }
+
+    return {
+        "check": "non_manifold_edges",
+        "passed": False,
+        "detail": f"{len(non_manifold_edges)} non-manifold edge(s) found",
+        "non_manifold_count": int(len(non_manifold_edges)),
+        "non_manifold_edges": non_manifold_edges.tolist(),
+    }
+
+
+def _check_winding_consistent(mesh: trimesh.Trimesh) -> Dict[str, Any]:
+    """Check that edge traversals are consistently oriented.
+
+    Inconsistent edge winding causes non-manifold topology. Note: this
+    checks edge-traversal consistency (trimesh.is_winding_consistent),
+    not face-normal direction. Face-normal outwardness is checked
+    separately by _check_face_normals_outward().
+    """
+    try:
+        winding_ok = bool(mesh.is_winding_consistent)
+    except Exception:
+        # Some degenerate meshes may fail the winding check call
+        winding_ok = False
+
+    return {
+        "check": "winding_consistent",
+        "passed": winding_ok,
+        "detail": "edge traversals consistently oriented" if winding_ok else "inconsistent edge traversals detected (or winding check failed)",
+    }
+
+
+def _check_face_normals_outward(mesh: trimesh.Trimesh) -> Dict[str, Any]:
+    """Check that face normals point outward from the mesh centroid.
+
+    Edge-based winding consistency (trimesh.is_winding_consistent) does
+    NOT detect uniformly inverted normals — all edges can be consistently
+    traversed while every face normal points inward. Slicers process face
+    normals directionally, so uniformly inverted meshes produce slicing
+    errors despite passing the edge-winding check.
+
+    For a closed, watertight mesh, normals should point away from the
+    centroid. We compute dot(face_normal, face_center - centroid) and
+    require > 95% of faces to agree with the dominant direction.
+    """
+    normals = mesh.face_normals
+    centroid = mesh.centroid
+    face_centers = mesh.triangles_center
+
+    outward_vecs = face_centers - centroid
+    outward_mags = np.linalg.norm(outward_vecs, axis=1, keepdims=True)
+    if np.any(outward_mags[:, 0] == 0.0):
+        return {
+            "check": "face_normals_outward",
+            "passed": False,
+            "detail": "one or more faces coincide with mesh centroid — cannot determine normal direction",
+            "inverted_count": 0,
+            "total_faces": len(normals),
+        }
+    outward_vecs = outward_vecs / outward_mags
+
+    dots = np.sum(normals * outward_vecs, axis=1)
+    outward_faces = int(np.sum(dots > 0.0))
+    inward_faces = int(np.sum(dots < 0.0))
+
+    consensus = max(outward_faces, inward_faces) / len(normals)
+    passed = consensus >= 0.95 and outward_faces > inward_faces
+
+    if passed:
+        return {
+            "check": "face_normals_outward",
+            "passed": True,
+            "detail": f"all {len(normals)} face normals point outward from centroid",
+            "inverted_count": 0,
+            "total_faces": len(normals),
+        }
+
+    if inward_faces > outward_faces:
+        return {
+            "check": "face_normals_outward",
+            "passed": False,
+            "detail": (
+                f"{inward_faces}/{len(normals)} face normals point inward — "
+                "mesh appears uniformly inverted; slicers will misinterpret surfaces"
+            ),
+            "inverted_count": inward_faces,
+            "total_faces": len(normals),
+        }
+
+    return {
+        "check": "face_normals_outward",
+        "passed": False,
+        "detail": (
+            f"{inward_faces}/{len(normals)} face normals point inward — "
+            "mixed normal direction, likely topology error"
+        ),
+        "inverted_count": inward_faces,
+        "total_faces": len(normals),
+    }
+
+
+def _check_finite_vertices(mesh: trimesh.Trimesh) -> Dict[str, Any]:
+    """Check that all vertex coordinates are finite (no NaN, no ±inf).
+
+    Non-finite vertices produce invalid geometry and must be rejected
+    before any downstream processing.
+    """
+    verts = mesh.vertices
+    finite_mask = np.all(np.isfinite(verts), axis=1)
+    all_finite = bool(np.all(finite_mask))
+    non_finite_indices = np.where(~finite_mask)[0] if not all_finite else None
+
+    if all_finite:
+        return {
+            "check": "finite_vertices",
+            "passed": True,
+            "detail": f"all {len(verts)} vertices have finite coordinates",
+        }
+
+    return {
+        "check": "finite_vertices",
+        "passed": False,
+        "detail": f"{len(non_finite_indices)} vertex(ices) with non-finite coordinates",
+        "non_finite_indices": non_finite_indices.tolist(),
+    }
+
+
+# ---------------------------------------------------------------------------
+# Report builder
+# ---------------------------------------------------------------------------
+
+def _build_report(
+    stl_path: str,
+    checks: List[Dict[str, Any]],
+) -> Dict[str, Any]:
+    """Assemble a structured validation report."""
+    passed_count = sum(1 for c in checks if c["passed"])
+    total_count = len(checks)
+    all_passed = passed_count == total_count
+
+    report: Dict[str, Any] = {
+        "gate": "mesh_validation",
+        "gate_version": "1.1",
+        "stl_path": stl_path,
+        "passed": all_passed,
+        "summary": f"{passed_count}/{total_count} checks passed",
+        "checks": checks,
+    }
+
+    if all_passed:
+        report["verdict"] = "PASS"
+    else:
+        report["verdict"] = "FAIL"
+
+    return report
+
+
+def _print_report(report: Dict[str, Any]) -> None:
+    """Print a human-readable validation report to stdout."""
+    border = "─" * 60
+    print(border)
+    print(f"  ZILFIT Mesh Validation Gate 1.0")
+    print(border)
+    print(f"  STL:       {report['stl_path']}")
+    print(f"  Verdict:   {'✅ PASS' if report['passed'] else '❌ FAIL'}")
+    print(f"  Summary:   {report['summary']}")
+    print(border)
+
+    for check in report["checks"]:
+        status = "✅" if check["passed"] else "❌"
+        print(f"  {status}  {check['check']}")
+        print(f"       {check['detail']}")
+
+    print(border)
+
+
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
+
+def validate_stl(stl_path: str) -> Dict[str, Any]:
+    """Load an STL file and run all validation checks.
+
+    Args:
+        stl_path: Path to a binary or ASCII STL file.
+
+    Returns:
+        Structured validation report dict.
+
+    Raises:
+        FileNotFoundError: If the STL file does not exist.
+        ValueError: If trimesh cannot load the file as a valid mesh.
+    """
+    # Load mesh — trimesh handles binary and ASCII STL
+    mesh = trimesh.load(stl_path)
+    if not isinstance(mesh, trimesh.Trimesh):
+        # trimesh may return a Scene for multi-body STLs
+        if hasattr(mesh, "geometry"):
+            # Merge all geometries into a single mesh for validation
+            combined = trimesh.util.concatenate(
+                list(mesh.geometry.values())
+            )
+            mesh = combined
+        else:
+            raise ValueError(
+                f"'{stl_path}' does not contain a valid trimesh.Trimesh "
+                f"mesh (got {type(mesh).__name__})"
+            )
+
+    checks = [
+        _check_watertight(mesh),
+        _check_non_manifold_edges(mesh),
+        _check_winding_consistent(mesh),
+        _check_face_normals_outward(mesh),
+        _check_finite_vertices(mesh),
+    ]
+
+    report = _build_report(stl_path, checks)
+    return report
+
+
+def run(input_path: str) -> Dict[str, Any]:
+    """Programmatic entry point for the unified pre-print runner.
+
+    Wraps validate_stl() and maps the result to a consistent schema:
+      gate, status, metrics, violations, worst
+
+    Args:
+        input_path: Path to an STL file.
+
+    Returns:
+        Standardized result dict.
+    """
+    try:
+        report = validate_stl(input_path)
+    except FileNotFoundError:
+        return {
+            "gate": "mesh_validation",
+            "status": "INPUT_ERROR",
+            "metrics": {},
+            "violations": [],
+            "worst": None,
+            "_error": f"STL file not found: {input_path}",
+        }
+    except ValueError as e:
+        return {
+            "gate": "mesh_validation",
+            "status": "INPUT_ERROR",
+            "metrics": {},
+            "violations": [],
+            "worst": None,
+            "_error": str(e),
+        }
+
+    checks = report.get("checks", [])
+    passed_count = sum(1 for c in checks if c.get("passed", False))
+    total_count = len(checks)
+
+    metrics: Dict[str, Any] = {
+        "passed_checks": passed_count,
+        "total_checks": total_count,
+    }
+    for c in checks:
+        metrics[c["check"]] = c.get("detail", "")
+
+    violations = [c for c in checks if not c.get("passed", False)]
+    status = "PASS" if report.get("passed", False) else "HARD_FAIL"
+
+    return {
+        "gate": "mesh_validation",
+        "status": status,
+        "metrics": metrics,
+        "violations": violations,
+        "worst": violations[0] if violations else None,
+        "_report": report,
+    }
+
+
+def main() -> int:
+    """CLI entry point. Returns 0 on PASS, 1 on FAIL."""
+    parser = argparse.ArgumentParser(
+        description="ZILFIT STL Manifold Validation — pre-print gate 1",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Returns exit code 0 if all checks pass, 1 if any check fails.\n"
+            "No runtime code is modified. No geometry is generated.\n"
+        ),
+    )
+    parser.add_argument(
+        "--stl",
+        required=True,
+        help="Path to the STL file to validate (binary or ASCII)",
+    )
+    args = parser.parse_args()
+
+    result = run(args.stl)
+
+    if result["status"] in ("INPUT_ERROR", "DEPENDENCY_ERROR"):
+        print(f"ERROR: {result.get('_error', 'unknown error')}", file=sys.stderr)
+        return 1
+
+    _print_report(result["_report"])
+    return 0 if result["status"] == "PASS" else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

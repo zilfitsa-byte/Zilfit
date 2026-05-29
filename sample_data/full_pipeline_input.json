@@ -1,0 +1,23 @@
+{
+  "scan_file": "sample_scans/foot_001.ply",
+  "scan_format": "json",
+  "landmarks": {
+    "heel_center": [0, 0, 0],
+    "met1_head": [42, 185, 16],
+    "met5_head": [-38, 175, 16],
+    "hallux_tip": [18, 265, 12],
+    "navicular": [35, 80, 22],
+    "calcaneus_lateral": [-30, 5, 2],
+    "calcaneus_medial": [28, 5, 2]
+  },
+  "session_params": {
+    "mode": "private_tester",
+    "duration_s": 120,
+    "cadence_spm": 110,
+    "asymmetry_pct": 5.0,
+    "roll_angle_deg": 3.0
+  },
+  "sample_id": "SAMPLE_001",
+  "material": "TPU_75A_80A",
+  "doctor_overrides": null
+}

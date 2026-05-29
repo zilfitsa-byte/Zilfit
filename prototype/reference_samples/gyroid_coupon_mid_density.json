@@ -1,0 +1,39 @@
+{
+  "_comment": "ZILFIT Gyroid Coupon — Mid Density (0.50) Reference Sample",
+  "_schema_version": "1.0",
+
+  "sample_id": "REF-COUPON-MID",
+  "geometry_type": "uniform_coupon",
+  "dimensions_mm": {
+    "length": 50.0,
+    "width": 20.0,
+    "height": 10.0
+  },
+  "density": 0.50,
+  "density_range": [0.40, 0.55],
+  "cell_size_mm": 6.0,
+  "wall_thickness_mm": 0.6,
+
+  "material": "TPU 95A",
+  "process_preference": "MJF",
+
+  "target_measurements": {
+    "compressive_stiffness_n_mm": null,
+    "max_compression_force_n": null,
+    "permanent_set_after_100_cycles_mm": null,
+    "permanent_set_after_1000_cycles_mm": null,
+    "rebound_time_s": null
+  },
+
+  "acceptance_criteria": {
+    "lattice_survives_print": true,
+    "no_collapsed_cells": true,
+    "max_permanent_set_100_cycles_pct": 2.0,
+    "max_permanent_set_1000_cycles_pct": 4.0,
+    "min_wall_thickness_mm": 0.5,
+    "max_wall_thickness_mm": 0.7
+  },
+
+  "related_tests": ["coupon_compression_test.json", "fatigue_cycle_test.json"],
+  "notes": "Baseline CALM edition density — represents typical product use case. Should be the first specimen to pass all tests."
+}

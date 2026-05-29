@@ -1,0 +1,60 @@
+{
+  "name": "degenerate_rejected",
+  "purpose": "Mesh with collinear triangle \u2014 must be rejected",
+  "mesh": {
+    "vertices": [
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        2,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0
+      ]
+    ],
+    "triangles": [
+      [
+        0,
+        1,
+        2
+      ],
+      [
+        0,
+        2,
+        3
+      ]
+    ],
+    "bounds": {
+      "min": [
+        0,
+        0,
+        0
+      ],
+      "max": [
+        2,
+        1,
+        0
+      ]
+    },
+    "manifold_flags": {
+      "is_closed": false
+    }
+  },
+  "expected_error_contains": "degenerate/collinear triangle",
+  "expected_diagnostics": {
+    "should_succeed": false,
+    "error_contains": "degenerate/collinear triangle"
+  }
+}

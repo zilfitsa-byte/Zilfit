@@ -1,0 +1,52 @@
+{
+  "version": "1.0.0",
+  "gate_name": "ZILFIT Safety Gate",
+  "evaluation_order": [
+    {
+      "rule_id": "RG001",
+      "condition": "pain_or_discomfort > 0.75",
+      "action": "STOP",
+      "message": "مستوى الألم مرتفع. يُرجى استشارة متخصص قبل استخدام المنتج.",
+      "severity": "critical"
+    },
+    {
+      "rule_id": "RG002",
+      "condition": "diabetes == true OR neuropathy == true",
+      "action": "STOP",
+      "message": "لا يُنصح باستخدام المنتج لمن يعانون من اعتلال عصبي أو مشاكل في الدورة الدموية بالقدم دون إشراف طبي.",
+      "severity": "critical"
+    },
+    {
+      "rule_id": "RG003",
+      "condition": "active_injury == true",
+      "action": "STOP",
+      "message": "إصابة نشطة مُبلَّغ عنها. أوقف الاستخدام وراجع طبيبك.",
+      "severity": "critical"
+    },
+    {
+      "rule_id": "RG004",
+      "condition": "pregnant == true",
+      "action": "RESTRICT",
+      "allowed_editions": ["FEMME"],
+      "max_density_override": 0.20,
+      "message": "يُرجى مراجعة طبيبك قبل استخدام أي منتج ضغط على القدم أثناء الحمل.",
+      "severity": "high"
+    },
+    {
+      "rule_id": "RG005",
+      "condition": "temperature_risk > 0.70",
+      "action": "WARNING",
+      "density_reduction_factor": 0.85,
+      "message": "درجة حرارة القدم مرتفعة. تأكد من التهوية الجيدة وتقليل وقت الاستخدام.",
+      "severity": "medium"
+    },
+    {
+      "rule_id": "RG006",
+      "condition": "session_duration_minutes > 240",
+      "action": "WARNING",
+      "message": "يُنصح بأخذ استراحة من 15 دقيقة كل 4 ساعات.",
+      "severity": "low"
+    }
+  ],
+  "gate_passed_condition": "all_critical_rules == false AND all_high_rules_handled"
+}

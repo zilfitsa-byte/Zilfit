@@ -1,0 +1,31 @@
+{
+  "version": "1.0.0",
+  "policy_name": "ZILFIT Scientific Claims Policy",
+  "mandatory_disclaimer": "هذا المنتج ليس جهازًا طبيًا ولا يُستخدم لتشخيص أو علاج أي حالة صحية. استشر مختصًا صحيًا عند الحاجة.",
+  "allowed_language": {
+    "terms": [
+      "قد يدعم", "قد يساعد على", "مصمم لتحسين الراحة",
+      "مستوحى من", "مؤشرات أولية تشير", "يحتاج إلى تحقق علمي إضافي"
+    ]
+  },
+  "prohibited_language": {
+    "terms": [
+      "يعالج", "يشفي", "يوازن الهرمونات", "يُحفّز الغدة النخامية",
+      "يخفض الكورتيزول", "علاج للقلق", "علاج للاكتئاب",
+      "بديل عن الدواء", "موصى به طبيًا"
+    ]
+  },
+  "evidence_levels": {
+    "RCT_proven": "مُثبَت بتجارب سريرية عشوائية — غير متوفر حاليًا لهذا المنتج",
+    "mechanistic_plausible": "له أساس فيزيولوجي نظري — يحتاج تحقق",
+    "exploratory": "فرضية استكشافية — دليل أولي فقط",
+    "traditional_reference": "مرجعية تقليدية — لا يُعتمد عليها كدليل طبي وحيد"
+  },
+  "per_edition_claim_level": {
+    "CALM": "exploratory",
+    "VITAL": "exploratory",
+    "FOCUS": "mechanistic_plausible",
+    "BALANCE": "mechanistic_plausible",
+    "FEMME": "traditional_reference"
+  }
+}
